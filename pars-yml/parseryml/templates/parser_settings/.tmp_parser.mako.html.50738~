@@ -1,0 +1,22 @@
+<%inherit file='/base/index.html' />
+<%def name="title()">Настройка категорий</%def>
+<%def name="head()">
+    <link rel="stylesheet" type="text/css" href="/js/ext/resources/css/ext-all.css" />
+    <script type="text/javascript" src="/js/ext/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="/js/ext/ext-all.js"></script>
+    <script type="text/javascript" src="/js/json.js"></script>
+    <script type="text/javascript" src="/js/parser.js"></script>
+</%def>
+<div id="mainMenu">${parent.menu()}</div>
+<center>
+	<table>
+		<tr>
+			<td>
+				<div id = "markets"></div>
+			</td>
+			<td valign='top'>
+				<div id = 'clear'></div>
+			</td>
+		</tr>
+	</table>
+</center>

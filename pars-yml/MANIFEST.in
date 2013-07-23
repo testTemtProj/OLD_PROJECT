@@ -1,0 +1,3 @@
+include parseryml/config/deployment.ini_tmpl
+recursive-include parseryml/public *
+recursive-include parseryml/templates *

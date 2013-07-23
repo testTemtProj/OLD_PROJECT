@@ -1,0 +1,149 @@
+<html> 
+    <head>
+        <title>Yottos - Интерфейс Парсера</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <link rel="icon" type="image/gif" href="/img/favicon.gif" />
+        <link rel="stylesheet" type="text/css" href="/js/ext/resources/css/ext-all.css" />
+        <link rel="stylesheet" type="text/css" href="/css/main.css" />
+        <script type="text/javascript" src="/js/ext/adapter/ext/ext-base.js"></script>
+        <script type="text/javascript" src="/js/ext/ext-all.js"></script>
+        <script src="/js/jquery.min.js" type="text/javascript"></script>
+        <script src="/js/jquery.timeago.js" type="text/javascript"></script>
+        <script type="text/javascript" src="/js/template.js"></script>
+        <script type="text/javascript" src="/js/parser.js"></script>
+        ${next.head()}
+    </head>
+    <body>
+		${next.body()}
+
+<%
+# Шаблоны для JavaScript:
+# http://code.google.com/p/trimpath/wiki/JavaScriptTemplateSyntax
+context.write(u'''
+<template id="group-status">
+{if state == 'new'}
+    В очереди
+{elseif state == 'pending'}
+    В очереди
+{elseif state == 'parsing'}
+    Обрабатываются
+{elseif state == 'finished'}
+    Завершено
+{elseif state == 'aborted'}
+    Прервано
+{elseif state == 'error'}
+    Ошибка
+{else}
+    Неизвестная ошибка
+{/if}
+</template>
+<template id="format-time-ago">
+    {if started.datetime}
+        <div class=time>
+            {if finished.datetime}
+                <p><em>${finished.timeago}</em></p>
+            {else}
+                <span class="process">обновляется</span>
+            {/if}
+            <p><strong>${started.day}.${started.month}.${started.year}</strong></p>
+            <p>c ${started.hour}:${started.min}:${started.sec}
+            {if finished.datetime}
+                по ${finished.hour}:${finished.min}:${finished.sec}
+            {/if}
+            </p>
+            {if total}{if total.sec}
+            <p class="total">итого:
+                {if total.days}
+                <em>${total.days} дней</em>
+                {/if}
+                {if total.sec}
+                <em>${total.sec} сек</em>
+                {/if}
+            </p>
+            {/if}{/if}
+        </div>
+    {else}
+        <span class="error">не обрабатывался</span>
+    {/if}
+</template>
+<template id="cell-title">
+    <div class="store">
+        <h2>${title}</h2>
+        <div class="stats">
+        {if file_date.day}
+        <p class="date">Актуален на <em>${file_date.day}.${file_date.month}.${file_date.year}</em> ${file_date.hour}:${file_date.min} <em>${file_date.timeago}</em></p>
+        {/if}
+        {if offers_count>0}
+            <em>${offers_count}</em> товаров, <em>${categories_count}</em> категорий
+        {else}
+            нет товаров
+        {/if}
+        </div>
+
+        <a target="_blank" class="market" url="${market_url}">${market_url_text}</a>
+        <a target="_blank" class="export" url="${export_url}">${export_url_text}</a>
+    </div>
+</template>
+<template id="cell-status">
+    <div class="parse parse-${state}">
+{if state == 'new'}
+    Ожидание<br><br>
+    <img class="action-process" src="/img/process.gif"/>
+{elseif state == 'parsing'}
+    <div class="progress" id="progress-${index}"></div>
+    <ol>
+        <li class="{if progress == false}active{/if}">
+            Ожидание очереди
+        </li>
+        <li class="{if progress.state == 'download_yml'}active{/if}">
+            Скачивание файла
+        </li>
+        <li class="{if progress.state == 'parsing_categories'}active{/if}">
+            Загрузка категорий
+        </li>
+        <li class="{if progress.state == 'parsing_offers'}active{/if}">
+            Загрузка товаров
+            {if progress.state == 'parsing_offers'}
+                (${progress.current} из ${progress.total})
+            {/if}
+        </li>
+        <li class="{if progress.state == 'parsing_images'}active{/if}">
+            Загрузка картинок
+        </li>
+    </ol>
+{elseif state == 'finished'}
+    <ul>
+        <li class="categories"><em>${categories}</em> категорий</li>
+        <li class="added"><em>${added}</em> добавленных товаров</li>
+        <li class="deleted"><em>${deleted}</em> устаревших товаров</li>
+        <li class="not_valid"><em>${not_valid}</em> не валидных товаров</li>
+    </ul>
+    {if code > 500}
+    <div class="error">
+        <strong>Ошибка</strong>
+        ${code}: ${message}
+    </div>
+    {/if}
+{elseif state == 'aborted'}
+    <em>Прервано</em>
+    <div class="message" title="${message}">${message}</div>
+{elseif state == 'error'}
+    <em>Ошибка</em>
+    <div class="message" title="${message}">${message}</div>
+{else}
+    <em>Неизвестная ошибка</em>
+{/if}
+    </div>
+</template>
+<template id="cell-action">
+    <div class="action">
+    {if state<20}
+    <a class="action-start" href="#"><img src="/img/start.png"/></a>
+    {else}
+    <a class="action-start" href="#"><img src="/img/start.png"/></a>
+    {/if}
+    </div>
+</template>
+''') %>
+    </body>
+</html>
