@@ -1,6 +1,0 @@
-<asp:TreeView  runat="server" Style="text-align:left;" CssClass="tree-all" ExpandDepth="1" Width="100%" NodeWrap="False" ImageSet="Arrows" CollapseImageToolTip="" ExpandImageToolTip="">
-   <ParentNodeStyle CssClass="tree-parent" />
-   <SelectedNodeStyle CssClass="tree-selected" />
-   <LeafNodeStyle CssClass="tree-leaf" />
-   <RootNodeStyle CssClass="tree-root" />
-</asp:TreeView>

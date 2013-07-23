@@ -1,8 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<siteMap xmlns="http://schemas.microsoft.com/AspNet/SiteMap-File-1.0" >
-    <siteMapNode url="CatalogList.aspx" title="Catalog List"  description="Catalog List">
-      <siteMapNode url="CatalogDetails.aspx" title="Catalog Details"  description="Catalog Details">
-        <siteMapNode url="CatalogContents.aspx" title="Catalog Contents"  description="Catalog Contents" />
-      </siteMapNode>
-    </siteMapNode>
-</siteMap>

@@ -1,7 +1,0 @@
-﻿<asp:Menu runat="server" Orientation="Horizontal" StaticDisplayLevels="1" StaticEnableDefaultPopOutImage="False" MaximumDynamicDisplayLevels="1">
-    <DynamicHoverStyle BackColor="#E8E8FF" ForeColor="#3366CC" Font-Size="10" />
-    <DynamicMenuStyle CssClass="menu-box" />
-    <StaticMenuItemStyle ForeColor="#3366CC" Font-Size="10" />
-    <StaticHoverStyle ForeColor="#3366CC" Font-Size="10" />
-    <DynamicMenuItemStyle Height="20" Font-Size="10" CssClass="menu_item" />      
-</asp:Menu>

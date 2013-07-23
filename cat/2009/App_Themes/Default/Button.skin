@@ -1,1 +1,0 @@
-<asp:Button runat="server" Width="110px" Heigth="24px" Font-Size="13px" Font-Names="Arial" CssClass="forButton"/>
