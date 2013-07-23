@@ -1,0 +1,22 @@
+# -*- coding: utf-8 -*-
+<%inherit file="/main.mako.html" />	
+##%>	(для парсера)
+<%def name="head()">
+        <title>Создание выгрузки GetMyAd</title>
+		<link type="text/css" href="/lib/css/theme/jquery-ui-1.8.1.custom.css" rel="stylesheet" />
+		<link type="text/css" href="/css/main.css" rel="stylesheet" />
+		<script type="text/javascript" src="/lib/jquery/jquery-1.3.2.min.js"></script>
+		<script type="text/javascript" src="/lib/ui/jquery-ui-1.8.1.custom.min.js"></script>
+		<link rel="stylesheet" media="screen" type="text/css" href="/lib/colorpicker/css/colorpicker.css" />
+		<script type="text/javascript" src="/lib/colorpicker/colorpicker.js"></script>
+		<script type="text/javascript" src="/lib/plugins/template.js"></script>
+</%def>
+##%>	4parser
+
+<h2>Список существующих выгрузок:</h2>
+<ol>
+% for item in data:
+<li><a href="/advertise/maker?adv_id=${item['guid']}">${item['user']} &rarr; ${item['title']}</a></li>
+% endfor
+
+</ol>

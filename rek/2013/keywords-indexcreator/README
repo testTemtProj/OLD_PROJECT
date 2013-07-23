@@ -1,0 +1,8 @@
+Зависимости от других библиотек
+-------------------------------
+Нужно собирать:
+* mongoclient (2.0), http://mongodb.org
+* google-glog (0.3.1)
+* rabbitmq (0.8)
+* rabbitcpp (http://code.google.com/p/rabbitcpp/)
+* CLucene (2.3.3.4) 

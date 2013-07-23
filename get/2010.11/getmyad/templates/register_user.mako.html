@@ -1,0 +1,117 @@
+# -*- coding: utf-8 -*-
+<%inherit file="/main.mako.html" />	
+<%!
+	from datetime import datetime
+%>
+
+<%def name="head()">
+        <title>Статистика GetMyAd</title>
+		<link type="text/css" href="/css/main.css" rel="stylesheet" />
+		<script type="text/javascript" src="/lib/jquery/jquery-1.4.2.min.js"></script>
+</%def>
+##%>	4parser
+
+
+
+<form name="RegisterForm" method="post" action="send" >
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+	function validate()
+	{
+		var site_re = /^(https?:\/\/)?([\w\.-]+)\.([a-z]{2,6}\.?)(\/[\w\.]*)*\/?$/;
+		var phone_re = /./
+		var email_re = /^([a-z0-9_\.-]+)@([a-z0-9_\.-]+)\.([a-z\.]{2,6})$/;
+
+		var valid_name = $("#UserNameText").val().length > 0;
+		var valid_url = site_re.test($("#SiteUrl").val().toLowerCase());
+		var valid_phone = phone_re.test($("#PhoneNumber").val());
+		var valid_email = email_re.test($("#Email").val());
+		var agreed = document.getElementById('AgreeCheckBox').checked;
+		var all_valid = valid_email && valid_phone && valid_url && valid_name && agreed;
+
+		document.getElementById('reqUserName').style.visibility = valid_name? "hidden" : "visible";
+		document.getElementById('reqUrl').style.visibility = valid_url? "hidden" : "visible";
+		document.getElementById('reqPhoneNumber').style.visibility = valid_phone? "hidden" : "visible";
+		document.getElementById('reqEmail').style.visibility = valid_email? "hidden" : "visible";
+		document.getElementById('SubmitButton').disabled = !all_valid;
+		
+		return all_valid;
+	};
+
+	$("#UserNameText, #SiteUrl, " +
+	  "#PhoneNumber, #Email").change(validate);
+	$("#AgreeCheckBox").change(validate);
+});
+</script>
+
+
+
+<div id="PanelMain">
+	
+<div style="padding-left: 100px">
+<h2>Добро пожаловать в программу GetMyAd! </h2>
+<p> Заполните, пожалуйста, требуемые данные, ваша заявка будет расмотрена в течении 3 дней. </p>
+
+<table cellpadding="6">
+
+<tr>
+    <td>Ваше имя*: </td>
+    <td><input name="UserNameText" type="text" id="UserNameText" style="width:200px;" value = "${c.user_name}" />
+    <span id="reqUserName" style="color:Red;visibility:hidden;">Введите Ваше имя</span>
+    </td>
+</tr>
+<tr>
+    <td>URL главной страницы  сайта*:</td>
+    <td><input name="SiteUrl" type="text" id="SiteUrl" style="width:300px;"  value ="${c.user_url}" />
+    <span id="reqUrl" style="color:Red;visibility:hidden;">Введите URL главной страницы  сайта</span>
+    </td>
+</tr>    
+<tr>
+    <td>Номер телефона*: <br />(<i style="color: #777;">+380 (44) 123-45-67</i>) </td>
+    <td><input name="PhoneNumber" type="text" id="PhoneNumber" style="width:200px;"  value = "${c.user_phone}" />
+    <span id="reqPhoneNumber" style="color:Red;visibility:hidden;">Введите номер телефона</span>
+    </td>
+</tr>
+<tr>
+    <td>Эл. почта*: </td>
+    <td><input name="Email" type="text" id="Email" style="width:200px;" value = "${c.user_email}" />
+    <span id="reqEmail" style="color:Red;visibility:hidden;">Заполните поле e-mail</span>
+    </td>
+</tr>
+<tr>
+    <td>Введите символы*:</td>
+    <td><div><span style='margin:5px;float:left;'><img src="/register_user/capcha" border='0' width=180 height=50></span><span style='margin:5px;float:left;'><input name="Capcha" type=text size=10 maxlength=10 value=''></span><br clear='all'></div>
+    </td>
+</tr>
+<tr>
+	<td></td>
+	<td><span id="reqCapcha" style="color:Red;">${c.capcha_error}</span></td>
+</tr>
+<tr>
+<td colspan="2">
+    <input id="AgreeCheckBox" type="checkbox" name="AgreeCheckBox" />
+	<label for="AgreeCheckBox">Я ознакомлен и согласен с <a href='http://getmyad.yottos.com/Правила_программы_Yottos_GetMyAd' target='_blank'>Правилами программы GetMyAd</a>.</label>
+</td>
+</tr>
+
+<tr>
+<td colspan="2">
+        <div id="ValidationSummary1" style="color:Red;display:none;"></div>
+</td>
+</tr>
+
+<tr>
+<td colspan="2">
+<br /><p style="text-align: center;">
+
+<input type="submit" name="SubmitButton" value="Отправить" id="SubmitButton" disabled="disabled" style="height:3em;width:200px;" /></p>
+</td>
+</tr>
+
+</table>
+</div>
+</div>
+  
+</form>

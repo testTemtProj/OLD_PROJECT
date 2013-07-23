@@ -1,0 +1,200 @@
+<%inherit file='/base/index.mako.html' />
+<%def name="title()">${_('Add site')}</%def>
+<%def name='body()'>
+    <script type="text/javascript" src="/js/jstree/jquery.jstree.js"></script>
+    <script type="text/javascript" src="/js/gen_tree.js"></script>
+    <script type="text/javascript" src="/js/add_lang_switch.js"></script>
+<table style="width:100%;border:0px; height:100%">
+  <tr>
+    <td style="width:30%;" />
+    <td style="width:70%;padding-left:10px">
+      <b>
+        <span>${ _('Your site will be published in Catalog, if:') }</span></b><br />
+      
+      <ul>
+        <span><li>${ _("It's maintenance does not contradict the legislation (does not propagandise violence, racial hatred, a pornography, corruption and so forth)" )}; </li >
+	  <li>${ _("the site or its basic sections are not in development;") }</li>
+	  <li >${ _("The site subjects answer the declared heading;") }</li><li>${ _("Your site is not a mirror of other site.") }</li></span>
+      </ul>
+      <span>${ _("Yottos reserves the right to itself to reject inquiry about site registration in the catalog without explanations. ") } <br />  <br />  
+	${ _("All fields are obligatory to filling!") }</span>
+      
+    </td>
+  </tr>
+  <tr>
+    <td align="left" valign="middle" style="width:30%;padding:10px; height: 51px;" />
+    <td style="width:70%; height: 51px;"><div id="ctl00_ContentPlaceHolder_ValidationSummary" style="color:Red;display:none;">
+      </div>
+
+    </td>
+  </tr>                     
+  <tr>       
+    <td colspan="2">       
+      <div>
+        <table style="width:100%;border:0px">       
+          <tr><td style="width:100%;height: 31px;" colspan="2">&nbsp;</td></tr>
+          <tr>
+            <td align="right" valign="middle" style="width:30%;padding-left:30px;">                                
+              <span>${_("Choose category:")}</span>
+		  <td align="left" valign="middle" style="width:70%;">
+		    <span style="color:Red;display:block;">${c.errors.get('category_not_leaf')}</span>
+		    <div id="category_tree"></div>
+		  </td>
+		<div style="display:none;" />
+                  <br />
+            </td>
+          </tr>       
+        </table></td>    
+
+      <tr><td style="width:100%;height: 31px;" colspan="2">&nbsp;</td></tr>
+       <tr>
+	 ${h.form(url(controller='sites', action='add'),method='post')}
+	 ${h.hidden('category_id', value = "0")}
+	 ${h.hidden('date_add', value = h.date.today())}
+            <td align="right" valign="middle" style="width:30%;padding-left:30px;" >
+                <span>${_("Site reference:")}</span>
+            </td>
+            <td align="left" valign="middle" style="width:70%;" class="PStextovka">
+                &nbsp;&nbsp;
+		${h.text(name="reference", value=c.form_data.get("reference","http://"), style="width:650px;")}
+                <span style="color:Red;display:block;">${c.errors.get('reference')}</span>
+                <span style="color:Red;display:none;">*</span>
+		<br/>
+                &nbsp;&nbsp;
+                <span>${_("For example http://yottos.com/")}</span>
+            </td>
+       </tr>
+
+  <tr><td style="width:100%;height: 31px;" colspan="2">&nbsp;</td></tr>
+
+  <tr><td valign="middle" style="width = 100%;" colspan="2">
+      <!-- Languages-->
+      <ul id="switch">
+	<li><span class="fields_ru">ru</span></li>
+	<li><span class="fields_en">en</span></li>
+	<li><span class="fields_uk">uk</span></li>
+      </ul>
+      <span style="color:Red;display:block;">${c.errors.get('fields_empty')}</span>
+      <!-- ru -->
+      <div style="display:block;" id="fields_ru" valign="middle">
+	<table style="width:100%">
+	  <tr>
+            <td align="right" valign="middle" style="width:30%;" >
+              <span>${_("Name")}</span>	      
+            </td>
+            <td align="left" valign="middle" style="width:70%;" class="PStextovka">
+              &nbsp;&nbsp;<p>${_("Text for russian language")}</p>
+              ${h.text('name_ru', style="width:650px;", value=c.form_data.get("name_ru",""))}<br />
+              <span>${ _("The name should characterise a resource as a whole, instead of separate sections. It is forbidden to place all text in the top register.") }<br /> 
+		${ _("No more than 100 symbols") } </span>
+            </td>
+	  </tr>
+
+	  <tr><td style="width:100%;height: 31px;" colspan="2">&nbsp;</td></tr>
+	  <tr>
+            <td align="right" valign="middle" style="width:30%; height: 109px;">            
+              <span>${_("Description")}</span>
+            </td>
+            <td align="left" valign="middle" style="width:70%;height: 109px;" class="PStextovka">
+	      &nbsp;&nbsp;
+	      <div style="width:650px;">
+	      ${h.textarea('description_ru', rows='2', cols='20', style="height:106px;width:650px;", content=c.form_data.get("description_ru",""))}                <br />
+              &nbsp;&nbsp;
+              <span>${ _("In the description it is forbidden to use adjectives in a superlative degree (for example, most, best, most, etc.). It is forbidden to place all text in the top register.")}<br />${_("Not more than 1000 symbols") }</span></div>
+            </td>
+	  </tr>
+
+	  <tr><td style="width:100%;height: 31px;" colspan="2">&nbsp;</td></tr>
+	</table>
+      </div>
+
+      <!-- uk -->
+      <div style="display:none;" id="fields_uk">
+
+	<table style="width:100%;">
+	  <tr>
+            <td align="right" valign="middle" style="width:30%;" >
+              <span>${_("Name")}</span>
+            </td>
+            <td align="left" valign="middle" style="width:70%;" class="PStextovka">
+              &nbsp;&nbsp;	<p>${_("Text for ukrainian language")}</p>
+              ${h.text('name_uk', style="width:650px;", value=c.form_data.get("name_uk",""))}<br />
+              <span>${ _("The name should characterise a resource as a whole, instead of separate sections. It is forbidden to place all text in the top register.") }<br /> 
+		${ _("No more than 100 symbols") } </span>
+            </td>
+	  </tr>
+
+	  <tr><td style="width:100%;height: 31px;" colspan="2">&nbsp;</td></tr>
+	  <tr>
+            <td align="right" valign="middle" style="width:30%; height: 109px;">            
+              <span>${_("Description")}</span>
+            </td>
+            <td align="left" valign="middle" style="width:70%;height: 109px;" class="PStextovka">
+	      &nbsp;&nbsp;
+	      <div style="width:650px;">	      
+	      ${h.textarea('description_uk', rows='2', cols='20', style="height:106px;width:650px;", content=c.form_data.get("description_uk",""))}                
+              <span id="ctl00_ContentPlaceHolder_AboutRequiredFieldValidator" style="color:Red;display:none;">*</span><br />
+              &nbsp;&nbsp;
+              <span>${ _("In the description it is forbidden to use adjectives in a superlative degree (for example, most, best, most, etc.). It is forbidden to place all text in the top register.")}<br />${_("Not more than 1000 symbols") }</span></div>
+            </td>
+	  </tr>
+	  
+	  <tr><td style="width:100%;height: 31px;" colspan="2">&nbsp;</td></tr>
+	</table>
+      </div>
+
+      <!-- en -->
+      <div style="display:none;" id="fields_en">
+
+	<table style="width:100%;">
+	  <tr>
+            <td align="right" valign="middle" style="width:30%;" >
+              <span>${_("Name")}</span>
+	      
+            </td>
+            <td align="left" valign="middle" style="width:70%;" class="PStextovka">
+              &nbsp;&nbsp;	<p>${_("Text for english language")}</p>
+              ${h.text('name_en', style="width:650px;", value=c.form_data.get("name_en",""))}
+              <span id="ctl00_ContentPlaceHolder_TitleRequiredFieldValidator" style="color:Red;display:none;">*</span><br />
+              &nbsp;&nbsp;
+              <span>${ _("The name should characterise a resource as a whole, instead of separate sections. It is forbidden to place all text in the top register.") }<br /> 
+		${ _("No more than 100 symbols") } </span>
+            </td>
+       </tr>
+	  
+	  <tr><td style="width:100%;height: 31px;" colspan="2">&nbsp;</td></tr>
+	  <tr>
+            <td align="right" valign="middle" style="width:30%; height: 109px;">            
+              <span>${_("Description")}</span>
+            </td>
+            <td align="left" valign="middle" style="width:70%;height: 109px;" class="PStextovka">
+	      &nbsp;&nbsp;
+	      <div style="width:650px;">
+	      ${h.textarea('description_en', rows='2', cols='20', style="height:106px;width:650px;", content=c.form_data.get("description_en",""))}<br />
+              &nbsp;&nbsp;
+              <span>${ _("In the description it is forbidden to use adjectives in a superlative degree (for example, most, best, most, etc.). It is forbidden to place all text in the top register.")}<br />${_("Not more than 1000 symbols") }</span></div>
+            </td>
+	  </tr>
+
+	  <tr><td style="width:100%;height: 31px;" colspan="2">&nbsp;</td></tr>
+	</table>
+      </div>
+<!-- End of languages-->
+</td></td>
+
+<tr>
+  <td align="right" valign="middle" style="width:30%;padding-left:30px;">
+    <span>${ _("your e-mail:") }</span></td>
+  <td align="left" valign="middle" style="width:70%;"> 
+    &nbsp;&nbsp;
+    ${h.text('owners_mail', style="width:300px;", value=c.form_data.get("owners_mail",""))}
+    <span style="color:Red;display:block;">${c.errors.get('owners_mail')}</span>
+  </td>
+</tr>
+<tr><td align='center' width='30%' colspan='2'><br/><br/>
+    ${h.submit('add',_('Add site'))}${h.end_form()}
+</td>
+</tr>
+</table>
+	
+</%def>

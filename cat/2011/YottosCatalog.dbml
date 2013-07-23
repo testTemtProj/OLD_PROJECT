@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database Name="yottos_catalog_1033" Class="YottosCatalogDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=localhost;Initial Catalog=yottos_catalog_1033;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="1033" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.sub_category_tree" Member="sub_category_trees">
+    <Type Name="sub_category_tree">
+      <Column Name="sub_root_id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="sub_nested_id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Association Name="sub_category_sub_category_tree" Member="nested_sub_category" ThisKey="sub_nested_id" OtherKey="id" Type="sub_category" IsForeignKey="true" />
+      <Association Name="sub_category_sub_category_tree1" Member="root_sub_category" ThisKey="sub_root_id" OtherKey="id" Type="sub_category" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.root_categories" Member="root_categories">
+    <Type Name="root_category">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="NVarChar(128) NOT NULL" CanBeNull="false" />
+      <Column Name="root_category_description" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="icon_uid" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="icon" Type="System.Data.Linq.Binary" DbType="VarBinary(MAX)" CanBeNull="true" UpdateCheck="Never" />
+      <Association Name="root_category_sub_category" Member="sub_categories" ThisKey="id" OtherKey="root_category_id" Type="sub_category" />
+    </Type>
+  </Table>
+  <Table Name="dbo.sub_categories" Member="sub_categories">
+    <Type Name="sub_category">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="root_category_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="NVarChar(128) NOT NULL" CanBeNull="false" />
+      <Column Name="sub_category_description" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="icon_uid" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="icon" Type="System.Data.Linq.Binary" DbType="VarBinary(MAX)" CanBeNull="true" UpdateCheck="Never" />
+      <Association Name="sub_category_sub_category_tree" Member="root_sub_category_trees" Storage="_root_category_trees" ThisKey="id" OtherKey="sub_nested_id" Type="sub_category_tree" />
+      <Association Name="sub_category_sub_category_tree1" Member="nested_sub_category_trees" ThisKey="id" OtherKey="sub_root_id" Type="sub_category_tree" />
+      <Association Name="sub_category_link" Member="links" ThisKey="id" OtherKey="sub_category_id" Type="link" />
+      <Association Name="root_category_sub_category" Member="root_category" ThisKey="root_category_id" OtherKey="id" Type="root_category" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.answers" Member="answers">
+    <Type Name="answer">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="question_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="answer" Member="answer_txt" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="associated_url" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="image_uid" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="image_type" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="answer_image" Type="System.Data.Linq.Binary" DbType="VarBinary(MAX)" CanBeNull="true" UpdateCheck="Never" />
+      <Association Name="question_answer" Member="question" ThisKey="question_id" OtherKey="id" Type="question" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.questions" Member="questions">
+    <Type Name="question">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="profession" Type="System.String" DbType="NVarChar(128)" CanBeNull="true" />
+      <Column Name="question" Member="question_txt" Type="System.String" DbType="NVarChar(128) NOT NULL" CanBeNull="false" />
+      <Association Name="question_answer" Member="answers" ThisKey="id" OtherKey="question_id" Type="answer" />
+    </Type>
+  </Table>
+  <Table Name="dbo.links" Member="links">
+    <Type Name="link">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="sub_category_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="url" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="caption" Type="System.String" DbType="NVarChar(128) NOT NULL" CanBeNull="false" />
+      <Column Name="url_prepared_caption" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="link_description" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="link_counter" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="is_accepted" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="date_add" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Column Name="author_email" Type="System.String" DbType="NVarChar(128) NOT NULL" CanBeNull="false" />
+      <Column Name="last_checked" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="check_count" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="sub_category_link" Member="sub_category" ThisKey="sub_category_id" OtherKey="id" Type="sub_category" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Function Name="dbo.validate_link" Method="validate_link" IsComposable="true">
+    <Parameter Name="url" Type="System.String" DbType="NVarChar(MAX)" />
+    <Parameter Name="email" Type="System.String" DbType="NVarChar(128)" />
+    <Return Type="System.Boolean" />
+  </Function>
+</Database>

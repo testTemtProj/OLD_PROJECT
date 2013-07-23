@@ -1,0 +1,282 @@
+
+<%inherit file="/main.mako.html" />
+<%def name="head()">
+	<title>Yottos GetMyAd</title>
+	<script type="text/javascript" src="/lib/jquery/jquery-1.4.2.min.js"></script>
+</%def>
+##%>
+
+
+
+<style type="text/css">
+
+.FormTitle {
+	color: #fff;
+	background-color:#0099FF;
+	font-size: 1.2em;
+	font-weight: bold;
+	border: 1px solid transparent;
+	text-align: center; 
+	line-height: 2em;
+	margin-top: 0;
+}
+
+#create_account_block {
+	margin-left: 100px ;	
+}
+
+fieldset {   
+	margin: 0 0 0 0;
+	border: none;   
+	padding: 0;  
+}  
+ 
+fieldset ol {   
+	padding: 0em 1em 0 0em;   
+	list-style: none;  
+}  
+fieldset li {   
+	padding-bottom: 1em;  
+	
+}  
+fieldset.submit {   
+	border-style: none;
+	
+}	
+
+
+/* Left-align */
+label {    
+float: left;    
+width: 16em;    
+margin-right: 0em;
+color: #000000;   
+}
+
+label+input {
+	width: 22em;
+}
+
+h.text {
+width: auto;	
+}
+
+#regbutton_div, #manager_regbutton_div {
+	margin-left: 16em ;
+	margin-top: 3em;
+}
+#regbutton, #manager_regbutton {
+	width: 200px;
+	height: 3em;
+}
+
+.errorMessage {
+	color: red;
+}
+
+.fixedCostOptions {
+	display: ${'none' if c.click_cost_type == 'floating' else 'block'};
+}
+
+.floatingCostOptions {
+	display: ${'block' if c.click_cost_type == 'floating' else 'none'};
+}
+
+</style>
+
+
+	
+<body>
+
+<div id="create_account_block">
+
+<h2>Регистрация пользователя GetMyAd! </h2>
+${h.form(h.url_for(controller='register_adv', action='createUser', qualified=False), method='post')}	
+<fieldset>
+<ol>	
+<li>
+	<label>Тип аккаунта: </label>
+	${h.select('account_type', 'user', [
+		('user', u'пользователь'),
+		('manager', u'менеджер'),
+		('admin', u'администратор')
+	])}
+	<script type="text/javascript">
+		document.getElementById("account_type").value = '${c.account_type}';
+		if('${c.account_type}'=='')document.getElementById("account_type").selectedIndex = 0;
+		document.getElementById("account_type").onchange = function() {
+			if(document.getElementById("account_type").value == 'user') {
+	        document.getElementById('create_user_account' ).style.display = 'block';
+			document.getElementById('create_manager_account' ).style.display = 'none';
+	    	} else {
+			document.getElementById('create_user_account' ).style.display = 'none';
+	        document.getElementById('create_manager_account' ).style.display = 'block';
+	    	}
+			}
+	</script>
+</li>
+</ol>
+</fieldset>
+
+
+<div id="create_user_account">
+%if c.user_error_messages:
+<p class="errorMessage">${c.user_error_messages}</p>
+%endif
+
+
+<fieldset>
+<ol>
+<li>
+	<label for="name">ФИО*: </label>${h.text('name', value=c.name)}
+</li>
+<li>
+    <label for="siteURL">URL главной страницы  сайта*:</label>${h.text('siteUrl', value=c.siteUrl)}
+</li>    
+<li>
+    <label for="phone">Номер телефона*:</label>${h.text('phone', value=c.phone)}
+</li>
+<li>
+    <label for="email">Эл. почта*:</label>${h.text('email', value=c.email)} 
+</li>
+<li>
+  <label for="click_cost_type">Тип цены:</label>
+  ${h.radio('click_cost_type', 'fixed', checked=(c.click_cost_type != 'floating'), label=u'Фиксированная цена')}
+  ${h.radio('click_cost_type', 'floating', checked=(c.click_cost_type == 'floating'), label=u'Плавающая цена')}
+  <br style="clear:both;" />
+</li>  
+<li>
+
+<li class="fixedCostOptions" >
+  <label for="click_cost">Цена за клик:</label>
+  ${h.text('click_cost', value=c.click_cost)}
+</li>
+
+<li class="floatingCostOptions">
+  <label for="percent">Процент от цены рекламодателя:</label>
+  ${h.text('percent', value=c.percent)} %
+</li>
+<li class="floatingCostOptions">
+  <label for="cost_min">но не менее</label>
+  ${h.text('cost_min', value=c.cost_min)} $
+</li>
+<li class="floatingCostOptions">
+  <label for="cost_max">и не более</label>
+  ${h.text('cost_max', value=c.cost_max)} $
+</li>
+
+<li>
+	<label for="minsum">Минимальная сумма для вывода средств*:</label>
+	<select name="minsum" id="minsum">
+	<%
+		spisok = [100, 90, 80, 70, 60, 50, 40, 30, 20]
+	%>
+		% for x in spisok:
+			 <option value="${x}">${x}</option>
+		% endfor
+	</select> $
+	<script type="text/javascript">
+		document.getElementById("minsum").value = '${c.minsum or "100"}';
+	</script>
+</li>
+<li>
+	<label for="money_web_z">Возможность вывода средств на webmoney-z:</label>
+	${h.checkbox('money_web_z', value=c.money_web_z, checked=c.money_web_z)}
+</li>
+<li>	
+	<label for="money_card">Возможность вывода средств на пластиковую карту:</label>
+	${h.checkbox('money_card', value=c.money_card, checked=c.money_card)}
+</li>
+<li>  
+  <label for="money_factura">Возможность вывода средств на счёт-фактуру:</label>
+  ${h.checkbox('money_factura', value=c.money_factura, checked=c.money_factura)}
+</li>
+
+<li>  
+  <label for="money_yandex">Возможность вывода средств на Яндекс Деньги:</label>
+  ${h.checkbox('money_yandex', value=c.money_yandex, checked=c.money_yandex)}
+</li>
+	 
+</li>	
+<li>
+	<label for="manager_get"> Ответственный менеджер*: </label>
+	<select name="manager_get" id="manager_get">
+		<option>------</option>
+		% for x in c.list_manager:
+			<option value="${x}">${x}</option>
+		% endfor
+	</select> 
+	<script type="text/javascript">				
+		var mgr = '${c.manager_get}';
+		if(mgr!='')document.getElementById("manager_get").value = mgr;
+		else document.getElementById("manager_get").selectedIndex = 0;		
+				
+	</script>
+</li>
+	<div id="regbutton_div">
+		<input id="regbutton" name="regButton" type="submit" value="Зарегистрировать" />
+	</div>
+</ol>
+</fieldset>
+
+</div>
+
+<div id="create_manager_account" style="display: none;">
+%if c.manager_error_messages:
+<p class="errorMessage">${c.manager_error_messages}</p>
+%endif
+
+<fieldset>
+<ol>
+<li>
+	<label for="manager_name">ФИО*: </label>${h.text('manager_name', value=c.manager_name)}
+</li>
+<li>
+    <label for="manager_login">Логин*:</label>${h.text('manager_login', value=c.manager_login)}
+</li>    
+<li>
+    <label for="manager_phone">Номер телефона*:</label>${h.text('manager_phone', value=c.manager_phone)}
+</li>
+<li>
+    <label for="manager_email">Эл. почта*:</label>${h.text('manager_email', value=c.manager_email)} 
+</li>
+
+<div id="regbutton_div">
+		<input id="regbutton" name="regButton" type="submit" value="Зарегистрировать" />
+	</div>
+</ol>
+</fieldset>
+
+${h.end_form()}	
+	
+</div>
+
+
+
+</div>
+
+<script type="text/javascript">
+
+$(function() {
+    // Переключение типа цены (плавающая или фиксированная)
+    $("#click_cost_type_fixed").click(function() {
+        $(".fixedCostOptions").show();
+        $(".floatingCostOptions").hide();
+    });
+    $("#click_cost_type_floating").click(function() {
+        $(".fixedCostOptions").hide();
+        $(".floatingCostOptions").show();
+    });
+
+    // Начальный значения типа регистрируемого аккаунта
+	if('${c.account_type}' == 'user' || '${c.account_type}' == '' ) {
+	        $('#create_user_account').show();
+			$('#create_manager_account').hide();
+	    } else {
+			$('#create_user_account').hide();
+	        $('#create_manager_account').show();
+	    }  
+
+});
+
+</script>

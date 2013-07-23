@@ -1,0 +1,160 @@
+# -*- coding: utf-8 -*-
+<%inherit file="/main.mako.html" />
+<%
+	c.Comment = True
+%>
+<%def name="head()">
+	<title>Yottos GetMyAd</title>
+</%def>
+##%>	(для парсера)
+	
+
+<table>
+<tr>
+<td style="width:138px;">
+</td>
+<td style="vertical-align: top; ">
+
+<div style="width: 600px">
+<h2>Для вебмастеров, желающих заработать: </h2>
+
+<ul>
+<li> зарабатывайте на своём сайте, размещая на своих страницах товарные предложения с помощью программы <b>GetMyAd</b> и
+    <b>получайте деньги за клики</b> совершаемые вашими пользователями по каждому предложению!
+</li>
+<li>Настраивайте предложения под дизайн своего сайта.</li>
+</ul>
+<a href="${h.url_for(controller='info', action='answers')}" style="margin-left: 150px; text-decoration: none; font-weight: bold; font-size: 13px">Узнайте больше о программе GetMyAd!</a>
+</div>
+<br />
+<img src="/img/example.jpg" style="border-width:0px; width: 400px;" />
+</td>
+
+<td style="width:200px">
+</td>
+
+<td style="vertical-align: top">
+
+<style type="text/css">
+	
+#loginForm {
+	border: 1px solid #B5C7DE;
+	background-color:#EFF3FB;
+	width: 260px;
+}
+
+.FormTitle {
+	color: #fff;
+	background-color:#0099FF;
+	font-size: 1.2em;
+	font-weight: bold;
+	border: 1px solid transparent;
+	text-align: center; 
+	line-height: 2em;
+	margin-top: 0;
+}
+
+fieldset {   
+	margin: 1.5em 0 0 0;
+	border: none;   
+	padding: 0;  
+}  
+legend {   
+	margin-left: 1em;   
+	color: #000000;   
+	font-weight: bold;  
+}  
+fieldset ol {   
+	padding: 0em 1em 0 1em;   
+	list-style: none;  
+}  
+fieldset li {   
+	padding-bottom: 1em;  
+}  
+fieldset.submit {   
+	border-style: none;  
+}	
+
+/* Left-align */
+label {    
+float: left;    
+width: 6em;    
+margin-right: 0em;
+color: #fe7300;   
+}
+
+label+input {
+	width: 12em;
+}
+
+fieldset li {    
+float: left;    
+clear: left;    
+width: 100%;    
+padding-bottom: 1em;   
+}
+
+fieldset {    
+float: left;    
+clear: left;    
+width: 100%;    
+margin: 0 0 0em 0;    
+padding: 0;   
+}
+
+fieldset.submit {    
+float: none;    
+width: auto;
+border: none;    
+padding-left: 200px;
+}
+
+.errorMessage {
+	color: red;
+}
+
+</style>
+
+<div id="loginForm">
+	
+${h.form(h.url_for(controller='main', action='signIn', qualified=False), method='post')}
+<p class="FormTitle">Вход в GetMyAd</p>
+%if errorMessage:
+<p class="errorMessage">${errorMessage}</p>
+%endif
+<fieldset>
+<ol>
+	<li> <label for="login">	Логин	</label>	${h.text('login')}					</li>
+	<li> <label for="password">	Пароль	</label>	${h.password('password')}			</li>
+</ol>
+</fieldset>
+<fieldset class="submit">
+	${h.submit('loginButton', u'Вход')}
+</fieldset>
+${h.end_form()}
+</div>
+
+	<script type="text/javascript">
+		document.getElementById("login").focus();
+	</script>
+
+
+
+
+<div style="text-align: left; margin-left: 10px;">
+    <p style="color: #33f; font-weight: bold; font-size: larger; text-align: center; width: 250px;">Как начать зарабатывать?</p>
+	    <a href="/register_user/index">
+        <img src="/img/RegisterButton.gif" border="0" alt="Стать участником!"/>
+    </a>
+    <p>Добавьте Ваш сайт в рекламную сеть Yottos!</p>
+</div>
+
+
+</td>
+</tr>
+</table>
+<script type="text/javascript"><!--
+var yottos_id = "aHR0cDovL2dldG15YWQueW90dG9zLnJ1";
+//-->
+</script>
+<script type="text/javascript" src="http://cdn.yottos.com/yinfoe.js"></script>

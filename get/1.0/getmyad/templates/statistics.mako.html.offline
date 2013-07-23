@@ -1,0 +1,18 @@
+# -*- coding: utf-8 -*-
+<%inherit file="/main.mako.html" />	
+##%>	(для парсера)
+
+<%def name="head()">
+        <title>GetMyAd | Правила программы GetMyAd</title>
+</%def>
+##%>	4parser
+
+
+   <div style="margin-left: 70px; width: 750px; height: 500px;"> 
+ 
+<h2>На сайте проводятся технические работы!</h2> 
+
+<p>Доступ к программе будет предоставлен в течении часа.<p>
+ 
+
+</div>

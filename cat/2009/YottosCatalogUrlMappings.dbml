@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database Name="catalog_url_mappins" Class="YottosCatalogUrlMappingsDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=localhost;Initial Catalog=yottos_catalog_url_mappins;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="yottos_catalog_url_mappinsConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.actual_urls" Member="actual_urls">
+    <Type Name="actual_url">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="url" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Association Name="actual_url_transformed_url" Member="transformed_urls" ThisKey="id" OtherKey="actual_url_id" Type="transformed_url" />
+    </Type>
+  </Table>
+  <Table Name="dbo.transformed_urls" Member="transformed_urls">
+    <Type Name="transformed_url">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="actual_url_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="lcid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="url" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Association Name="actual_url_transformed_url" Member="actual_url" ThisKey="actual_url_id" OtherKey="id" Type="actual_url" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+</Database>

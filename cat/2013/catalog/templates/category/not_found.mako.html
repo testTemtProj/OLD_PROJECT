@@ -1,0 +1,18 @@
+<%def name="title()">${c.query}</%def>
+<%inherit file='/base/index.mako.html' />
+<%def name="body()">
+<table style ="width :100%;">
+  <tr>
+    <td style ="vertical-align:top; ">
+        <span id="ctl00_ContentPlaceHolder_NoResultLabel"> 
+	  <b>${_("Haven`t found anything for your query")}</b><br /><br />
+	  ${_("Recomedations:")}
+	  <ul><li>${_("Check word spelling")}</li>
+	    <li>${_("Try to use more popular keywords")}</li>
+	    <li>${_("Try to search") + " '" + c.query + "' " + _("in the")} <a href="http://yottos.com/Result.aspx?${c.query}" target="_blank" style="font-size:13px">${_("Internet")}</a></li>
+	  </ul>
+	</span>
+    </td> 
+  </tr>
+</table> 
+</%def>

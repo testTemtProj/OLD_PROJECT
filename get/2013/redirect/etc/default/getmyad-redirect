@@ -1,0 +1,11 @@
+# Where to chdir at start.
+CELERYD_CHDIR="/var/www/rg.yottos.com/redirect/"
+#
+# Extra arguments to celeryd
+CELERYD_OPTS="--time-limit 3000"
+
+
+#
+# Name of the celery config module.#
+CELERY_CONFIG_MODULE="celeryconfig"
+

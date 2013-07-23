@@ -1,0 +1,46 @@
+<%inherit file='/base/index.mako.html' />
+<%def name="title()">Add site</%def>
+<%def name='body()'>
+
+
+                    
+    <table style="width:100%;border:0px" align="center">
+       <tr>
+            <td style="width:100%;height: 31px;" colspan="2">&nbsp;</td>
+       </tr>
+
+       <tr>
+            <td colspan="2" align="center" style="height: 11px">
+                <span class="textovkaHeder" style="font-weight:bold;">${_("The query for adding your site in the Yottos catalog had been submited and would be viewed soon.")}</span></td>
+       </tr>
+        <tr>
+            <td align="center" colspan="2">
+            </td>
+        </tr>
+
+       <tr>
+            <td style="width:50%;height: 31px;" align="center">
+                &nbsp;
+                <a class="rubrika" href="/">${_("Return in the catalog")}</a>
+            </td>
+            <td style="width:50%;height: 31px;" align="center">
+                &nbsp;
+                <a class="rubrika" href="${url(controller='sites', action='add')}">${_("Add one more site")}</a>
+
+            </td>
+       </tr>
+       <tr>
+           <td colspan="2" align="center">
+              <span class="textovkaHeder">${_("Thank you for supporting this project!")}<br/>${_("Also we`ll thank you for adding our link-banner for any of Yottos projects on your site. You can find them ")}</span>
+              <a class="rubrika" href="http://www.yottos.ru/About/Bottons.aspx">${_("here")}</a>
+           </td>
+
+       </tr>
+       <tr>
+            <td style="width:100%;height: 16px; vertical-align:bottom;" colspan="2" align="center">
+                <span style="color:Silver;font-size:10pt;">${_("finding link banner by robot for any project are rising waluability of the page relative to the banners size.")}</span>            
+            </td>
+       </tr>
+    </table>   
+  
+</%def>

@@ -1,0 +1,209 @@
+
+<%inherit file="/main.mako.html" />
+<%def name="head()">
+	<title>Yottos GetMyAd</title>
+</%def>
+##%>
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<title>Untitled Document</title>
+	</head>
+
+
+<style type="text/css">
+
+.FormTitle {
+	color: #fff;
+	background-color:#0099FF;
+	font-size: 1.2em;
+	font-weight: bold;
+	border: 1px solid transparent;
+	text-align: center; 
+	line-height: 2em;
+	margin-top: 0;
+}
+
+#create_account_block {
+	margin-left: 100px ;	
+}
+
+fieldset {   
+	margin: 0 0 0 0;
+	border: none;   
+	padding: 0;  
+}  
+ 
+fieldset ol {   
+	padding: 0em 1em 0 0em;   
+	list-style: none;  
+}  
+fieldset li {   
+	padding-bottom: 1em;  
+	
+}  
+fieldset.submit {   
+	border-style: none;
+	
+}	
+
+
+/* Left-align */
+label {    
+float: left;    
+width: 16em;    
+margin-right: 0em;
+color: #000000;   
+}
+
+label+input {
+	width: 22em;
+}
+
+h.text {
+width: auto;	
+}
+
+#regbutton_div, #manager_regbutton_div {
+	margin-left: 16em ;
+	margin-top: 3em;
+}
+#regbutton, #manager_regbutton {
+	width: 200px;
+	height: 3em;
+}
+
+.errorMessage {
+	color: red;
+}
+
+</style>
+
+
+	
+<body>
+
+<div id="create_account_block">
+
+<h2>Регистрация пользователя GetMyAd! </h2>
+${h.form(h.url_for(controller='register_adv', action='createUser', qualified=False), method='post')}	
+<fieldset>
+<ol>	
+<li>
+	<label>Тип аккаунта: </label>
+	${h.select('account_type', 'user', [
+		('user', u'пользователь'),
+		('manager', u'менеджер'),
+		('admin', u'администратор')
+	])}
+	<script type="text/javascript">
+		document.getElementById("account_type").value = '${c.account_type}';
+		document.getElementById("account_type").onchange = function() {
+			if(document.getElementById("account_type").value == 'user') {
+	        document.getElementById('create_user_account' ).style.display = 'block';
+			document.getElementById('create_manager_account' ).style.display = 'none';
+	    	} else {
+			document.getElementById('create_user_account' ).style.display = 'none';
+	        document.getElementById('create_manager_account' ).style.display = 'block';
+	    	}
+			}
+	</script>
+</li>
+</ol>
+</fieldset>
+
+
+<div id="create_user_account">
+%if c.user_error_messages:
+<p class="errorMessage">${c.user_error_messages}</p>
+%endif
+
+<fieldset>
+<ol>
+<li>
+	<label for="name">ФИО*: </label>${h.text('name', value=c.name)}
+</li>
+<li>
+    <label for="siteURL">URL главной страницы  сайта*:</label>${h.text('siteUrl', value=c.siteUrl)}
+</li>    
+<li>
+    <label for="phone">Номер телефона*:</label>${h.text('phone', value=c.phone)}
+</li>
+<li>
+    <label for="email">Эл. почта*:</label>${h.text('email', value=c.email)} 
+</li>
+<li>
+	<label for="minsum">Минимальная сумма для вывода средств*:</label>
+	<select name="minsum" id="minsum">
+	<%
+		spisok = [100, 90, 80, 70, 60, 50, 40, 30, 20]
+	%>
+		% for x in spisok:
+			 <option value="${x}">${x}</option>
+		% endfor
+	</select> $
+	<script type="text/javascript">
+		document.getElementById("minsum").value = '${c.minsum or ""}';
+	</script>
+</li>
+<li>
+	<label for="manager_get"> Ответственный менеджер*: </label>
+	<select name="manager_get" id="manager_get">
+		<option>------</option>
+		% for x in c.list_manager:
+			<option value="${x}">${x}</option>
+		% endfor
+	</select> 
+	<script type="text/javascript">
+		document.getElementById("manager_get").value = '${c.manager_get}';
+	</script>
+</li>
+	<div id="regbutton_div">
+		<input id="regbutton" name="regButton" type="submit" value="Зарегистрировать" />
+	</div>
+</ol>
+</fieldset>
+
+</div>
+
+<div id="create_manager_account" style="display: none;">
+%if c.manager_error_messages:
+<p class="errorMessage">${c.manager_error_messages}</p>
+%endif
+
+<fieldset>
+<ol>
+<li>
+	<label for="manager_name">ФИО*: </label>${h.text('manager_name', value=c.manager_name)}
+</li>
+<li>
+    <label for="manager_login">Логин*:</label>${h.text('manager_login', value=c.manager_login)}
+</li>    
+<li>
+    <label for="manager_phone">Номер телефона*:</label>${h.text('manager_phone', value=c.manager_phone)}
+</li>
+<li>
+    <label for="manager_email">Эл. почта*:</label>${h.text('manager_email', value=c.manager_email)} 
+</li>
+
+<div id="regbutton_div">
+		<input id="regbutton" name="regButton" type="submit" value="Зарегистрировать" />
+	</div>
+</ol>
+</fieldset>
+
+${h.end_form()}	
+	
+</div>
+
+
+
+</div>
+
+	</body>
+</html>
+
+

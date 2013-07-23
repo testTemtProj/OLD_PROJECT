@@ -1,0 +1,295 @@
+# Ukrainian translations for catalog.
+# Copyright (C) 2012 ORGANIZATION
+# This file is distributed under the same license as the catalog project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: catalog 0.1\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2012-03-01 11:59+0200\n"
+"PO-Revision-Date: 2012-03-01 12:01+0200\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: uk <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 0.9.6\n"
+
+#: catalog/controllers/category.py:43 catalog/controllers/category.py:50
+msgid "Sorry, there is no such category."
+msgstr "Вибачте, немає таої категорії."
+
+#: catalog/controllers/sites.py:79
+msgid "Please fill in the fields at least for one language."
+msgstr "Будьласка заповніть поля хоча б для однієї мови."
+
+#: catalog/controllers/sites.py:80
+msgid "Please select the other category"
+msgstr "Будьласка, виберіть іншу категорію"
+
+#: catalog/templates/base/index.mako.html:41
+msgid "http://yottos.com"
+msgstr "http://yottos.com.ua"
+
+#: catalog/templates/base/index.mako.html:41
+msgid "Web"
+msgstr "Веб"
+
+#: catalog/templates/base/index.mako.html:43
+msgid "http://zero.yottos.com"
+msgstr "http://zero.yottos.com.ua"
+
+#: catalog/templates/base/index.mako.html:43
+msgid "Zero"
+msgstr ""
+
+#: catalog/templates/base/index.mako.html:44
+msgid "http://news.yottos.com"
+msgstr "http://news.yottos.com.ua"
+
+#: catalog/templates/base/index.mako.html:44
+msgid "News"
+msgstr "Новини"
+
+#: catalog/templates/base/index.mako.html:45
+msgid "Catalog"
+msgstr "Каталог"
+
+#: catalog/templates/base/index.mako.html:46
+msgid "http://rynok.yottos.com/"
+msgstr "http://rynok.yottos.com.ua"
+
+#: catalog/templates/base/index.mako.html:46
+msgid "Market"
+msgstr "Ринок"
+
+#: catalog/templates/base/index.mako.html:49
+#: catalog/templates/base/index.mako.html:50
+#: catalog/templates/category/search.mako.html:2
+#: catalog/templates/category/search.mako.html:5
+msgid "Search"
+msgstr "Пошук"
+
+#: catalog/templates/base/index.mako.html:79
+msgid "Main Page"
+msgstr "Головна сторінка"
+
+#: catalog/templates/base/index.mako.html:81
+msgid "About Yottos"
+msgstr "Про Yottos"
+
+#: catalog/templates/base/index.mako.html:83
+msgid "Advertisment programs"
+msgstr "Рекламні пропозиції"
+
+#: catalog/templates/base/index.mako.html:85
+#: catalog/templates/site/add.mako.html:2
+#: catalog/templates/site/add.mako.html:195
+msgid "Add site"
+msgstr "Додати сайт"
+
+#: catalog/templates/base/index.mako.html:122
+msgid "Make as default page"
+msgstr "Зробити домашньою сторінкою"
+
+#: catalog/templates/category/category.mako.html:84
+msgid "Go to Page:"
+msgstr "Перейти на сторінку:"
+
+#: catalog/templates/category/no_category.mako.html:4
+msgid "No such category!!!"
+msgstr "Немає такої категорії!"
+
+#: catalog/templates/category/not_found.mako.html:8
+msgid "Haven`t found anything for your query"
+msgstr "Нічого не знайдено за вашим запитом"
+
+#: catalog/templates/category/not_found.mako.html:9
+msgid "Recomedations:"
+msgstr "Рекомендації:"
+
+#: catalog/templates/category/not_found.mako.html:10
+msgid "Check word spelling"
+msgstr "Перевірте правопис"
+
+#: catalog/templates/category/not_found.mako.html:11
+msgid "Try to use more popular keywords"
+msgstr "Спробуйте використовувати більше популяпних ключевих слів"
+
+#: catalog/templates/category/not_found.mako.html:12
+msgid "Try to search"
+msgstr "Спробуйте пошукати"
+
+#: catalog/templates/category/not_found.mako.html:12
+msgid "in the"
+msgstr "у"
+
+#: catalog/templates/category/not_found.mako.html:12
+msgid "Internet"
+msgstr "Інтернеті"
+
+#: catalog/templates/category/search.mako.html:7
+msgid "Search results for query:"
+msgstr "Результат пошуку за запитом:"
+
+#: catalog/templates/manager/login.mako.html:2
+msgid "Login to manager"
+msgstr "Вхід у менеджер"
+
+#: catalog/templates/manager/login.mako.html:4
+msgid "You are atempting to enter the manager. Log in please."
+msgstr "Ви намагаєтеся зайти у менеджер. Аутентифікуйтеся будьласка."
+
+#: catalog/templates/manager/login.mako.html:7
+#: catalog/templates/manager/login.mako.html:9
+msgid "Login"
+msgstr "Логін"
+
+#: catalog/templates/manager/login.mako.html:8
+msgid "Password"
+msgstr "Пароль"
+
+#: catalog/templates/site/add.mako.html:12
+msgid "Your site will be published in Catalog, if:"
+msgstr "Ваш сайт буде опубліковано у каталозі, якщо:"
+
+#: catalog/templates/site/add.mako.html:15
+msgid ""
+"It's maintenance does not contradict the legislation (does not "
+"propagandise violence, racial hatred, a pornography, corruption and so "
+"forth)"
+msgstr "Його зміст не суперечує законодавству (не пропагує насилля, расову ненависть, порнографію, корупцію и таке інше);"
+
+#: catalog/templates/site/add.mako.html:16
+msgid "the site or its basic sections are not in development;"
+msgstr "сайт або його основні розділи не знаходяться у стадії розробки;"
+
+#: catalog/templates/site/add.mako.html:17
+msgid "The site subjects answer the declared heading;"
+msgstr "тематика сайту відповідає заявленій рубриці;"
+
+#: catalog/templates/site/add.mako.html:17
+msgid "Your site is not a mirror of other site."
+msgstr "Ваш сайт не є дзеркалом будь-якого іншого сайту"
+
+#: catalog/templates/site/add.mako.html:19
+msgid ""
+"Yottos reserves the right to itself to reject inquiry about site "
+"registration in the catalog without explanations. "
+msgstr ""
+
+#: catalog/templates/site/add.mako.html:20
+msgid "All fields are obligatory to filling!"
+msgstr "Усі поля необхідно заповнювати!"
+
+#: catalog/templates/site/add.mako.html:38
+msgid "Choose category:"
+msgstr "Виберіть Категорію:"
+
+#: catalog/templates/site/add.mako.html:55
+msgid "Site reference:"
+msgstr "Ссилка на сайт:"
+
+#: catalog/templates/site/add.mako.html:64
+msgid "For example http://yottos.com/"
+msgstr "На приклад http://yottos.com/"
+
+#: catalog/templates/site/add.mako.html:83
+#: catalog/templates/site/add.mako.html:117
+#: catalog/templates/site/add.mako.html:152
+msgid "Name"
+msgstr "Назва"
+
+#: catalog/templates/site/add.mako.html:86
+msgid "Text for russian language"
+msgstr "Текст на російській мові"
+
+#: catalog/templates/site/add.mako.html:88
+#: catalog/templates/site/add.mako.html:122
+#: catalog/templates/site/add.mako.html:160
+msgid ""
+"The name should characterise a resource as a whole, instead of separate "
+"sections. It is forbidden to place all text in the top register."
+msgstr ""
+"Назва повинна характеризувати ресурс в цілому, а не окремі розділи. "
+"Забороняється розміщувати весь текст у верхньому регістрі."
+
+#: catalog/templates/site/add.mako.html:89
+#: catalog/templates/site/add.mako.html:123
+#: catalog/templates/site/add.mako.html:161
+msgid "No more than 100 symbols"
+msgstr "Не більше 100 символів"
+
+#: catalog/templates/site/add.mako.html:96
+#: catalog/templates/site/add.mako.html:130
+#: catalog/templates/site/add.mako.html:168
+msgid "Description"
+msgstr "Опис сайту"
+
+#: catalog/templates/site/add.mako.html:103
+#: catalog/templates/site/add.mako.html:138
+#: catalog/templates/site/add.mako.html:175
+msgid ""
+"In the description it is forbidden to use adjectives in a superlative "
+"degree (for example, most, best, most, etc.). It is forbidden to place "
+"all text in the top register."
+msgstr ""
+"  В описі забороняється використовувати прикметники у найвищому ступені "
+"(наприклад, "най", "найбільш" тощо). Забороняється розміщувати весь текст у верхньому регістрі."
+#: catalog/templates/site/add.mako.html:103
+#: catalog/templates/site/add.mako.html:138
+#: catalog/templates/site/add.mako.html:175
+msgid "Not more than 1000 symbols"
+msgstr "Не більше 1000 символів"
+
+#: catalog/templates/site/add.mako.html:120
+msgid "Text for ukrainian language"
+msgstr "Текст на українскій мові"
+
+#: catalog/templates/site/add.mako.html:156
+msgid "Text for english language"
+msgstr "Текст на англійській мові"
+
+#: catalog/templates/site/add.mako.html:187
+msgid "your e-mail:"
+msgstr "Ваша ел. пошта:"
+
+#: catalog/templates/site/thanks.mako.html:14
+msgid ""
+"The query for adding your site in the Yottos catalog had been submited "
+"and would be viewed soon."
+msgstr "Запит на додання сайту до каталогу Yottos подано та скоро буде розглянуто."
+
+#: catalog/templates/site/thanks.mako.html:24
+msgid "Return in the catalog"
+msgstr "Повернутися у каталог"
+
+#: catalog/templates/site/thanks.mako.html:28
+msgid "Add one more site"
+msgstr "Додати ще один сайт"
+
+#: catalog/templates/site/thanks.mako.html:34
+msgid "Thank you for supporting this project!"
+msgstr "Дякуємо за підтримку цього проекту!"
+
+#: catalog/templates/site/thanks.mako.html:34
+msgid ""
+"Also we`ll thank you for adding our link-banner for any of Yottos "
+"projects on your site. You can find them "
+msgstr ""
+"Також ми будемо вдячні вам за розміщення банеру із посиланням на будь-який з проектів Yottos"
+"на вашому сайті. Ви можете знайти їх"
+#: catalog/templates/site/thanks.mako.html:35
+msgid "here"
+msgstr "тут"
+
+#: catalog/templates/site/thanks.mako.html:41
+msgid ""
+"finding link banner by robot for any project are rising waluability of "
+"the page relative to the banners size."
+msgstr ""
+"Знайдення роботом банеру підвищує рейтинг сторінки "
+"Залежно від його розміру."

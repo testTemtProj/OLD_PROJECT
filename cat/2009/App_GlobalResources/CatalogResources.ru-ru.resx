@@ -1,0 +1,409 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AboutCatalogDescription_0" xml:space="preserve">
+    <value>&lt;b&gt;Что такое "Каталог Yottos"?&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;"Каталог Yottos" - это каталог интернет-сайтов. Сайты в каталоге разбиты по тематическим категориям так, чтобы поиск необходимого сайта был максимально простым. Сайты размещены в порядке убывания их популярности среди пользователей Yottos. &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Зачем нужен "Каталог Yottos"?&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Если Вам необходим сайт определенной тематики, то нет необходимости искать его, используя поисковики и перерывая множество некачественных сайтов. Достаточно просто зайти в "Каталог Yottos" по адресу catalog.yottos.com и, выбрав нужную категорию, получить список лучших сайтов.&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Чем "Каталог Yottos" лучше других интернет-каталогов?&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;"Каталог Yottos" - модерируемый каталог. Это значит, что сайты добавляются не автоматически, а проходят проверку. Редакторы Yottos отбирают самые качественные ресурсы, описывают их и систематизируют по тематическим категориям. Некачественный сайт в каталог просто-напросто не попадет. Ресурсы регулярно проверяются на доступность и снимаются с публикации в случае, если сайт уже не действует. Сайты, которые не обновляются более полугода, тоже исключаются из каталога. Иными словами, в "Каталоге Yottos" находятся только самые качественные и постоянно обновляемые сайты. &lt;br/&gt;&lt;br/&gt;Количество сайтов в каталоге неуклонно растет и составляет уже несколько тысяч. Если у Вас есть свой сайт и Вы считаете, что он достоин публикации в Каталоге Yottos,</value>
+  </data>
+  <data name="AboutCatalogDescription_1" xml:space="preserve">
+    <value>Если у Вас есть вопросы или предложения по содержанию и форме представления информации,</value>
+  </data>
+  <data name="AboutCatalogDescription_2" xml:space="preserve">
+    <value>Администрация будет благодарна за любые комментарии и рекомендации относительно Yottos.</value>
+  </data>
+  <data name="AboutLinkCaption" xml:space="preserve">
+    <value>Всё о Yottos</value>
+  </data>
+  <data name="AddSiteLinkCaption" xml:space="preserve">
+    <value>Добавить сайт</value>
+  </data>
+  <data name="AdvertLinkCaption" xml:space="preserve">
+    <value>Рекламные программы</value>
+  </data>
+  <data name="CatalogAddAbout" xml:space="preserve">
+    <value>Описание:</value>
+  </data>
+  <data name="CatalogAddAboutDescr" xml:space="preserve">
+    <value>В описании запрещается употреблять прилагательные в превосходной степени (например,  «самый», «лучший», «наиболее» и т. п.). Запрещается размещать весь текст в верхнем регистре.&lt;br /&gt;Не более 1000 символов</value>
+  </data>
+  <data name="CatalogAddAboutRequired" xml:space="preserve">
+    <value>Введите описание сайта!</value>
+  </data>
+  <data name="CatalogAddAutoCustom" xml:space="preserve">
+    <value>Неверно указан код защиты от автоматических регистраций!</value>
+  </data>
+  <data name="CatalogAddButtonText" xml:space="preserve">
+    <value>Добавить сайт</value>
+  </data>
+  <data name="CatalogAddEmail" xml:space="preserve">
+    <value>Ваш e-mail:</value>
+  </data>
+  <data name="CatalogAddEmailRegular" xml:space="preserve">
+    <value>Некорректно задан e-mail!</value>
+  </data>
+  <data name="CatalogAddEmailRequired" xml:space="preserve">
+    <value>Введите e-mail!</value>
+  </data>
+  <data name="CatalogAddLinkCaption" xml:space="preserve">
+    <value>добавьте его в каталог</value>
+  </data>
+  <data name="CatalogAddNameDescr" xml:space="preserve">
+    <value>Название должно характеризовать ресурс в целом, а не отдельные разделы. Запрещается  размещать весь текст в верхнем регистре.&lt;br /&gt;  Не более 100 символов</value>
+  </data>
+  <data name="CatalogAddSecretWord" xml:space="preserve">
+    <value>Введите номер, нарисованный на картинке, и нажмите на кнопку 'Добавить сайт'</value>
+  </data>
+  <data name="CatalogAddSelectRootCategory" xml:space="preserve">
+    <value>Выберите раздел каталога:</value>
+  </data>
+  <data name="CatalogAddSelectSubCategory" xml:space="preserve">
+    <value>Выберите рубрику раздела:</value>
+  </data>
+  <data name="CatalogAddSiteName" xml:space="preserve">
+    <value>Название:</value>
+  </data>
+  <data name="CatalogAddSiteUrl" xml:space="preserve">
+    <value>Адрес сайта:</value>
+  </data>
+  <data name="CatalogAddTitle" xml:space="preserve">
+    <value>Ваш сайт будет опубликован в каталоге если:</value>
+  </data>
+  <data name="CatalogAddTitleDescr_0" xml:space="preserve">
+    <value>&lt;li&gt;его содержание не противоречит законодательству (не пропагандирует насилие, расовую ненависть, порнографию, коррупцию и пр.);&lt;/li &gt;&lt;li&gt;сайт или его основные разделы не находятся в стадии разработки;&lt;/li&gt;&lt;li &gt; тематика сайта отвечает заявленной рубрике;&lt;/li&gt;&lt;li&gt; ваш сайт не является &lt;i&gt;зеркалом&lt;/i&gt; какого либо другого сайта.&lt;/li&gt;</value>
+  </data>
+  <data name="CatalogAddTitleDescr_1" xml:space="preserve">
+    <value>Yottos оставляет за собой право отклонить запрос о регистрации сайта в каталоге без объяснений.  &lt;br /&gt;  &lt;br /&gt;  Все поля обязательны к заполнению!</value>
+  </data>
+  <data name="CatalogAddTitleRequired" xml:space="preserve">
+    <value>Ведите название сайта!</value>
+  </data>
+  <data name="CatalogAddURLDescr" xml:space="preserve">
+    <value>Например: http://yottos.com/</value>
+  </data>
+  <data name="CatalogAddURLRegular" xml:space="preserve">
+    <value>Некорректно задан адрес сайта!</value>
+  </data>
+  <data name="CatalogAddURLRequired" xml:space="preserve">
+    <value>Введите адрес сайта!</value>
+  </data>
+  <data name="CatalogLinkCaption" xml:space="preserve">
+    <value>Каталог</value>
+  </data>
+  <data name="CatalogLinkPostedAddMore" xml:space="preserve">
+    <value>Добавить еще один сайт</value>
+  </data>
+  <data name="CatalogLinkPostedBackToCatalog" xml:space="preserve">
+    <value>Вернуться в каталог</value>
+  </data>
+  <data name="CatalogLinkPostedResult" xml:space="preserve">
+    <value>Запрос на добавление Вашего сайта в каталог Yottos отправлен и будет рассмотрен в ближайшее время.</value>
+  </data>
+  <data name="CatalogLinkPotedBaners" xml:space="preserve">
+    <value>сдесь</value>
+  </data>
+  <data name="CatalogLinkPotedBanersInfo" xml:space="preserve">
+    <value>Нахождение роботом ссылочного банера на любой из проектов, повышает значимость страницы в зависимости от его размера.</value>
+  </data>
+  <data name="CatalogLinkPotedText" xml:space="preserve">
+    <value>Большое спасибо, за принятия участия в формировании донного проекта!&lt;br/&gt;Также, мы будим вам благодарны если вы самостоятельно поставите ссылочный банер на своем сайте на любой из проектов Yottos. Найти банера можно</value>
+  </data>
+  <data name="CatalogTitle" xml:space="preserve">
+    <value>Каталог</value>
+  </data>
+  <data name="CategoryLabelText" xml:space="preserve">
+    <value>Раздел:</value>
+  </data>
+  <data name="ContactLinkCaption" xml:space="preserve">
+    <value>напишите нам</value>
+  </data>
+  <data name="ExitLinkCaption" xml:space="preserve">
+    <value>Выход</value>
+  </data>
+  <data name="MainPageLinkCaption" xml:space="preserve">
+    <value>Главная страница</value>
+  </data>
+  <data name="MarketLinkCaption" xml:space="preserve">
+    <value>Рынок</value>
+  </data>
+  <data name="NewsLinkCaption" xml:space="preserve">
+    <value>Новости</value>
+  </data>
+  <data name="PersonalLinkCaption" xml:space="preserve">
+    <value>Вход в Личную комнату</value>
+  </data>
+  <data name="QuestionnaireLinkCaption" xml:space="preserve">
+    <value>Поучаствуй в обучении интеллектуального поиска Yottos</value>
+  </data>
+  <data name="QuestionResultAnswer" xml:space="preserve">
+    <value>Правильный ответ:</value>
+  </data>
+  <data name="QuestionResultAnswerLink" xml:space="preserve">
+    <value>Ссылка на достоверную подробную информацию ответа:</value>
+  </data>
+  <data name="QuestionResultAnswers" xml:space="preserve">
+    <value>ответы на поставленный вами вопрос:</value>
+  </data>
+  <data name="QuestionResultEdit" xml:space="preserve">
+    <value>править</value>
+  </data>
+  <data name="QuestionResultMessage" xml:space="preserve">
+    <value>по данной ссылке будет находится Ваш опрос всегда, вы можете её сохранить. также по сбоственному желанию выкладывать там где посчитаете нужным.</value>
+  </data>
+  <data name="QuestionResultSave" xml:space="preserve">
+    <value>сохранить опрос</value>
+  </data>
+  <data name="QuestionsAddAnswer" xml:space="preserve">
+    <value>Еще есть ассоциации ?</value>
+  </data>
+  <data name="QuestionsAnswerCaption_1" xml:space="preserve">
+    <value>Правильный ответ, который ассоциативно первым приходит в вашу голову на заданный вами вопрос:</value>
+  </data>
+  <data name="QuestionsAnswerCaption_2" xml:space="preserve">
+    <value>Правильный ответ, который ассоциативно вторым приходит в вашу голову на заданный вами вопрос:</value>
+  </data>
+  <data name="QuestionsAnswerCaption_3" xml:space="preserve">
+    <value>Правильный ответ, который ассоциативно третим приходит в вашу голову на заданный вами вопрос:</value>
+  </data>
+  <data name="QuestionsAnswerCaption_4" xml:space="preserve">
+    <value>Правильный ответ, который ассоциативно четвёртым приходит в вашу голову на заданный вами вопрос:</value>
+  </data>
+  <data name="QuestionsAnswerCaption_5" xml:space="preserve">
+    <value>Правильный ответ, который ассоциативно пятым приходит в вашу голову на заданный вами вопрос:</value>
+  </data>
+  <data name="QuestionsAnswerCaption_6" xml:space="preserve">
+    <value>Правильный ответ, который ассоциативно шестым приходит в вашу голову на заданный вами вопрос:</value>
+  </data>
+  <data name="QuestionsAnswerErrorMessage" xml:space="preserve">
+    <value>заполните поле!</value>
+  </data>
+  <data name="QuestionsAnswerImageCaption" xml:space="preserve">
+    <value>Ассоциативное фото этого ответа:</value>
+  </data>
+  <data name="QuestionsAnswerLinkCaption" xml:space="preserve">
+    <value>Можно указать ссылку на достоверную подробную информацию первого ответа:</value>
+  </data>
+  <data name="QuestionsFill" xml:space="preserve">
+    <value>Заполните пожалуйста все поля по мере ваших знаний.</value>
+  </data>
+  <data name="QuestionsFinish" xml:space="preserve">
+    <value>окончить опрос</value>
+  </data>
+  <data name="QuestionsGiveAnswers" xml:space="preserve">
+    <value>Дайте ответы на поставленный вами вопрос:</value>
+  </data>
+  <data name="QuestionsGiveAnswersHint" xml:space="preserve">
+    <value>Напишите кратким доступным человеческим языком не привязывайтесь к ключевым словам!</value>
+  </data>
+  <data name="QuestionsGiveQuestion" xml:space="preserve">
+    <value>Задайте поисковый вопрос, на который вы знаете ответ</value>
+  </data>
+  <data name="QuestionsMainTitle" xml:space="preserve">
+    <value>Программа обучения системы понимания человеческого языка.&lt;br /&gt;
+Цель анкеты - задать любые вопросы и получить на них ответы доступным человеческим языком.</value>
+  </data>
+  <data name="QuestionsOwnerHint" xml:space="preserve">
+    <value>Если вы являетесь владельцем ресурсов, на которые вы ставите ссылки, будим благодарны если поставите обратную ссылку на эту страницу, для привлечения людей разбирающихся в этой области которые могут задать больше разнообразных вопросов и дать на них ответы.</value>
+  </data>
+  <data name="QuestionsPageTitle" xml:space="preserve">
+    <value>Yottos | опрос</value>
+  </data>
+  <data name="QuestionsProfession" xml:space="preserve">
+    <value>В какой области вы профессионал или просто разбераетесь?</value>
+  </data>
+  <data name="RootAllCategoriesText" xml:space="preserve">
+    <value>&lt;&lt;все категории&gt;&gt;</value>
+  </data>
+  <data name="SearchButtonText" xml:space="preserve">
+    <value>Поиск в Каталоге</value>
+  </data>
+  <data name="SearchNoResultInternet" xml:space="preserve">
+    <value>Интернете</value>
+  </data>
+  <data name="SearchNoResults" xml:space="preserve">
+    <value>&lt;b&gt;По вашему запросу ничего не найдено.&lt;/b&gt;&lt;br /&gt;&lt;br /&gt;Рекомендации:&lt;ul&gt;&lt;li&gt;Проверьте правописание слов.&lt;/li&gt;&lt;li&gt;Попробуйте другие ключевые слова.&lt;/li&gt;&lt;li&gt;Попробуйте: '#' поискать в '$'&lt;/li&gt;&lt;/ul&gt;</value>
+  </data>
+  <data name="SearchTitle" xml:space="preserve">
+    <value>Поиск</value>
+  </data>
+  <data name="SettingsLinkCaption" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="StartLinkCaption" xml:space="preserve">
+    <value>Сделать стартовой</value>
+  </data>
+  <data name="TaskLinkCaption" xml:space="preserve">
+    <value>Заметка</value>
+  </data>
+  <data name="ToCatalogListLinkCaption" xml:space="preserve">
+    <value>Главная: Каталог</value>
+  </data>
+  <data name="WebLinkCaption" xml:space="preserve">
+    <value>Веб</value>
+  </data>
+  <data name="ZeroLinkCaption" xml:space="preserve">
+    <value>Zero</value>
+  </data>
+  <data name="Master_NewsLink" xml:space="preserve">
+    <value>http://news.yottos.ru/</value>
+  </data>
+  <data name="Master_RynokLink" xml:space="preserve">
+    <value>http://rynok.yottos.ru/</value>
+  </data>
+  <data name="Master_WebLink" xml:space="preserve">
+    <value>http://www.yottos.ru/</value>
+  </data>
+  <data name="SettingsDescriptionCaption" xml:space="preserve">
+    <value>С помощью этой формы Вы можете настроить выдачу результатов в каталоге</value>
+  </data>
+  <data name="SettingsLanguageCaption" xml:space="preserve">
+    <value>Язык интерфейса:</value>
+  </data>
+  <data name="SettingsOnThePageCaption" xml:space="preserve">
+    <value>на странице.</value>
+  </data>
+  <data name="SettingsPageSizeCaption" xml:space="preserve">
+    <value>Показывать по: </value>
+  </data>
+  <data name="SettingsSaveAndReturnCaption" xml:space="preserve">
+    <value>Сохранить настройки по окончанию и вернуться к каталогу.</value>
+  </data>
+  <data name="SettingsSaveButtonCaption" xml:space="preserve">
+    <value>Сохранить настройки</value>
+  </data>
+  <data name="SettingsTitle" xml:space="preserve">
+    <value>Yottos | настройки</value>
+  </data>
+  <data name="SettingsTitleCaption" xml:space="preserve">
+    <value>Общие настройки</value>
+  </data>
+  <data name="SettingsTransferButtonCaption" xml:space="preserve">
+    <value>Перейти</value>
+  </data>
+  <data name="Master_AboutYottos" xml:space="preserve">
+    <value>http://yottos.ru/About/AboutYottos.aspx</value>
+  </data>
+  <data name="Master_AdloadLink" xml:space="preserve">
+    <value>http://adload.yottos.ru/</value>
+  </data>
+  <data name="Master_PersonalLink" xml:space="preserve">
+    <value>http://www.yottos.ru/PersonalRoom/Default.aspx</value>
+  </data>
+  <data name="LogoUrl" xml:space="preserve">
+    <value>/Image/Logos/ru-RU.gif</value>
+  </data>
+</root>

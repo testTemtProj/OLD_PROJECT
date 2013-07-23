@@ -1,0 +1,93 @@
+# -*- coding: utf-8 -*-
+<%inherit file="/main.mako.html" />	
+
+<%def name="head()">
+        <title>Статистика GetMyAd</title>
+		<link type="text/css" href="/lib/css/theme/jquery-ui-1.7.2.custom.css" rel="stylesheet" />
+		<link type="text/css" href="/lib/grid/css/ui.jqgrid.css" rel="stylesheet" />
+		<link type="text/css" href="/css/main.css" rel="stylesheet" />
+		<script type="text/javascript" src="/lib/jquery/jquery-1.4.2.min.js"></script>
+		<script type="text/javascript" src="/lib/ui/jquery-ui-1.7.2.custom.js"></script>
+		<script type="text/javascript" src="/lib/grid/js/i18n/grid.locale-ru.js" ></script>		
+		<script type="text/javascript" src="/lib/grid/js/jquery.jqGrid.min.js" ></script>		
+		<script type="text/javascript" src="/lib/ui/i18n/ui.datepicker-ru.js"></script>
+		<script type="text/javascript" src="/lib/flot/jquery.flot.js"></script>
+</%def>
+##%>	4parser
+
+##		<script type="text/javascript" src="/lib/grid/src/grid.loader.js" ></script>
+
+
+<div id="tabs">
+<ul>
+	<li><a href="#main">Менеджер</a></li>
+	<li><a href="#moneyOutRequests">Вывод средств</a></li>
+##	<li><a href="#summary">Статистика</a></li>
+</ul>
+
+<div id="main">
+	<a href="/register_adv/index" target="_blank">Регистрация пользователя</a>
+	
+	<table id="tableUsersSummary"></table>
+	
+	<h2>Текущие цены за уникального посетителя</h2>
+	<div id="toolbarClickCost"></div>
+	<table id="tableClickCost"></table>
+	
+	<br/><br/>
+
+</div>
+
+<div id="moneyOutRequests">
+	<h2>Заявки на вывод средств</h2>
+	
+	<div id="toolbarMoneyOutRequest"></div>
+	<table id="tableMoneyOutRequest"></table>
+</div>
+
+
+<style type="text/css">
+	#dialogSetCost label, #dialogSetCost input {
+		display: block;
+	}
+	#dialogSetCost input {
+		margin-bottom: 10px;
+	}
+	#dialogSetCost fieldset {
+		padding:0;
+		border:0;
+		margin-top:15px; 
+	}
+	#dialogSetCost_user {
+		font-weight: bold;
+	}
+	
+	tr.jqgrow td {white-space: normal;}		/* Multiline rows for jqGrid */
+</style>
+
+<div id="dialogSetCost" style="display: none;" title="Назначение цены">
+	Назначить цену пользователю <span id="dialogSetCost_user">%username%</span>
+	<form>
+		<fieldset>
+			<label for="dialogSetCost_cost">Цена</label>
+			<input type="text" name="dialogSetCost_cost" id="dialogSetCost_cost" class="text ui-widget-content ui-corner-all"/>
+			
+			<label for="dialogSetCost_date">Время применения:</label>
+			<input type="text" name="dialogSetCost_date" id="dialogSetCost_date" value="" readonly="true" class="text ui-widget-content ui-corner-all"/>
+		</fieldset>
+	</form>
+</div>
+
+<div id="dialogMoneyOutApprove" style="display: none;" title="Одобрение заявки на вывод средств">
+	Вы действительно хотите перевести <span id="dialogMoneyOutApprove_summ" style="font-weight: bold;"></span> на счёт пользователя <span id="dialogMoneyOutApprove_user" style="font-weight: bold;"></span>?
+	<span id="dialogMoneyOutApprove_date" style="display:none;"></span>
+</div>
+
+
+
+<script type="text/javascript">
+	var currentClickCost = ${currentClickCost};
+	var dataMoneyOutRequests = ${dataMoneyOutRequests};
+	var dataUsersSummary = ${dataUsersSummary};
+</script>
+<script type="text/javascript" src="/js/manager.js"></script>

@@ -1,0 +1,13 @@
+# -*- coding: utf-8 -*-
+<%inherit file="/main.mako.html" />	
+<%def name="head()">
+        <title>Создание выгрузки GetMyAd</title>
+</%def>
+
+<h2>Список существующих выгрузок:</h2>
+<ol>
+% for item in data:
+<li><a href="${h.url_for(controller='advertise', action='maker', id=item.get('guid'))}">${item['user']} &rarr; ${item['title']}</a></li>
+% endfor
+
+</ol>

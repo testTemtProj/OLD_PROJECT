@@ -1,0 +1,35 @@
+#необходим для редиректа рекламы
+WSGIPythonPath /var/www/getmyad.yottos.com 
+#
+<VirtualHost *:80>
+	DocumentRoot /var/www/getmyad.yottos.com/
+#	DocumentRoot /var/www/temp/
+	ErrorLog /var/log/apache2/ERROR.getmyad.yottos.com.log
+        CustomLog /var/log/apache2/ACCESS.getmyad.yottos.com.log combined
+#       Лог сжатия контента
+#        CustomLog /var/log/apache2/DEFLATE.getmyad.yottos.com.log deflate
+	ServerName getmyad.yottos.com
+	ServerAlias getmyad.vsrv-3.3.yottos.com
+	ServerAlias www.getmyad.vsrv-3.2.yottos.com
+	ServerAlias getmyad.vsrv-3.2.yottos.com
+	ServerAlias www.getmyad.yottos.com
+        ServerAlias getmyad.yottos.ru
+        ServerAlias www.getmyad.yottos.ru
+        ServerAlias getmyad.yottos.com.ua
+        ServerAlias www.getmyad.yottos.com.ua
+	ServerAlias getmyad.vsrv-1.2.yottos.com
+#необходим для редиректа рекламы
+#	WSGIScriptAlias /redirect /var/www/getmyad.yottos.com/redirect.py
+#
+	WSGIScriptAlias / /var/www/getmyad.yottos.com/getmyad.wsgi
+        WSGIDaemonProcess getmyad  display-name=getmyad maximum-requests=5000  processes=2 threads=2
+        WSGIProcessGroup  getmyad
+	
+#
+#	ScriptAlias /adshow.fcgi /var/www/rg.yottos.com/cgi/getmyad-worker
+#
+	Alias /css/ /var/www/getmyad.yottos.com/getmyad/public/css/
+	Alias /img/ /var/www/getmyad.yottos.com/getmyad/public/img/
+	Alias /js/ /var/www/getmyad.yottos.com/getmyad/public/js/
+	Alias /lib/ /var/www/getmyad.yottos.com/getmyad/public/lib/
+</VirtualHost>

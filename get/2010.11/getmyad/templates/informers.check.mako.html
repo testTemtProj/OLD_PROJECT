@@ -1,0 +1,95 @@
+# -*- coding: utf-8 -*-
+<%inherit file="/main.mako.html" />	
+<%def name="head()">
+		<title>GetMyAd | Проверка работоспособности рекламных выгрузок</title>
+		<style>
+			.warning {
+				height: 100px;
+				width: 100%;
+				border: 3px solid red;
+				background-color: #fee;
+				padding-top: 80px;
+				text-align: center;
+			}
+			a:link, a:visited {
+				text-decoration: none;
+			}
+			a:hover {
+				text-decoration: underline;
+			}
+			table.data-table tr td {
+				border-bottom: 1px dotted gray;
+			}
+		</style>
+</%def>
+##%>	4parser
+
+	<h1>Проверка работоспособности информеров</h1>
+	
+		<p>Сервер показа рекламы: <b>${c.getmyad_worker_server}</b></p>
+
+		<p> Выберите страну: 		
+				  <%
+				    countries = {'AZ': u'Азербайджан',
+				                 'AM': u'Армения',
+				                 'BY': u'Беларусь',
+				                 'KZ': u'Казахстан',
+				                 'KG': u'Киргизия',
+				                 'MD': u'Молдавия',
+				                 'RU': u'Россия',
+				                 'TJ': u'Таджикистан',
+				                 'TM': u'Туркмения',
+				                 'UZ': u'Узбекистан',
+				                 'UA': u'Украина'}
+				  %>
+			<select id="selectCountry">
+			% for x in countries.items():
+				<option value="${x[0]}">${x[1]}</option>
+			%endfor
+			</select>
+			
+			<script type="text/javascript">
+				var selectCountry = document.getElementById("selectCountry"); 
+				selectCountry.value = '${c.country or "UA"}';
+				selectCountry.onchange = function() {
+					window.location.href = '/manager/checkInformers/' + selectCountry.value;
+				}
+			</script>
+		</p>
+		
+		<p><b></b></p>
+		<table class="datatable">
+			<tr><th></th> <th>Быстрый переход к аккаунтам:</th></tr>
+		<% current_account = ' ' %>
+		% for inf in c.informers:
+			% if current_account <> inf['user']:
+				% if current_account[0] <> inf['user'][0]:					# Первая буква
+					<% first = True %>
+					</tr></td>
+					<tr><td><b>${inf['user'][0]}</b></td>
+					<td>
+				% endif
+				<% current_account = inf['user'] %>
+				% if not first:
+					 <span style="color:#9a9"> | </span>
+				% endif
+				<% first = False %>   
+				<a href="#${inf['guid']}">${current_account}</a>
+			% endif
+		% endfor
+		</table>
+		
+		<hr />
+
+		% for i in c.informers:
+		<h2 id="${i['guid']}">${i['user']} ${i['domain'] if i['domain'] <> i['user'] else ''} ${i.get('title')}</h2>
+		% if i['valid']:
+			<iframe src="${c.getmyad_worker_server}?scr=${i['guid']}&country=${c.country or 'UA'}&test=true"
+				width="${i['width']}" height="${i['height']}" frameborder="0" scrolling="no"></iframe>
+		% else:
+			<div class="warning">
+				Внимание! Настройки информера недействительны! Обратитесь к администратору или попробуйте
+				пересохранить информер.
+			</div>
+		% endif
+		% endfor

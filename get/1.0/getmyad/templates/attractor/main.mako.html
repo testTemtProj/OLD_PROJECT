@@ -1,0 +1,74 @@
+# -*- coding: utf-8 -*-
+<%inherit file="/main.mako.html" />	
+
+<%def name="head()">
+	<title>Yottos Attractor</title>
+	<link type="text/css" href="/lib/css/theme/jquery-ui-1.8.1.custom.css" rel="stylesheet" />
+	<link type="text/css" href="/lib/grid/css/ui.jqgrid.css" rel="stylesheet" />
+	<link type="text/css" href="/css/main.css" rel="stylesheet" />
+	<script type="text/javascript" src="/lib/jquery/jquery-1.4.2.min.js"></script>
+	<script type="text/javascript" src="/lib/ui/jquery-ui-1.8.1.custom.min.js"></script>
+	<script type="text/javascript" src="/lib/grid/js/i18n/grid.locale-ru.js" ></script>		
+	<script type="text/javascript" src="/lib/grid/js/jquery.jqGrid.min.js" ></script>		
+	<script type="text/javascript" src="/lib/ui/i18n/ui.datepicker-ru.js"></script>
+	<script type="text/javascript" src="/lib/plugins/jquery.form.js"></script>
+    <style>
+        acronym { border-bottom: 1px dotted black; }
+    </style>
+</%def>
+##%>	4parser
+
+<h2>Статистика эффективности партнерских каналов</h2>
+<table>
+	<tr>
+		<td></td>
+		<td colspan="1">
+			<div style="margin:5px 5px 5px 5px">с
+				<input type="text" id="calendar1" value="" />
+				по 
+				<input type="text" id="calendar2" value="" />
+                <input type="checkbox" id="relative" />
+                <label for="relative">Относительные величины</label>
+			</div>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td rowspan="2">
+			<div id="toolbar_user"></div>
+			<table id="table_user"></table>
+		</td>
+		<td>
+			<table id="table_stats_partner"></table>
+			<div id="pager_stats_partner"></div>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<table id="table_stats_other"></table>
+			<div id="pager_stats_other"></div>			
+		</td>
+	</tr>
+</table>
+
+
+<div id="dialogCreateUserScript" title="Получения скрипта Attractor">
+	<table>
+		<tr>
+			<td>Url сайта: </td>
+			<td><input type="text" id="urlCreateUserScript" /></td>
+		</tr>
+		<tr>
+			<td>Код:</td>
+			<td><textarea id="textCreateUserScript" cols=40 rows=8 readonly="readonly"></textarea></td>
+		</tr>
+	</table>
+</div>
+
+<div id="dialogHideUser" title="Скрытие пользователя">
+    <p>Вы действительно хотите скрыть пользователя из списка?</p>
+</div>
+
+<script type="text/javascript" src="/js/attractor.js"></script>
+<script type="text/javascript">
+	$(document).ready(AttractorUI);
+</script>

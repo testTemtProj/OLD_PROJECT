@@ -1,0 +1,209 @@
+# -*- coding: utf-8 -*-
+<%inherit file="/main.mako.html" />	
+<%!
+	from datetime import datetime
+%>
+
+<%def name="head()">
+        <title>Статистика GetMyAd</title>
+<%
+	informersJSON = h.JSON([{'title': x.title,
+							   'guid': x.guid,
+							   'domain': x.domain}
+							   for x in c.informers])
+	
+	domainsJSON = c.domains						   
+%>
+
+
+	<script type="text/javascript">
+        var account_data = {};
+		var advertiseList = ${informersJSON};
+		var domains = ${domainsJSON}
+		var token = ${h.JSON(c.token)};
+	</script>
+	<script type="text/javascript" src="/js/statistics.js"></script>
+	<script src="/js/ajaxupload.3.6.js" type="text/javascript"></script>
+</%def>
+<!--div #tabs-->
+<div id="tabs" style="visibility: hidden;" >
+    <ul>
+        <li id="linkmain"><a href="#main">Главная</a></li>
+        <li id="linkaccount"><a href="#account">Счёт</a></li>
+        <li><a href="#informers" id="linkinformers">Мои блоки</a></li>		
+        <li><a href="#help" id="linkhelp" >Помощь</a></li>
+    </ul>
+    <!--div #main-->
+    <div id="main">
+        <!--div .inlinel-->
+        <div class="inlinel">
+            <h1>Добро пожаловать в GetMyAd!</h1>
+            <p>На данный момент Ваш доход составляет <span class="spanAccountSumm"></span>. <br/>           
+            % if c.moneyOutEnabled:
+                        Вы можете оформить заявку на <a href="javascript:void(0)" class="linkMoneyOut">вывод средств</a></p>
+            % else:
+            Текущей суммы недостаточно для вывода. Рекомендуем изучить <a href="/info/increase#Dohodnye_mesta" target="_blank">статьи</a> о повышении доходности от выгрузок. 
+            % endif
+            </br>
+            <div id="divFilterOptions" style="width: 50em;">
+                Показать статистику за ${h.select('filterpreset', 'lastmonth', [
+                        ('off', u'весь период'),
+                        ('today', u'сегодня'),
+                        ('yesterday', u'вчера'),
+                        ('thisweek', u'текущая неделя'),
+                        ('lastweek', u'последние 7 дней'),
+                        ('thismonth', u'текущий месяц'),
+                        ('lastmonth', u'последние 30 дней'),
+                        ('oneday', u'один день...'),
+                        ('range', u'произвольный период...')])}
+                <div id="filterByRangeOptions" style="display: none; text-align: center; width: 320px;" >
+                        <label>от </label> <input type="text" name="dateStart" id="dateStart" readonly="true" />
+                        <label>до </label> <input type="text" name="dateEnd" id="dateEnd" readonly="true" />
+                </div>
+                <div id="filterByOneDayOptions" style="display: none; text-align: center; width: 320px;">
+                        <a id="setPrevDay" href="javascript:void(0)" class="linkAction">&larr;</a>
+                        <input type="text" name="dateFilterOneDay" id="dateFilterOneDay" readonly="true" />
+                        <a id="setNextDay" href="javascript:void(0)" class="linkAction">&rarr;</a>
+                </div>
+
+            </div>
+            
+            <table id="tableAllAdvertise"></table>
+            <br/>
+            <div id="chart" style="width:700px;height:300px;float:left;"></div>
+            <div id="chartLegend" style="width:200px; max-height: 300px; overflow-y: auto;"></div>
+            <br style="clear: both;"/>
+            <br style="line-height: 3em;"/>
+            <table id="tableStatsByDays"></table>
+            <div id="pagerStasByDays"></div>
+            
+            
+            % if isinstance(c.updateTime, datetime):
+                <p id="actualDataTime">Данные по состоянию на  </p>
+                <script>
+                var utc = new Date(${c.updateTimeUTC});
+                function addZero(num) {
+                return (num < 10)? ('0' + num) : num;
+                }
+
+                var tz = (utc.getTimezoneOffset() / -60);
+                var str = addZero(utc.getDate()) + '.' + 
+                      addZero(utc.getMonth() + 1) + '.' + 
+                      utc.getFullYear() + '  ' + 
+                      addZero(utc.getHours()) + ':' + addZero(utc.getMinutes()) + 
+                      " (GMT" + (tz > 0? "+" : "") + tz + ")";
+                $("#actualDataTime").html('Данные по состоянию на  ' + str + '.');  
+                </script>
+
+            % else:
+                <p>Время последнего обновления неизвестно.</p>
+            % endif
+
+            <!-- Форма вывода денег-->
+            <%include file="include/moneyOutDialog.mako.html"/>
+        </div>
+        <!--end div .inlinel-->
+        <!--div .inliner-->
+        <div class="inliner">
+            <div style="width: 200px;">
+            <h3>Рост доходности</h3>
+            <p><a href="/info/increase#Dohodnye_mesta" target="_blank">Доходные места</a></p>
+            <p><a href="/info/increase#Dizayn_bloka_razmery_cveta_shrift" target="_blank">Дизайн рекламного блока</a></p>
+            <p><a href="/info/increase#Kajdomu_reklamnomu_mestu_po_reklamnomu_bloku" target="_blank">Каждому рекламному месту – по рекламному блоку</a></p>
+            <p><a href="/info/increase#Kak_sozdat_informer" target="_blank">Как создать рекламный блок?</a></p>
+            </div>
+        </div>
+        <!--end div .inliner-->
+    <br class="clearBoth" />
+    </div>
+    <!--end div #main-->
+    <!--div #account-->
+    <div id="account">
+        <h2>Операции со счётом</h2>
+        На данный момент на Вашем счету находится <span class="spanAccountSumm"></span>. <br/>
+        <table>
+            <tr>
+                <td style="vertical-align:text-top;">
+                    % if c.moneyOutEnabled:
+                    <p>
+                        Вы можете оформить заявку на <a href="#" class="linkMoneyOut">вывод средств</a>
+                    </p>
+                    % else:
+                        Текущей суммы недостаточно для вывода. Рекомендуем изучить <a href="#" id="showGrowingInfo2">статьи</a> о повышении доходности от выгрузок.
+                        <br/>Минимальная сумма для вывода средств из Вашего аккаунта: <b>${c.min_out_sum} $ </b> 
+                    % endif
+                </td>
+            </tr>
+            <tr>
+                <td style="vertical-align:text-top;">
+                    <table id="tableAccountIncome"></table>
+                    <div id="pagerAccountIncome"></div>
+                </td>
+            </tr>
+            <tr>
+                <td style="vertical-align:text-top;">
+                    <p>
+                        <a href ="/info/increase#Raspisanie_polucheniya_vyplat" target="_blank">Расписание и механизм получения выплат</a>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td style="vertical-align:text-top;">
+                    <table id="tableAccountMoneyOut"></table>
+                    <div id="pagerAccountMoneyOut"></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <!--end div #account-->
+    <!--div #informers-->
+    <div id="informers">
+        <div id="startwork" style="display:none"><h3> Добро пожаловать в GetMyAd! Для того чтоб начать работу, создайте, пожалуйста, информер.</h3></div>
+        
+        <p><a href="/advertise/create#size" class="link-button">Создать новый рекламный блок</a></p>
+        <div id="textCreateInformerHint">
+             Предлагаем Вам  установить дополнительные рекламные блоки на сайте  – это позволит приумножить Ваш заработок.<br/>
+             Исходя из наших данных и опыта наилучшая эффективность достигается посредством 3-х рекламных блоков, одновременно установленных на сайте. 
+             (<a href="/info/increase#Dohodnye_mesta" target="_blank">подробнее</a>).
+        </div>
+        
+        <p><a href="javascript:;" class="link-button" id="btnRegisterDomain">Зарегистрировать сайт</a></p>
+        <div id="textRegisterDomainHint">Регистрация нового сайта необходима в том случае, если Вы хотите установить рекламный блок на новом сайте.</div>
+        
+        <div id="tableInformers">
+                <p/>
+                <table id="tableExistingInformers"></table>
+                <div id="pagerExistingInformers"></div>
+        </div>			
+        <div id="dialogRegisterDomain" class="dialog">
+            <h3>Заявка на регистрацию нового сайта</h3>
+            <form id="formRegisterDomain" name="formRegisterDomain" action="/private/register_domain_request" method="get">
+              <input type="hidden" name="token" value="${c.token}"/>
+                <fieldset>
+                    <label for="txtRegisterDomainUrl">URL сайта:</label>
+                    <input type="text" id="txtRegisterDomainUrl" name="txtRegisterDomainUrl" />
+                </fieldset>
+            </form>
+            <div id="registerDomain_errorMessage" class="errorMessage"></div>
+            <div id="registerDomain_wait" style="text-align: right; display: none;" >
+                <img src="/img/wait26trans.gif" />
+            </div>
+        </div>
+
+    </div>
+    <!--end div #informers-->
+        
+    
+    <div id="dialogCancelRequest" title="" style="display: none;">
+      <input type="hidden" name="token" id="token" value="${c.token}"/>
+        <p>Вы действительно хотите отменить заявку?</p>
+    </div>
+
+        
+    <div id="help">
+        ##<script language="JavaScript" type="text/javascript">//$(document).ready(function(){$("#linkhelp").click(function(){$("#nextContents").click();});</script>
+        <%include file="/faq.content.html" />
+    </div>	
+
+</div>
+<!--end div #tabs-->

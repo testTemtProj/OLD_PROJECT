@@ -1,0 +1,110 @@
+#
+# getmyad - Pylons configuration
+#
+# The %(here)s variable will be replaced with the parent directory of this file
+#
+[DEFAULT]
+debug = true
+email_to = you@yourdomain.com
+smtp_server = localhost
+error_email_from = paste@localhost
+
+[server:main]
+use = egg:Paste#http
+host = 0.0.0.0
+port = 5000
+
+[app:main]
+use = egg:getmyad
+full_stack = true
+static_files = true
+
+cache_dir = %(here)s/data
+beaker.session.key = getmyad
+beaker.session.secret = ${app_instance_secret}
+app_instance_uuid = ${app_instance_uuid}
+
+# If you'd like to fine-tune the individual locations of the cache data dirs
+# for the Cache data, or the Session saves, un-comment the desired settings
+# here:
+#beaker.cache.data_dir = %(here)s/data/cache
+#beaker.session.data_dir = %(here)s/data/sessions
+
+# WARNING: *THE LINE BELOW MUST BE UNCOMMENTED ON A PRODUCTION ENVIRONMENT*
+# Debug mode will enable the interactive debugging tool, allowing ANYONE to
+# execute malicious code after an exception is raised.
+set debug = false
+
+# Строка подключения к MSSQL базе данных GetMyAd (в формате odbc)
+mssql_connection_string = DRIVER={SQL Server};server=213.186.119.106;DATABASE=1gb_YottosGetMyAd;UID=user;PWD=password 
+
+# Адрес XML-RPC сервера adload
+adload_xmlrpc_server = http://adload.vsrv-1.2.yottos.com/rpc
+
+# Адрес XML-RPC сервера getmyad
+getmyad_xmlrpc_server = http://localhost:5000/rpc
+
+# Адрес службы показа рекламы
+getmyad_worker_server = http://getmyad.vsrv-1.2.yottos.com/adshow.fcgi
+
+# Параметры подключения к MongoDB
+mongo_host = localhost
+mongo_user = 
+mongo_password =  
+mongo_database = getmyad_db
+
+# Параметры FTP для заливки заглушек
+reserve_ftp =
+reserve_ftp_user =
+reserve_ftp_password =
+reserve_ftp_path =
+
+# Параметры FTP для заливки загрузчиков информеров
+informer_loader_ftp =
+informer_loader_ftp_user =
+informer_loader_ftp_password =
+informer_loader_ftp_path =
+
+# Параметры FTP для заливки статических файлов на сервер CDN
+cdn_server_url =				# URL сервера CDN, например, http://cdnt.yottos.com/getmyad/
+cdn_ftp =
+cdn_ftp_user =
+cdn_ftp_password =
+cdn_ftp_path =
+
+# Параметры менеджера очереди сообщений
+amqp_host = localhost
+amqp_user = guest
+amqp_password = guest
+
+# Путь к папке для сохранения счёт-фактур
+schet_factura_folder = %(here)s/data/schetfactura
+
+# Параметры электронной почты ящика поддержки Yottos
+support_smtp_server = 
+support_smtp_port =
+support_smtp_username = 
+support_smtp_password =
+
+# Logging configuration
+[loggers]
+keys = root
+
+[handlers]
+keys = console
+
+[formatters]
+keys = generic
+
+[logger_root]
+level = INFO
+handlers = console
+
+[handler_console]
+class = StreamHandler
+args = (sys.stderr,)
+level = NOTSET
+formatter = generic
+
+[formatter_generic]
+format = %(asctime)s %(levelname)-5.5s [%(name)s] [%(threadName)s] %(message)s

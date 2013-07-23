@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<routing>
+  <root path="yottos-catalog" lcid="1033">
+    <transformed actual="/CatalogList.aspx" path="/List_of_chapters" />
+    <transformed actual="/Settings.aspx" path="/Settings" />
+    <transformed actual="/CatalogAddLink.aspx" path="/Add_link" />
+    <transformed actual="/CatalogLinkPosted.aspx" path="/Link_posted" />
+    <transformed actual="/Questionnaire/Questions.aspx" path="/Questionnaire" />
+    <transformed actual="/Questionnaire/Result.aspx" path="/Result_of_questionnaire" />
+    <transformed actual="/CatalogSearch.aspx" path="/Search/{*q}" />
+    <transformed actual="/catalogSearch.aspx" path="/Search/{cat}/{*q}" />
+  </root>
+  <root path="yottos-каталог" lcid="1049">
+    <transformed actual="/CatalogList.aspx" path="/Список_разделов" />
+    <transformed actual="/Settings.aspx" path="/Настройки" />
+    <transformed actual="/CatalogAddLink.aspx" path="/Добавить_ссылку" />
+    <transformed actual="/CatalogLinkPosted.aspx" path="/Ссылка_добавлена" />
+    <transformed actual="/Questionnaire/Questions.aspx" path="/Опрос" />
+    <transformed actual="/Questionnaire/Result.aspx" path="/Результат_опроса" />
+    <transformed actual="/CatalogSearch.aspx" path="/Поиск/{*q}" />
+    <transformed actual="/catalogSearch.aspx" path="/Поиск/{cat}/{*q}" />
+  </root>
+  <root path="yottos-каталог" lcid="1058">
+    <transformed actual="/CatalogList.aspx" path="/Список_розділів" />
+    <transformed actual="/Settings.aspx" path="/Налаштування" />
+    <transformed actual="/CatalogAddLink.aspx" path="/Додати_посилання" />
+    <transformed actual="/CatalogLinkPosted.aspx" path="/Посилання_додане" />
+    <transformed actual="/Questionnaire/Questions.aspx" path="/Опит" />
+    <transformed actual="/Questionnaire/Result.aspx" path="/Результат_опитування" />
+    <transformed actual="/CatalogSearch.aspx" path="/Пошук/{*q}" />
+    <transformed actual="/catalogSearch.aspx" path="/Пошук/{cat}/{*q}" />
+  </root>
+</routing>

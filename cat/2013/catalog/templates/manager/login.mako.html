@@ -1,0 +1,12 @@
+<%inherit file='/base/index.mako.html' />
+<%def name="title()">${_('Login to manager')}</%def>
+<%def name='body()'>
+<h2>${_('You are atempting to enter the manager. Log in please.')}</h2>
+<div align='right' style='width:250px'>
+${h.form(url(controller='manager',action='dologin'), method='post')}
+${_("Login")}${h.text('user_name')}<br />
+${_("Password")}${h.password('password')}<br />
+${h.submit('submit',value=_('Login'))}
+${h.end_form()}
+</div>
+</%def>

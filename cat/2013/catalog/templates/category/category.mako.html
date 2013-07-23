@@ -1,0 +1,120 @@
+<%def name="title()">
+%if c.category.html_title != "":
+${ c.category.html_title}
+%else: 
+${'Yottos Catalog | ' + c.category.title}
+%endif
+</%def>
+<%inherit file='/base/index.mako.html' />
+<%def name="body()">
+
+%if c.category.id != 0:
+<h1>${ c.category.title }</h1>
+%endif 
+<div>
+
+  <div style="width: 100%; padding-left: 10px;">
+    <div width="100%"><span style="color:red;">${c.error if hasattr(c,'error') else ''}</span></div>
+    <table width="100%">
+      <tr>
+	<td width="85%" valign='top'>
+	  <table width="100%">
+	    <tr>
+	      <td style="padding-bottom: 13px;">
+		%if c.breadcrunchs:
+		%for crunch in c.breadcrunchs[0:-1]:
+		<font style="font-size: 16px;">
+		  <a href="/${crunch.slug}" class="rubrika">${_(crunch.title)}</a>&nbsp&nbsp/&nbsp</font>
+		%endfor
+		<font style="font-size: 16px; font-weight: bold;">${_(c.breadcrunchs[-1].title)}</font>
+		%endif 
+	      </td>
+	    </tr>
+
+	    <tr style="margin-top: 15px;">
+	      %for iter in range(len(c.children)):
+	      <td valign="top" width="50%" style="margin-top: 10px;">
+		<a href="/${c.children[iter][0].slug}" class="rubrika">${_(c.children[iter][0].title)}</a>
+		<div style="margin-right: 5px; margin-top: 5px;">
+		  <span>
+		    %for i in range(1,4):
+		    %if i in range(len(c.children[iter])) and c.children[iter][i]:
+		    <span style="margin-top: 10px;">
+		      <a class="razdel" href="/${c.children[iter][i][0].slug}" style="padding-bottom: 10px">${_(c.children[iter][i][0].title)}</a>
+		    </span><font style="font-size: 12pt">,</font>&nbsp;
+		    %endif
+		    %endfor
+
+		    %if len(c.children[iter]) > 3:
+		    <a href="/${c.children[iter][0].slug}" class="razdel">...</a>
+		    %endif
+		  </span>
+		</div><br /><br />
+	      </td>
+
+	      
+	      %if iter % 2:
+	    </tr>
+	       %if iter != len(c.children) -1:
+	    <tr>
+	       %endif
+	      %endif
+	      %endfor
+	  </table>
+	</td>
+	<td width="15%" valign='top' rowspan=10>
+	  <div>
+	    ${h.HTML.literal(c.category.banner_script)}
+	  </div>
+	  
+	</td>
+      </tr>
+      <!--/table-->
+
+      <tr>
+	<td style="width: 100%">
+	  <!--/div-->
+	  %if c.sites:
+	  <div style="margin-right: 5px;">
+	    %for site in c.sites:
+	    %if site.to_dict[c.site_name]:
+	    ${site.set_field('name',site.to_dict[c.site_name])}
+	    ${site.set_field('description', site.to_dict[c.site_descr])}
+	    %else:
+	    %if site.name_ru:
+	    ${site.set_field('name', site.name_ru)}
+	    ${site.set_field('description', site.description_ru)}
+	    %elif site.name_en:			   
+	    ${site.set_field('name', site.name_en)}
+	    ${site.set_field('description', site.description_en)}
+	    %elif site.name_uk:			   
+	    ${site.set_field('name', site.name_uk)}
+	    ${site.set_field('description', site.description_uk)}
+	    %endif
+	    %endif
+	    <a href='${site.reference}' onClick="window.location='${url(controller="redirect", action="redirect", url=h.base64.b64encode(site.reference))}';" class='catalogUrl'>${site.name}</a><br />
+	    ${site.description}<br />
+	    <a href="${site.reference}" onClick="window.location='${url(controller="redirect", action="redirect", url=h.base64.b64encode(site.reference))}';" style="color: green; font-size: 10pt;">${site.reference}</a>
+	    <br /><br />
+	    %endfor
+	  </div>
+
+
+	  %if c.pages > 1:
+	  <center>
+	    <p>${_('Go to Page:')}
+	      <font style="font-size: 14pt">
+		${h.paging_toolbar(c.cur_page,c.pages)}
+	      </font>
+	  </center>
+	  %endif 
+
+	  %endif
+	</td>
+      </tr>
+    <!--/table-->
+</table>
+</div>
+</div>
+</%def>
+

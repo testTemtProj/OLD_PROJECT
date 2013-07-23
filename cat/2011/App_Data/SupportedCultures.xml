@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<cultures>
+  <culture name="ru-RU" lcid="1049" domain_ext="ru" natine_name="Мой язык Русский">Мой язык Русский<![CDATA[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]]></culture>
+  <culture name="uk-UA" lcid="1058" domain_ext="com.ua" natine_name="Моя мова Українська">Моя мова Українська<![CDATA[&nbsp;&nbsp;&nbsp;]]></culture>
+  <culture name="en-US" lcid="1033" domain_ext="com" natine_name="My language is English">My language is English</culture>
+</cultures>

@@ -1,0 +1,3 @@
+include catalog/config/deployment.ini_tmpl
+recursive-include catalog/public *
+recursive-include catalog/templates *

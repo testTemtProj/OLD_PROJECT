@@ -1,0 +1,64 @@
+<%inherit file='/base/index.mako.html' />
+<%def name="title()">${_('Search')}</%def>
+
+<%def name='body()'>
+<h1>${_('Search')}</h1>
+
+<h2>${_('Search results for query:')} ${c.query}</h2>
+
+<table>
+  <tr>
+    <td style="width: 85%" valign="top">
+      %for site in c.sites:
+      %if site.to_dict[c.site_name]:
+      ${site.set_field('name',site.to_dict[c.site_name])}
+      ${site.set_field('description', site.to_dict[c.site_descr])}
+      %else:
+      %if site.name_ru:
+      ${site.set_field('name', site.name_ru)}
+      ${site.set_field('description', site.description_ru)}
+      %elif site.name_en:			   
+      ${site.set_field('name', site.name_en)}
+      ${site.set_field('description', site.description_en)}
+      %elif site.name_uk:			   
+      ${site.set_field('name', site.name_uk)}
+      ${site.set_field('description', site.description_uk)}
+      %endif
+      %endif
+      <a href='${site.reference}' onClick="window.location='${url(controller="redirect", action="redirect", url=h.base64.b64encode(site.reference))}';">
+	${h.HTML.literal(site.name)}
+      </a>
+
+      <br />
+
+      ${h.HTML.literal(site.description)}<br />
+      <a href="${site.reference}" onClick="window.location='${url(controller="redirect", action="redirect", url=h.base64.b64encode(site.reference))}';" style="color: green; font-size: 10pt;">
+	${site.reference}
+      </a>
+
+      <br />
+      <br />
+
+      %endfor
+
+      <br />
+      %if c.pages > 1:
+      <center>Go to page:</center>
+      <font style="font-size: 14pt">
+	${h.paging_toolbar(c.cur_page, c.pages)}
+      </font>
+      %endif
+    </td>
+
+    <td style="width: 14%" valign='top'>
+      <script type="text/javascript">
+	<!--
+	     yottos_advertise = "6aafe89a-98ec-11e0-bbc7-00163e0300c1";
+	     //-->
+      </script>
+      <script type="text/javascript" src="http://cdn.yottos.com/getmyad/_a.js">
+      </script>
+    </td>
+  </tr>
+</table>
+</%def> 

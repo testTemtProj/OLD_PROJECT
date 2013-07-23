@@ -1,0 +1,43 @@
+# -*- coding: utf-8 -*-
+<%inherit file="/main.mako.html" />
+<%
+	c.Comment = True
+%>
+<%def name="head()">
+    <title>YOTTOS | GetMyAd — бесплатная программа для заработка в Интернете. Заработай на своем сайте</title>
+</%def>
+##%>	(для парсера)
+	
+
+		<div id="contentPosition">
+            % if hasattr(c, 'error_message'):
+        <div class="errorMessage" style="margin: 0 auto; width: 500px;">
+            ${c.error_message}
+        </div>
+% else:
+			<div id="contentCenter">
+                <div class="reg">
+				<h2>Для вебмастеров, желающих заработать:</h2>
+                <ul>
+                    <li>Отправьте заявку на добавление Вашего сайта к рекламной сети 
+                    <font color="#fe7300" style="font-size:12px; ">Yot</font><font color="#4c6bdf" style="font-size:12px; ">tos</font>
+                    <font color="#fe7300" style="font-size:12px; ">Get</font><font color="#4c6bdf" style="font-size:12px; ">My</font><font color="#fe7300" style="font-size:12px; ">Ad</font></li>
+                    <li>Настройте рекламные блоки под дизайн Вашего сайта и разместите их</li>
+                    <li>Получайте деньги за клики пользователей по рекламным предложениям и за показы баннеров</li>
+				</ul>
+                <a href="${h.url_for(controller='info', action='answers')}">Узнайте больше о программе GETMYAD</a>
+				<br />
+				<img src="/img/example.jpg" style="border-width:0px; width: 400px;" />
+			</div>
+			</div>
+			<div id="contentRight">
+				<div class="reg">
+				<h2>Как начать зарабатывать?</h2>
+                <p>Добавьте Ваш сайт в рекламную сеть
+                <font color="#fe7300" style="font-size:12px; ">Yot</font><font color="#4c6bdf" style="font-size:12px; ">tos</font>
+                <font color="#fe7300" style="font-size:12px; ">Get</font><font color="#4c6bdf" style="font-size:12px; ">My</font><font color="#fe7300" style="font-size:12px; ">Ad</font></p>
+				<a class="regButton" href="/register_user/index"><span>Присоединиться к сети</span></a>
+				</div>
+			</div>
+% endif
+		</div>

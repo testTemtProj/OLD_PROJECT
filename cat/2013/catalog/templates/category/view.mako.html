@@ -1,0 +1,48 @@
+<%inherit file='/base/index.mako.html' />
+<%def name="title()">${c.title}</%def>
+<%def name='body()'>
+
+<h1>${c.title}</h1>
+   <table width="100%">
+     <tr><td  style="padding-bottom: 10px;">
+       %for crunch in c.breadcrunchs:
+       <a href="/${crunch.slug}">${crunch.title}</a>->
+       %endfor
+     </td></tr>
+     <tr>
+     %for iter in range(len(c.children)):
+     <td valign="top" width="50%">
+       <a href="/${c.children[iter][0].slug}" class="rubrika">${c.children[iter][0].title}</a>
+       <div style="margin-right: 5px;">
+	 <span>
+	 %for i in range(1,4):
+	 %if i in range(len(c.children[iter])) and c.children[iter][i]:
+	 <span>
+           <a class="razdel" href="/${c.children[iter][i][0].slug}">${c.children[iter][i][0].title}</a>
+         </span>&nbsp;
+	 %endif
+         %endfor
+	 </span></div><br /><br />
+     </td>
+     
+     %if iter % 2:
+     </tr><tr>
+     %endif
+     %endfor
+   </table>
+
+	<div style="margin-right: 5px;">
+  %for site in c.sites:
+      %if site.reference:
+      <a href='${site.reference}' class='catalogUrl'>${site.name}</a><br />
+	  %if site.description:
+              ${site.description[0:200]}...<br />
+	  %endif
+      %endif
+  %endfor
+    </div>
+<p>Go to Page:
+  %for page in range(c.totals/20):
+  <a href="/${c.slug}/${page+1}">${page+1}</a>
+  %endfor</p>
+</%def>

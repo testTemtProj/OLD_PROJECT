@@ -1,0 +1,8 @@
+<asp:GridView runat="server" AllowSorting="True" AutoGenerateColumns="False" Width="100%" PageSize="50" CssClass="grid"  EmptyDataText="<br /><center><b>Нет записей для отображения</b></center><br /><br />">
+    <PagerSettings Mode="NumericFirstLast" />
+    <RowStyle CssClass="grid-row" />
+    <SelectedRowStyle CssClass="grid-selected-row" />
+    <PagerStyle CssClass="grid-pager" HorizontalAlign="Center" BorderColor="ButtonFace"/>
+    <HeaderStyle BorderColor="ButtonFace" BorderStyle="Solid" BorderWidth="1px" CssClass="grid-header" />
+    <AlternatingRowStyle CssClass="grid-alternative-row" />
+</asp:GridView>

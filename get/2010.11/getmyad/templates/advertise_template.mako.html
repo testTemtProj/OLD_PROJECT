@@ -1,0 +1,300 @@
+#########################################################		Шаблон выгрузки AdMaker		#########################################################
+<%text>
+<textarea id="templateTest" style="display:none;" rows=0 cols=0>
+	test
+</textarea>
+
+<textarea id="styleTemplate" style="display:none;" rows=0 cols=0>
+
+<style type="text/css">
+#mainContainer {
+	position: relative;
+	width: ${Main.width};
+	height: ${Main.height};
+	border: ${Main.borderWidth}px solid #${Main.borderColor};
+	background-color: #${Main.backgroundColor};
+	overflow: hidden;
+	border-radius: 5px;
+	}
+
+.advBlock {
+	width: ${Advertise.width};
+	height: ${Advertise.height};
+	border: ${Advertise.borderWidth}px solid #${Advertise.borderColor};
+	float: left;
+	position: relative;
+	font-family: ${Main.fontFamily};
+	font-size: ${Main.fontSize}px;
+	color: #${Advertise.fontColor};
+	overflow: hidden;
+}
+
+.advHeader {
+	position: absolute;
+	top: ${Header.top}px;
+	left: ${Header.left}px;
+	width: ${Header.width};
+	height: ${Header.height};
+	border: ${Header.borderWidth}px solid #${Header.borderColor};
+	overflow: hidden;
+	text-align: ${Header.align || 'center'};
+
+}
+
+.advHeader, .advHeader:hover, .advHeader:visited, .advHeader:active, .advHeader:link {
+{if Header.fontUnderline}
+	text-decoration: underline;
+{else}
+	text-decoration: none;
+{/if}
+	color: #${Header.fontColor};
+	font-size: ${Header.fontSize}px;
+{if Header.fontBold}
+	font-weight: bold;
+{/if}
+}
+
+.advHeader:hover {
+	text-decoration: underline;
+}
+	
+	
+.advDescription {
+	position: absolute;
+	top: ${Description.top}px;
+	left: ${Description.left}px;
+	width: ${Description.width};
+	height: ${Description.height};
+	border: ${Description.borderWidth}px solid #${Description.borderColor};
+	overflow: hidden;		
+	text-align: ${Description.align || 'center'};
+{if Description.hide}
+	display: none;
+{/if}
+}
+
+.advDescription, .advDescription:hover, .advDescription:visited, .advDescription:active, .advDescription:link {
+	text-decoration: none;
+	color: #${Description.fontColor};
+	font-size: ${Description.fontSize}px;
+	font-family:${Description.fontFamily};
+{if Description.fontBold}
+	font-weight: bold;
+{/if}
+
+}
+
+.advDescription:hover {
+	text-decoration: underline;
+}
+
+.advCost {
+	position: absolute;
+	top: ${Cost.top}px;
+	left: ${Cost.left}px;
+	width: ${Cost.width};
+	height: ${Cost.height};
+	border: ${Cost.borderWidth}px solid #${Cost.borderColor};
+	overflow: hidden;
+	text-align: ${Cost.align || 'center'};
+{if Cost.hide}
+	display: none;
+{/if}
+}
+
+.advCost, .advCost:link, .advCost:hover, .advCost:visited, .advCost:active {
+	text-decoration: none;
+	color: #${Cost.fontColor};
+	font-size: ${Cost.fontSize}px;
+	font-family:${Cost.fontFamily};
+{if Cost.fontBold}
+	font-weight: bold;
+{/if}
+}
+
+.advCost:hover {
+	text-decoration: underline;
+}
+
+.advImage {
+	position: absolute;
+	width: ${Image.width};
+	height: ${Image.height};
+	top: ${Image.top}px;
+	left: ${Image.left}px;
+{if Image.hide}
+	display: none;
+{/if}
+	border: ${Image.borderWidth}px solid #${Image.borderColor};
+}
+
+
+.nav {
+	cursor:pointer;	
+	position: absolute;
+	width: 11px;
+	height: 16px;
+
+{if Nav.navPosition == 'top-right' }
+	top: 5px;
+	right: 2px;
+{elseif Nav.navPosition == 'top-left' }
+	top: 1px;
+	left: 14px;
+{elseif Nav.navPosition == 'bottom-left' }
+	bottom: 1px;
+	left: 14px;
+{elseif Nav.navPosition == 'bottom-right' }
+	bottom: 5px;
+	right: 5px;
+{/if}
+
+}
+
+.nav a, .nav a:hover, .nav a:link, .nav a:visited, .nav a:active {
+	font-size: 15px;
+	text-decoration: none;
+	/*color: #${Nav.color};*/
+	/*background-color: #${Nav.backgroundColor};*/
+	font-family: ${Main.fontFamily};
+	display: block;
+	/*border: 1px solid #000;*/
+	width: 11px;	
+}
+
+/*.nav a:hover {
+	color: #${Nav.backgroundColor};
+	background-color: #${Nav.backgroundColor};
+}*/
+
+
+.navr {
+	cursor:pointer;	
+	position: absolute;
+	width: 11px;
+	height: 16px;
+
+{if Nav.navPosition == 'top-right' }
+	top: 5px;
+	right: 16px;
+{elseif Nav.navPosition == 'top-left' }
+	top: 1px;
+	left: 1px;
+{elseif Nav.navPosition == 'bottom-left' }
+	bottom: 1px;
+	left: 1px;
+{elseif Nav.navPosition == 'bottom-right' }
+	bottom: 5px;
+	right: 18px;
+{/if}
+
+}
+
+.navr a, .nav a:hover, .navr a:link, .navr a:visited, .navr a:active {
+	font-size: 15px;
+	text-decoration: none;
+	/*color: #${Nav.color};*/
+	/*background-color: #${Nav.backgroundColor};*/
+	font-family: ${Main.fontFamily};
+	display: block;
+	/*border: 1px solid #000;*/
+	width: 11px;	
+}
+
+/*.navr a:hover {
+	color: #${Nav.backgroundColor};
+	background-color: #${Nav.backgroundColor};
+}*/
+#adInfo {
+	position: absolute;
+{if Nav.logoPosition == 'top-right' }
+	top: 3px;
+	right: 1px;
+{elseif Nav.logoPosition == 'top-left' }
+	top: 3px;
+	left: 1px;
+{elseif Nav.logoPosition == 'bottom-left' }
+	bottom: 5px;
+	left: 0px;
+{elseif Nav.logoPosition == 'bottom-right' }
+	bottom: 0;
+	right: 1px;
+{/if}
+	background-repeat: no-repeat;
+	overflow:hidden;
+
+{if parseInt(Main.width) < 200}
+	{var logoPath = "http://cdnt.yottos.com/getmyad/logos/yot/"; }
+	{var logoWidth = 45; }
+{else}
+	{var logoPath = "http://cdnt.yottos.com/getmyad/logos/"; }
+	{var logoWidth = 100; }
+{/if}
+{if Nav.logoColor == 'color' }
+	background-image: url('${logoPath}colorLogo.gif');
+{elseif Nav.logoColor == 'black' }
+	background-image: url('${logoPath}blackLogo.gif');
+{elseif Nav.logoColor == 'blue' }
+	background-image: url('${logoPath}blueLogo.gif');
+{elseif Nav.logoColor == 'white' }
+	background-image: url('${logoPath}whiteLogo.gif');
+{/if}
+	height: 10px;
+	width: ${logoWidth}px;
+{if Nav.logoHide}
+	display: none;
+{/if}
+}	
+
+
+#adInfo a {
+	width:100%;
+	height:100%;
+	display: block;
+
+}
+
+.c {position: absolute; overflow-x: hidden; overflow-y: hidden; width: 1px; height: 1px;background-color:#${Nav.backgroundColor};}
+/*.a1 {position: absolute; overflow-x: hidden; overflow-y: hidden; width: 1px; height: 1px;background-color:#${Nav.backgroundColor};display:none;}*/
+.c1 {position: absolute; overflow-x: hidden; overflow-y: hidden; width: 1px; height: 1px;background-color:#${Nav.color};}
+.c2 {position: absolute; overflow-x: hidden; overflow-y: hidden; width: 1px; height: 1px;background-color:#${Nav.hovercolor};}
+.b {position: absolute; overflow-x: hidden; overflow-y: hidden; width: 1px; height: 1px;background-color:#${Nav.backgroundColor};}
+.b1 {position: absolute; overflow-x: hidden; overflow-y: hidden; width: 1px; height: 1px;background-color:#${Nav.color};}
+.b2 {position: absolute; overflow-x: hidden; overflow-y: hidden; width: 1px; height: 1px;background-color:#${Nav.hovercolor};}
+/*.b1 {position: absolute; overflow-x: hidden; overflow-y: hidden; width: 1px; height: 1px;background-color:#${Nav.color};}*/
+
+</style>
+</textarea>
+
+
+	
+<textarea id="contentTemplate" style="display:none;" rows=0 cols=0>
+   	<div id="mainContainer">
+	<div id=""ads"" style=""position: absolute; left:0; top: 0"">
+	{for item in items}
+    		<div class="advBlock">
+    			<a class="advHeader" href="javascript:;" >Теперь доступно и вашему вниманию!</a>
+				<a class="advDescription" href="javascript:;" >Выравнивает, подкручивает волосы, делает их блестящими и объемными!</a>
+				<a class="advCost" href="javascript:;" >1 234,00 грн.</a>
+				<a href="javascript:;" ><img class="advImage" src="http://rynok.yottos.ru/img/55/5232348e-b849-46e4-a1d3-ac26135c05dc.jpg" alt=""/></a>
+    		</div>
+	{/for}
+	</div>
+		    <div id='adInfo'><a href="http://yottos.com.ua" target="_blank" title="Реклама от Yottos"></a></div>
+			
+			 <div class='navr' onMouseOver="change('b');" onMouseOut="change1('b');" > <div id="leftArrow" style="width:12;height:16px;">
+<div class="b1"style='left:3px;top:7px;'></div><div class="b1"style='left:3px;top:8px;'></div><div class="b1"style='left:4px;top:6px;'></div><div class="b1"style='left:4px;top:7px;'></div><div class="b1"style='left:4px;top:8px;'></div><div class="b1"style='left:4px;top:9px;'></div><div class="b1"style='left:5px;top:5px;'></div><div class="b1"style='left:5px;top:6px;'></div><div class="b1"style='left:5px;top:7px;'></div><div class="b1"style='left:5px;top:8px;'></div><div class="b1"style='left:5px;top:9px;'></div><div class="b1"style='left:5px;top:10px;'></div><div class="b1"style='left:6px;top:4px;'></div><div class="b1"style='left:6px;top:5px;'></div><div class="b1"style='left:6px;top:6px;'></div><div class="b1"style='left:6px;top:9px;'></div><div class="b1"style='left:6px;top:10px;'></div><div class="b1"style='left:6px;top:11px;'></div><div class="b1"style='left:7px;top:3px;'></div><div class="b1"style='left:7px;top:4px;'></div><div class="b1"style='left:7px;top:5px;'></div><div class="b1"style='left:7px;top:10px;'></div><div class="b1"style='left:7px;top:11px;'></div><div class="b1"style='left:7px;top:12px;'></div><div class="b1"style='left:8px;top:2px;'></div><div class="b1"style='left:8px;top:3px;'></div><div class="b1"style='left:8px;top:4px;'></div><div class="b1"style='left:8px;top:11px;'></div><div class="b1"style='left:8px;top:12px;'></div><div class="b1"style='left:8px;top:13px;'></div>
+<div class="b"style='left:0px;top:7px;'></div><div class="b"style='left:0px;top:8px;'></div><div class="b"style='left:1px;top:6px;'></div><div class="b"style='left:1px;top:7px;'></div><div class="b"style='left:1px;top:8px;'></div><div class="b"style='left:1px;top:9px;'></div><div class="b"style='left:2px;top:5px;'></div><div class="b"style='left:2px;top:6px;'></div><div class="b"style='left:2px;top:7px;'></div><div class="b"style='left:2px;top:8px;'></div><div class="b"style='left:2px;top:9px;'></div><div class="b"style='left:2px;top:10px;'></div><div class="b"style='left:3px;top:4px;'></div><div class="b"style='left:3px;top:5px;'></div><div class="b"style='left:3px;top:6px;'></div><div class="b"style='left:3px;top:9px;'></div><div class="b"style='left:3px;top:10px;'></div><div class="b"style='left:3px;top:11px;'></div><div class="b"style='left:4px;top:3px;'></div><div class="b"style='left:4px;top:4px;'></div><div class="b"style='left:4px;top:5px;'></div><div class="b"style='left:4px;top:10px;'></div><div class="b"style='left:4px;top:11px;'></div><div class="b"style='left:4px;top:12px;'></div><div class="b"style='left:5px;top:2px;'></div><div class="b"style='left:5px;top:3px;'></div><div class="b"style='left:5px;top:4px;'></div><div class="b"style='left:5px;top:11px;'></div><div class="b"style='left:5px;top:12px;'></div><div class="b"style='left:5px;top:13px;'></div><div class="b"style='left:6px;top:1px;'></div><div class="b"style='left:6px;top:2px;'></div><div class="b"style='left:6px;top:3px;'></div><div class="b"style='left:6px;top:7px;'></div><div class="b"style='left:6px;top:8px;'></div><div class="b"style='left:6px;top:12px;'></div><div class="b"style='left:6px;top:13px;'></div><div class="b"style='left:6px;top:14px;'></div><div class="b"style='left:7px;top:0px;'></div><div class="b"style='left:7px;top:1px;'></div><div class="b"style='left:7px;top:2px;'></div><div class="b"style='left:7px;top:6px;'></div><div class="b"style='left:7px;top:7px;'></div><div class="b"style='left:7px;top:8px;'></div><div class="b"style='left:7px;top:9px;'></div><div class="b"style='left:7px;top:13px;'></div><div class="b"style='left:7px;top:14px;'></div><div class="b"style='left:7px;top:15px;'></div><div class="b"style='left:8px;top:0px;'></div><div class="b"style='left:8px;top:1px;'></div><div class="b"style='left:8px;top:5px;'></div><div class="b"style='left:8px;top:6px;'></div><div class="b"style='left:8px;top:7px;'></div><div class="b"style='left:8px;top:8px;'></div><div class="b"style='left:8px;top:9px;'></div><div class="b"style='left:8px;top:10px;'></div><div class="b"style='left:8px;top:14px;'></div><div class="b"style='left:8px;top:15px;'></div><div class="b"style='left:9px;top:0px;'></div><div class="b"style='left:9px;top:1px;'></div><div class="b"style='left:9px;top:2px;'></div><div class="b"style='left:9px;top:3px;'></div><div class="b"style='left:9px;top:4px;'></div><div class="b"style='left:9px;top:5px;'></div><div class="b"style='left:9px;top:6px;'></div><div class="b"style='left:9px;top:7px;'></div><div class="b"style='left:9px;top:8px;'></div><div class="b"style='left:9px;top:9px;'></div><div class="b"style='left:9px;top:10px;'></div><div class="b"style='left:9px;top:11px;'></div><div class="b"style='left:9px;top:12px;'></div><div class="b"style='left:9px;top:13px;'></div><div class="b"style='left:9px;top:14px;'></div><div class="b"style='left:9px;top:15px;'></div><div class="b"style='left:10px;top:0px;'></div><div class="b"style='left:10px;top:1px;'></div><div class="b"style='left:10px;top:2px;'></div><div class="b"style='left:10px;top:3px;'></div><div class="b"style='left:10px;top:4px;'></div><div class="b"style='left:10px;top:5px;'></div><div class="b"style='left:10px;top:6px;'></div><div class="b"style='left:10px;top:7px;'></div><div class="b"style='left:10px;top:8px;'></div><div class="b"style='left:10px;top:9px;'></div><div class="b"style='left:10px;top:10px;'></div><div class="b"style='left:10px;top:11px;'></div><div class="b"style='left:10px;top:12px;'></div><div class="b"style='left:10px;top:13px;'></div><div class="b"style='left:10px;top:14px;'></div><div class="b"style='left:10px;top:15px;'></div> 
+			 </div> </div>
+			
+			
+		    <div class='nav' onMouseOver="change('c');" onMouseOut="change1('c');" > <div id="leftArrow" style="width:12;height:16px;">
+<div class="c1"style='left:2px;top:2px;'></div><div class="c1"style='left:2px;top:3px;'></div><div class="c1"style='left:2px;top:4px;'></div><div class="c1"style='left:2px;top:11px;'></div><div class="c1"style='left:2px;top:12px;'></div><div class="c1"style='left:2px;top:13px;'></div><div class="c1"style='left:3px;top:3px;'></div><div class="c1"style='left:3px;top:4px;'></div><div class="c1"style='left:3px;top:5px;'></div><div class="c1"style='left:3px;top:10px;'></div><div class="c1"style='left:3px;top:11px;'></div><div class="c1"style='left:3px;top:12px;'></div><div class="c1"style='left:4px;top:4px;'></div><div class="c1"style='left:4px;top:5px;'></div><div class="c1"style='left:4px;top:6px;'></div><div class="c1"style='left:4px;top:9px;'></div><div class="c1"style='left:4px;top:10px;'></div><div class="c1"style='left:4px;top:11px;'></div><div class="c1"style='left:5px;top:5px;'></div><div class="c1"style='left:5px;top:6px;'></div><div class="c1"style='left:5px;top:7px;'></div><div class="c1"style='left:5px;top:8px;'></div><div class="c1"style='left:5px;top:9px;'></div><div class="c1"style='left:5px;top:10px;'></div><div class="c1"style='left:6px;top:6px;'></div><div class="c1"style='left:6px;top:7px;'></div><div class="c1"style='left:6px;top:8px;'></div><div class="c1"style='left:6px;top:9px;'></div><div class="c1"style='left:7px;top:7px;'></div><div class="c1"style='left:7px;top:8px;'></div>
+<div class="c"style='left:0px;top:0px;'></div><div class="c"style='left:0px;top:1px;'></div><div class="c"style='left:0px;top:2px;'></div><div class="c"style='left:0px;top:3px;'></div><div class="c"style='left:0px;top:4px;'></div><div class="c"style='left:0px;top:5px;'></div><div class="c"style='left:0px;top:6px;'></div><div class="c"style='left:0px;top:7px;'></div><div class="c"style='left:0px;top:8px;'></div><div class="c"style='left:0px;top:9px;'></div><div class="c"style='left:0px;top:10px;'></div><div class="c"style='left:0px;top:11px;'></div><div class="c"style='left:0px;top:12px;'></div><div class="c"style='left:0px;top:13px;'></div><div class="c"style='left:0px;top:14px;'></div><div class="c"style='left:0px;top:15px;'></div><div class="c"style='left:1px;top:0px;'></div><div class="c"style='left:1px;top:1px;'></div><div class="c"style='left:1px;top:2px;'></div><div class="c"style='left:1px;top:3px;'></div><div class="c"style='left:1px;top:4px;'></div><div class="c"style='left:1px;top:5px;'></div><div class="c"style='left:1px;top:6px;'></div><div class="c"style='left:1px;top:7px;'></div><div class="c"style='left:1px;top:8px;'></div><div class="c"style='left:1px;top:9px;'></div><div class="c"style='left:1px;top:10px;'></div><div class="c"style='left:1px;top:11px;'></div><div class="c"style='left:1px;top:12px;'></div><div class="c"style='left:1px;top:13px;'></div><div class="c"style='left:1px;top:14px;'></div><div class="c"style='left:1px;top:15px;'></div><div class="c"style='left:2px;top:0px;'></div><div class="c"style='left:2px;top:1px;'></div><div class="c"style='left:2px;top:5px;'></div><div class="c"style='left:2px;top:6px;'></div><div class="c"style='left:2px;top:7px;'></div><div class="c"style='left:2px;top:8px;'></div><div class="c"style='left:2px;top:9px;'></div><div class="c"style='left:2px;top:10px;'></div><div class="c"style='left:2px;top:14px;'></div><div class="c"style='left:2px;top:15px;'></div><div class="c"style='left:3px;top:0px;'></div><div class="c"style='left:3px;top:1px;'></div><div class="c"style='left:3px;top:2px;'></div><div class="c"style='left:3px;top:6px;'></div><div class="c"style='left:3px;top:7px;'></div><div class="c"style='left:3px;top:8px;'></div><div class="c"style='left:3px;top:9px;'></div><div class="c"style='left:3px;top:13px;'></div><div class="c"style='left:3px;top:14px;'></div><div class="c"style='left:3px;top:15px;'></div><div class="c"style='left:4px;top:1px;'></div><div class="c"style='left:4px;top:2px;'></div><div class="c"style='left:4px;top:3px;'></div><div class="c"style='left:4px;top:7px;'></div><div class="c"style='left:4px;top:8px;'></div><div class="c"style='left:4px;top:12px;'></div><div class="c"style='left:4px;top:13px;'></div><div class="c"style='left:4px;top:14px;'></div><div class="c"style='left:5px;top:2px;'></div><div class="c"style='left:5px;top:3px;'></div><div class="c"style='left:5px;top:4px;'></div><div class="c"style='left:5px;top:11px;'></div><div class="c"style='left:5px;top:12px;'></div><div class="c"style='left:5px;top:13px;'></div><div class="c"style='left:6px;top:3px;'></div><div class="c"style='left:6px;top:4px;'></div><div class="c"style='left:6px;top:5px;'></div><div class="c"style='left:6px;top:10px;'></div><div class="c"style='left:6px;top:11px;'></div><div class="c"style='left:6px;top:12px;'></div><div class="c"style='left:7px;top:4px;'></div><div class="c"style='left:7px;top:5px;'></div><div class="c"style='left:7px;top:6px;'></div><div class="c"style='left:7px;top:9px;'></div><div class="c"style='left:7px;top:10px;'></div><div class="c"style='left:7px;top:11px;'></div><div class="c"style='left:8px;top:5px;'></div><div class="c"style='left:8px;top:6px;'></div><div class="c"style='left:8px;top:7px;'></div><div class="c"style='left:8px;top:8px;'></div><div class="c"style='left:8px;top:9px;'></div><div class="c"style='left:8px;top:10px;'></div><div class="c"style='left:9px;top:6px;'></div><div class="c"style='left:9px;top:7px;'></div><div class="c"style='left:9px;top:8px;'></div><div class="c"style='left:9px;top:9px;'></div><div class="c"style='left:10px;top:7px;'></div><div class="c"style='left:10px;top:8px;'></div>
+ 
+			 </div> </div>
+			 
+    </div>	
+</textarea>
+</%text>
+##</%>	4parser

@@ -1,0 +1,45 @@
+<Settings>
+    <!-- Настройка сервиса подсказок.
+	 
+	 minQueryLen: минимальная длина запроса, после которой сервис
+	              начинает работу -->
+    <Suggest minQueryLen="3">
+
+    	<!-- Кеширование долгих запросов. Если true, то запросы, обработка
+	     которых заняла больше minTime миллисекунд, будут кешироваться
+	     в оперативной памяти. Задание небольших величин может привести
+	     к значительному разбуханию сервиса в памяти. -->
+    	<CacheLongQueries minTime="75">true</CacheLongQueries>
+
+	<!-- Журналирование долгих запросов. Если true и время обработки
+	     запроса заняла больше minTime, запрос будет помещён в лог. -->
+	<LogLongQueries minTime="75">true</LogLongQueries>
+
+	<!-- Список загружаемых словарей. Может загружаться или из файла, или
+	     по ключу из общей памяти (см. dictionaryd) -->
+        <Dictionaries>
+            <!-- Dictionary sharedMemoryKey="yottos.suggest.web-en_4"></Dictionary -->
+	    <!-- Dictionary>/home/silver/develop/suggest/data/1M.dict</Dictionary -->
+	    <Dictionary>/home/silver/develop/suggest/data/test.dict</Dictionary>
+        </Dictionaries>
+        
+	<!-- Исправление раскладки, если true.
+
+	     minQueryLen: минимальная длина запроса, после которой функция
+	                  активизируется. -->
+        <FixLayout minQueryLen="0">true</FixLayout>
+
+	<!-- "Лёгкий" алгоритм коррекции орфографии, если true.
+
+	     minQueryLen: минимальная длина запроса, после которой функция
+	                  активизируется. -->
+        <FixSpellingLight minQueryLen="0">true</FixSpellingLight>
+
+	<!-- "Полный" алгоритм коррекции орфографии, если true.
+
+	     minQueryLen: минимальная длина запроса, после которой функция
+	                  активизируется. -->
+        <FixSpellingFull minQueryLen="4">true</FixSpellingFull>
+
+    </Suggest>
+</Settings>

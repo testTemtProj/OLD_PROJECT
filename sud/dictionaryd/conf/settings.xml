@@ -1,0 +1,9 @@
+<DictinaryServiceSettings>
+    <Log>/tmp/dictionaryd.log</Log>
+
+    <Dictionary>
+        <key>yottos.suggest.web-en_4</key>
+        <file>/tmp/web.suggest.р.work</file>
+    </Dictionary>
+
+</DictinaryServiceSettings>

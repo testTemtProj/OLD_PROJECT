@@ -1,0 +1,107 @@
+# -*- coding: utf-8 -*-
+<%inherit file="/main.mako.html" />
+<%def name="head()">
+<title>Yottos GetMyAd</title>
+<link rel="stylesheet" href="/css/main.css" type="text/css" media="screen, projection" />
+</%def>
+    <h2>Рейтинг рекламных предложений</h2>
+            <table id="tableOfferRating"></table>
+            <div id="tableOfferRating_pager"></div>
+            <table id="tableOfferRatingForInformers"></table>
+            <div id="tableOfferRatingForInformers_pager"></div>
+	
+	
+<script text="text/javascript">
+  
+$(document).ready(function() {	
+
+
+    // Таблица рейтинга рекламных предложений
+    $("#tableOfferRating").jqGrid({
+        url:'/manager/rating',
+        datatype: 'json',
+        mtype: 'GET',
+        colNames: ['РП', 'РК', 'Показы', 'Клики', 'CTR', 'Цена', 'Рейтинг', 'Показы до пересчета', 'Клики до пересчета', 'Старый CTR', 'Все показы', 'Все клики', 'Обший CTR'],
+        colModel: [
+          { name: 'title', index: 'title', align: 'center' },
+          { name: 'campaignTitle', index: 'campaignTitle', align: 'center'},
+          { name: 'impressions', index: 'impressions', align: 'center', width: '70px' },
+          { name: 'clicks', index: 'clicks', align: 'center', width: '70px'},
+          { name: 'ctr', index: 'ctr', align: 'center', width: '80px', formatter:'number', formatoptions:{decimalSeparator:",", thousandsSeparator: ",", decimalPlaces: 4}},
+          { name: 'cost', index: 'cost', align: 'center', width: '70px'},
+          { name: 'rating', index: 'rating', align: 'center', width: '85px'},
+          { name: 'old_impressions', index: 'old_impressions', align: 'center', width: '150px' },
+          { name: 'old_clicks', index: 'old_clicks', align: 'center', width: '150px'},
+          { name: 'old_ctr', index: 'old_ctr', align: 'center', width: '80px', formatter:'number', formatoptions:{decimalSeparator:",", thousandsSeparator: ",", decimalPlaces: 4}},
+          { name: 'full_impressions', index: 'full_impressions', align: 'center' , width: '90px'},
+          { name: 'full_clicks', index: 'full_clicks', align: 'center', width: '90px'},
+          { name: 'full_ctr', index: 'full_ctr', align: 'center', width: '80px', formatter:'number', formatoptions:{decimalSeparator:",", thousandsSeparator: ",", decimalPlaces: 4}}],
+        caption: "Обший рейтинг рекламных предложений",
+        height: 'auto',
+        rowNum:10,
+        rowList:[10,20,30,100],
+        sortname: 'title',
+        sortorder: 'asc',
+        rownumbers: true,
+        rownumWidth: 20,
+        autowidth: true,
+        hiddengrid: true,
+        pager: '#tableOfferRating_pager'
+    });
+    $("#tableOfferRating").jqGrid('navGrid', '#tableOfferRating_pager',{del:false,add:false,edit:false,search:false},{},{},{},{});
+
+    // Таблица рейтинга рекламных предложений по рекламным блокам
+    $("#tableOfferRatingForInformers").jqGrid({
+        url:'/manager/ratingForInformers',
+        datatype: 'json',
+        mtype: 'GET',
+        colNames: ['', 'Рекламный блок'],
+        colModel: [
+          { name: 'adv', index: 'adv', align: 'center', key:true, hidden: true },
+          { name: 'title', index: 'title', align: 'center', width: '1200px' }],
+        caption: "Pейтинг рекламных предложений по рекламным блокам",
+        rownumbers: false,
+        loadonce: true,
+        sortable: true,
+        hiddengrid: true,
+        autowidth: true,
+        rowNum: 900,
+        height: '100%',
+        subGrid: true,
+        subGridRowExpanded: function(subgrid_id, row_id) {
+            var subgrid_table_id, pager_id;
+            subgrid_table_id = subgrid_id+"_t";
+            pager_id = "p_"+subgrid_table_id;
+            $("#"+subgrid_id).html("<table id='"+subgrid_table_id+"' class='scroll'></table><div id='"+pager_id+"' class='scroll'></div>");
+            jQuery("#"+subgrid_table_id).jqGrid({
+                url:'/manager/ratingForInformers?subgrid='+ row_id ,
+                datatype: "json",
+                colNames: ['РП', 'РК', 'Показы', 'Клики', 'CTR', 'Цена', 'Рейтинг', 'Показы до пересчета', 'Клики до пересчета', 'Старый CTR', 'Все показы', 'Все клики', 'Обший CTR'],
+                colModel: [
+                  { name: 'title', index: 'title', align: 'center', sortable:true, sorttype: 'text' },
+                  { name: 'campaignTitle', index: 'campaignTitle', align: 'text'},
+                  { name: 'impressions', index: 'impressions', align: 'center', sortable:true, sorttype: 'integer', width: '70px' },
+                  { name: 'clicks', index: 'clicks', align: 'center', sortable:true, sorttype: 'integer', width: '70px'},
+                  { name: 'ctr', index: 'ctr', align: 'center', sortable:true, sorttype: 'integer', width: '70px', formatter:'number', formatoptions:{decimalSeparator:",", thousandsSeparator: ",", decimalPlaces: 4}},
+                  { name: 'cost', index: 'cost', align: 'center', sortable:true, sorttype: 'integer', width: '70px'},
+                  { name: 'rating', index: 'rating', align: 'center', sortable:true, sorttype: 'integer', width: '85px'},
+                  { name: 'old_impressions', index: 'old_impressions', align: 'center', sortable:true, sorttype: 'integer', width: '150px' },
+                  { name: 'old_clicks', index: 'old_clicks', align: 'center', sortable:true, sorttype: 'integer', width: '150px'},
+                  { name: 'old_ctr', index: 'old_ctr', align: 'center', sortable:true, sorttype: 'integer', width: '70px', formatter:'number', formatoptions:{decimalSeparator:",", thousandsSeparator: ",", decimalPlaces: 4}},
+                  { name: 'full_impressions', index: 'full_impressions', align: 'center', sortable:true, sorttype: 'integer', width: '90px' },
+                  { name: 'full_clicks', index: 'full_clicks', align: 'center', sortable:true, sorttype: 'integer', width: '90px'},
+                  { name: 'full_ctr', index: 'full_ctr', align: 'center', sortable:true, sorttype: 'integer', width: '70px', formatter:'number', formatoptions:{decimalSeparator:",", thousandsSeparator: ",", decimalPlaces: 4}}],
+                rownumbers: false,
+                loadonce: true,
+                sortable: true,
+                hiddengrid: true,
+                autowidth: true,
+                rowNum: 900,
+                height: '100%'
+            });
+        },
+        pager: '#tableOfferRatingForInformers_pager'
+    });
+		
+})
+</script>

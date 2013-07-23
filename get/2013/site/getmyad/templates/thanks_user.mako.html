@@ -1,0 +1,26 @@
+# -*- coding: utf-8 -*-
+<%inherit file="/main.mako.html" />	
+<%!
+	from datetime import datetime
+%>
+
+<%def name="head()">
+        <title>Статистика GetMyAd</title>
+</%def>
+
+<div id="contentPosition">
+    <div id="registerUserThanks">
+ 	${c.text_message}
+        <h3>Спасибо за интерес к участию в партнёрской программе Yottos GetMyAd.</h3>
+        <p>
+        Мы обязательно рассмотрим Вашу заявку в течение трех рабочих дней и дадим ответ о <br />
+        возможности участия вашего сайта в рекламной сети Yottos GetMyAd. <br />
+        <a class="footerlink" href="${h.url_for(controller='info', action='terms_and_conditions')}" target="_self">Правила и условия GetMyAd™</a>
+        </p>
+        <br />
+        <p>С уважением,<br /> 
+        Отдел Развития Рекламной Сети Yottos GetMyAd.<br />
+        partner@yottos.com<br />
+        тел.: +38 (050) 406 20 20.</p>        
+    </div>
+</div>

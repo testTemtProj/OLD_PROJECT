@@ -1,0 +1,385 @@
+﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{29D02A48-A1F0-43B3-A10E-26C21F9B0DA3}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>YottosCatalog</RootNamespace>
+    <AssemblyName>YottosCatalog</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web.Abstractions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web.Extensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web.Routing">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Web.Mobile" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Themes\Default\Image\button_sm.gif" />
+    <Content Include="App_Themes\Default\Main.css" />
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="About.aspx.cs">
+      <DependentUpon>About.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="About.aspx.designer.cs">
+      <DependentUpon>About.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\CatalogPageUrlsMapping.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CatalogPageUrlsMapping.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\CatalogPageUrlsMapping.en-us.designer.cs">
+      <DependentUpon>CatalogPageUrlsMapping.en-us.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="App_GlobalResources\CatalogPageUrlsMapping.ru-ru.designer.cs">
+      <DependentUpon>CatalogPageUrlsMapping.ru-ru.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="App_GlobalResources\CatalogPageUrlsMapping.uk-ua.designer.cs">
+      <DependentUpon>CatalogPageUrlsMapping.uk-ua.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Code\CatalogRouting.cs" />
+    <Compile Include="Controls\QuestionnaireAnswer.ascx.cs">
+      <DependentUpon>QuestionnaireAnswer.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\QuestionnaireAnswer.ascx.designer.cs">
+      <DependentUpon>QuestionnaireAnswer.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Filters\CatalogFilterBase.cs" />
+    <Compile Include="Filters\LinksResultModificationFilter.cs" />
+    <Compile Include="Handlers\BanersHandler.ashx.cs">
+      <DependentUpon>BanersHandler.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="CatalogAddLink.aspx.cs">
+      <DependentUpon>CatalogAddLink.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CatalogAddLink.aspx.designer.cs">
+      <DependentUpon>CatalogAddLink.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CatalogLinkPosted.aspx.cs">
+      <DependentUpon>CatalogLinkPosted.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CatalogLinkPosted.aspx.designer.cs">
+      <DependentUpon>CatalogLinkPosted.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CatalogSearch.aspx.cs">
+      <DependentUpon>CatalogSearch.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CatalogSearch.aspx.designer.cs">
+      <DependentUpon>CatalogSearch.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Code\CatalogSiteMapProvider.cs" />
+    <Compile Include="App_GlobalResources\CatalogResources.designer.cs">
+      <DependentUpon>CatalogResources.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="App_GlobalResources\CatalogResources.uk-ua.designer.cs">
+      <DependentUpon>CatalogResources.uk-ua.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="App_GlobalResources\CatalogResources.ru-ru.designer.cs">
+      <DependentUpon>CatalogResources.ru-ru.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="App_GlobalResources\CatalogResources.en-us.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CatalogResources.en-us.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Catalog.Master.cs">
+      <DependentUpon>Catalog.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Catalog.Master.designer.cs">
+      <DependentUpon>Catalog.Master</DependentUpon>
+    </Compile>
+    <Compile Include="CatalogContents.aspx.cs">
+      <DependentUpon>CatalogContents.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CatalogContents.aspx.designer.cs">
+      <DependentUpon>CatalogContents.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CatalogDetails.aspx.cs">
+      <DependentUpon>CatalogDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CatalogDetails.aspx.designer.cs">
+      <DependentUpon>CatalogDetails.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CatalogList.aspx.cs">
+      <DependentUpon>CatalogList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CatalogList.aspx.designer.cs">
+      <DependentUpon>CatalogList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Handlers\CatalogRouteHandler.cs" />
+    <Compile Include="Handlers\CheckImageHandler.ashx.cs">
+      <DependentUpon>CheckImageHandler.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Handlers\LinkClickHandler.ashx.cs">
+      <DependentUpon>LinkClickHandler.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="Code\MenuPage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\UrlRewriterParserModule.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Questionnaire\Questions.aspx.cs">
+      <DependentUpon>Questions.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Questionnaire\Questions.aspx.designer.cs">
+      <DependentUpon>Questions.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Questionnaire\Result.aspx.cs">
+      <DependentUpon>Result.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Questionnaire\Result.aspx.designer.cs">
+      <DependentUpon>Result.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Filters\ResponseModificationFilter.cs" />
+    <Compile Include="Settings.aspx.cs">
+      <DependentUpon>Settings.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Settings.aspx.designer.cs">
+      <DependentUpon>Settings.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SitemapGenerator.aspx.cs">
+      <DependentUpon>SitemapGenerator.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SitemapGenerator.aspx.designer.cs">
+      <DependentUpon>SitemapGenerator.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="YottosCatalog.dbml.cs">
+      <DependentUpon>YottosCatalog.dbml</DependentUpon>
+    </Compile>
+    <Compile Include="YottosCatalog.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>YottosCatalog.dbml</DependentUpon>
+    </Compile>
+    <Compile Include="YottosCatalogUrlMappings.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>YottosCatalogUrlMappings.dbml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Themes\Default\Button.skin" />
+    <Content Include="App_Themes\Default\Calendar.skin" />
+    <Content Include="App_Themes\Default\GridView.skin" />
+    <Content Include="Catalog.Master" />
+    <Content Include="CatalogList.aspx" />
+    <Content Include="Image\key.gif" />
+    <Content Include="Image\Logos\ru-RU.gif" />
+    <Content Include="Image\Subsys\SmallCatalog.gif" />
+    <Content Include="Image\Subsys\SmallNews.gif" />
+    <Content Include="Image\Subsys\SmallRynok.gif" />
+    <Content Include="Image\Subsys\SmallWeb.gif" />
+    <Content Include="Image\Subsys\SmallZero.gif" />
+    <Content Include="Image\ytTitle.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\CatalogResources.en-us.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>CatalogResources.en-us.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\CatalogResources.ru-ru.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>CatalogResources.ru-ru.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\CatalogResources.uk-ua.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>CatalogResources.uk-ua.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\CatalogResources.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>CatalogResources.designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="CatalogContents.aspx" />
+    <Content Include="CatalogDetails.aspx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="YottosCatalog.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>YottosCatalog.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="About.aspx" />
+    <Content Include="App_Data\RouteTable.xml" />
+    <Content Include="App_Data\SupportedCultures.xml" />
+    <Content Include="CatalogAddLink.aspx" />
+    <Content Include="CatalogLinkPosted.aspx" />
+    <Content Include="CatalogSearch.aspx" />
+    <Content Include="ClientBin\Baners\Katalog01.swf" />
+    <Content Include="ClientBin\Baners\News01.swf" />
+    <Content Include="ClientBin\Baners\PersonalRoom01.swf" />
+    <Content Include="ClientBin\Baners\Search01.swf" />
+    <Content Include="ClientBin\Baners\Zero01.swf" />
+    <Content Include="Controls\QuestionnaireAnswer.ascx" />
+    <Content Include="Global.asax" />
+    <Content Include="Image\Arrow-Left.gif" />
+    <Content Include="Image\Arrow-Right.gif" />
+    <Content Include="Image\down_arrow.jpg" />
+    <Content Include="Questionnaire\Questions.aspx" />
+    <Content Include="Questionnaire\Result.aspx" />
+    <Content Include="Scripts\menu_onclick_override.js" />
+    <Content Include="Scripts\query_builder.js" />
+    <Content Include="Settings.aspx" />
+    <Content Include="SitemapGenerator.aspx" />
+    <Content Include="Web.sitemap" />
+    <Content Include="Handlers\CheckImageHandler.ashx" />
+    <Content Include="App_Themes\Default\TreeView.skin" />
+    <Content Include="Handlers\BanersHandler.ashx" />
+    <Content Include="App_Themes\Default\Menu.skin" />
+    <Content Include="Handlers\LinkClickHandler.ashx" />
+    <None Include="YottosCatalog.dbml.layout">
+      <DependentUpon>YottosCatalog.dbml</DependentUpon>
+    </None>
+    <None Include="YottosCatalogUrlMappings.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>YottosCatalogUrlMappings.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="YottosCatalogUrlMappings.dbml.layout">
+      <DependentUpon>YottosCatalogUrlMappings.dbml</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\CatalogPageUrlsMapping.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>CatalogPageUrlsMapping.Designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\CatalogPageUrlsMapping.en-us.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>CatalogPageUrlsMapping.en-us.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\CatalogPageUrlsMapping.ru-ru.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>CatalogPageUrlsMapping.ru-ru.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\CatalogPageUrlsMapping.uk-ua.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>CatalogPageUrlsMapping.uk-ua.designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="Image\Logos\en-US.gif" />
+    <Content Include="Image\Logos\uk-UA.gif" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>54141</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

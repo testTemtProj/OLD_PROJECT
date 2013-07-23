@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="YottosCatalogUrlMappings">
+  <DataContextMoniker Name="/YottosCatalogUrlMappingsDataContext" />
+  <nestedChildShapes>
+    <classShape Id="c8a26f63-0e56-4be5-bdcb-96398932a7cf" absoluteBounds="0.75, 1, 2, 1.0961531575520838">
+      <DataClassMoniker Name="/YottosCatalogUrlMappingsDataContext/actual_url" />
+      <nestedChildShapes>
+        <elementListCompartment Id="fe61d7b6-8a41-45ff-832a-e9c377fc5773" absoluteBounds="0.765, 1.46, 1.9700000000000002, 0.53615315755208326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="9e59e683-3325-480b-9146-caed5f521241" absoluteBounds="3.5, 0.875, 2, 1.4248478190104166">
+      <DataClassMoniker Name="/YottosCatalogUrlMappingsDataContext/transformed_url" />
+      <nestedChildShapes>
+        <elementListCompartment Id="1f0d2964-cefe-4712-a96c-fab0c04fb905" absoluteBounds="3.515, 1.335, 1.9700000000000002, 0.86484781901041674" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(2.75 : 1.54807657877604); (3.5 : 1.54807657877604)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/YottosCatalogUrlMappingsDataContext/actual_url/actual_url_transformed_url" />
+      <nodes>
+        <classShapeMoniker Id="c8a26f63-0e56-4be5-bdcb-96398932a7cf" />
+        <classShapeMoniker Id="9e59e683-3325-480b-9146-caed5f521241" />
+      </nodes>
+    </associationConnector>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

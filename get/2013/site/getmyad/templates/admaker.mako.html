@@ -1,0 +1,138 @@
+# -*- coding: utf-8 -*-
+<%inherit file="/main.mako.html" />	
+<%def name="head()">
+        <title>Создание выгрузки GetMyAd</title>
+</%def>
+
+
+			<style type="text/css">
+				#admakerOptions > h3 {
+					text-align: center;
+				} 
+				.optionsGroup {
+					width: 100px;
+					float: left;
+					font-weight: bold;
+				}
+			</style>
+			<div id="admaker">
+				<input type="button" id="refreshButton" value="Обновить" />
+				<input type="button" id="printButton" value="Вывод кода" />
+				<input type="button" id="saveButton" value="Сохранить" />
+				<div id="admakerPreview"></div>
+				
+				
+				<div id="admakerOptions" style="width:450px;">
+					<h3><a href="#">Весь блок</a></h3>
+					<div id="mainOptions"></div>
+
+					<h3><a href="#">Блок предложения</a></h3>
+					<div id="advertiseOptions"></div>
+
+					<h3><a href="#">Заголовок</a></h3>
+					<div id="headerOptions" style="height: 200px;"></div>
+			
+					<h3><a href="#">Описание</a></h3>
+					<div id="descriptionOptions"></div>
+			
+					<h3><a href="#">Цена</a></h3>
+					<div id="costOptions"></div>
+			
+					<h3><a href="#">Изображение</a></h3>
+					<div id="imageOptions"></div>
+
+					<h3><a href="#">Навигация</a></h3>
+					<div id="navOptions"></div>
+					
+				</div>	<!-- end admakerOptions -->
+			</div>	<!-- end admaker -->
+
+			
+
+<!-- Шаблон выгрузки -->
+<%include file="advertise_template.mako.html" />	<!-- /%> -->
+			
+			
+
+	<script type="text/javascript">
+		var CurrentAdvertiseId = '${c.adv_id}';
+% if c.admaker:
+		var initialOptions = ${c.admaker};
+% else:
+		var initialOptions = {
+			Main: {
+				backgroundColor: "ffffff",
+				borderColor: "303030",
+				borderWidth: "1",
+				height: "170px",
+				width: "750px",
+				itemsNumber: "6",
+				left: "0",
+				top: "0"
+			}, 
+			Advertise: {
+				borderColor: "303030",
+				borderWidth: "1",
+				height: "170px",
+				width: "150px",
+				left: "0",
+				top: "0"
+			},
+			Header: {
+				borderColor: "666666",
+				borderWidth: "1",
+				fontColor: "000000",
+				fontSize: "12",
+				height: "auto",
+				width: "auto",
+				left: "0",
+				top: "0"
+			},
+			Description: {
+				borderColor: "ff6666",
+				borderWidth: "1",
+				fontColor: "000000",
+				fontSize: "12",
+				height: "auto",
+				width: "auto",
+				left: "0",
+				top: "30",
+				align: "center"
+			},
+			Cost: {
+				borderColor: "9f9feb",
+				borderWidth: "1",
+				fontColor: "000000",
+				fontSize: "12",
+				height: "auto",
+				width: "auto",
+				left: "0",
+				top: "100"
+			},
+			Image: {
+				borderColor: "303030",
+				borderWidth: "1",
+				height: "50px",
+				width: "50px",
+				left: "0",
+				top: "120"
+			},
+			Nav: {
+				corner: 'right-top',
+				color: "000000",
+				backgroundColor: 'ffffff',
+				borderColor: "303030"
+			},
+			Logo: {
+				corner: 'bottom-left',
+				file: 'colorLogo.png'
+			}
+		}
+% endif
+
+attractorChecked = ${'true' if c.track_attractor else 'false'};
+	</script>
+		
+
+	<script type="text/javascript" src="/js/admaker.js"></script>
+

@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>${self.title()}</title>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+    %if hasattr(c,'description'):
+    <meta name="description" content="${c.description}">
+    %else:
+    <meta name="description" content="Каталог сайтов Yottos" />
+    %endif
+    %if hasattr(c,'keywords'):
+    <meta name="keywords" content="${c.keywords}" />
+    %else: 
+    <meta name="keywords" content="сайты, поиск, каталог, yottos, поисковая система, search-engine, sites, catalog, Ukraine, Украина, реклама" />
+    %endif
+    <link rel="stylesheet" title="Default" href="/css/Main.css" type="text/css" />
+    <link rel="shortcut icon" href="/Image/ytTitle.ico" />
+    <script type="text/javascript" src="/js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="/js/default.js"></script>
+  </head>
+  <body style="border: White 0px solid; margin-top: 0;">
+
+    <table style="min-width: 1024px;">
+      <tr>
+        <td colspan="3">
+          ${language_selector(h.get_current_locale())}
+        </td>
+      </tr>
+      <tr>
+
+	  
+          <td style="width:154px;  border-left: #ffffff 1px solid;" valign="top" style="margin=5px;"><br />
+	    <div id="ctl00_SearchString_LogoCell">
+              <a  href="/"><img  src="/Image/Logo_en.gif" style="width:125px;border-width:0px;vertical-align:bottom; "></a>
+	    </div>
+          </td>
+
+
+        <td>
+	  <ul class="h-icons">
+	    <li id="icons-web" class="h-icons-web"><a onmouseover="buildSearchUrl(this)" href=${_("http://yottos.com")}>${_("Web")}</a></li>
+	    <li id="icons-zero" class="h-icons-zero"><a onmouseover="buildSearchUrl(this)" href=${_("http://zero.yottos.com")}>${_("Zero")}</a></li>
+	    <li id="icons-news" class="h-icons-news"><a onmouseover="buildSearchUrl(this)" href=${_("http://news.yottos.com")}>${_("News")}</a></li>
+	    <li id="icons-catalog" class="h-icons-catalog"><a class="icons-active" href="/">${_("Catalog")}</a></li>
+	    <li id="icons-rynok" class="h-icons-rynok"><a onmouseover="buildSearchUrl(this)" href=${_("http://rynok.yottos.com/")}>${_('Market')}</a></li>
+	  </ul>
+	  ${h.form(url(controller='category', action='search'),method='get')}
+	  ${_("Search")}:${h.text('q', size = '70',style="width: 528px; height: 22px;padding: 0;margin: 0;border: 1px solid #667; font-size: 10pt;line-height: 25px;")}
+	  ${h.submit('search', _('Search'), style="font-family:Arial;font-size:13px;width:110px;")}
+	  ${h.end_form()}
+        </td>
+      </tr>
+    </table>	  
+    
+    <table width="100%" style="border:1px; border-top:0;" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td style="border-top: 0px ;border-left: #4c6bdf 1px solid; height: 15px;">&nbsp;</td>
+	<td style="border-top: 0px ; height: 15px;" ></td>              
+      </tr>
+      <tr>
+        <td style="height:13px; border-right: #4c6bdf 1px solid; border-top: #4c6bdf 1px solid;" colspan="2">
+          &nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; 
+	</td>
+      </tr>
+    </table>
+    <table width="99%" cellpadding="0" cellspacing="0">
+      <tr>
+	<td style="vertical-align:top;">
+
+
+
+	  ${self.body()}
+
+
+	</td>
+    </table>
+    <table width="100%" style="min-width: 1024px;">
+      <tr>
+	<td style="border-top: 0px ;border-left: #4c6bdf 1px solid; height:7px;font-size:12;" align="center">                
+          <br/><br/>
+	</td>
+	<td style="width :240px; height:7px; font-size:2px;">
+	  &nbsp;
+	</td>
+      </tr>
+      <tr>
+	<td style="height:40px; border-right: #4c6bdf 1px solid; border-top: #4c6bdf 1px solid; text-align:center ; border-bottom: #4c6bdf 1px solid;" valign="middle">
+          <a class="mainlink" href="http://yottos.com/" target="_self">${_('Main Page')}</a>
+          &nbsp; 
+	  <span class="Line">|</span>
+          &nbsp; <a class="mainlink" href="${url('yottos.com')}/About/AboutYottos.aspx" target="_self">${_("About Yottos")}</a>
+          &nbsp; <span class="Line">|</span>
+          &nbsp; <a class="mainlink" href="http://yottos.com/Advertising" target="_self">${_("Advertisment programs")}</a>
+          &nbsp; <span class="Line">|</span>
+          &nbsp;&nbsp; <a class="mainlink" href="/sites/add">${_("Add site")}</a>
+	</td>
+	<td style="width :240px;"></td>
+      </tr>
+    </table>
+    &copy;<span style="font-size:12px;">2011
+      &nbsp;<font color="#fe7300" style="font-size:12px;">Yot</font><font color="#4c6bdf" style="font-size:12px;">tos</font></span>
+
+  </body>
+</html>
+
+<%def name="language_selector(current_locale)">
+<table style="border-bottom: Silver 1px solid;" id="t_lang_select">
+  <tbody>
+    <tr>
+      <td>
+
+<%
+    messages = {"ru" : u"Мой язык - русский",
+                 "uk" : u"Моя мова - українська",
+                 "en" : u"My language is english"}
+    if current_locale not in messages:
+        current_locale = "ru"
+    current_message = messages[current_locale]
+    del messages[current_locale]
+%>
+        <span>${current_message}</span>
+        <ul id="language_select_box">
+          % for locale in messages:
+          <li><a href="/language/change?lang=${locale}">${messages[locale]}</a></li>
+          % endfor
+        </ul>
+      </td>
+      <td>
+        <img styel="border-width: 0px;" src="/Image/down_arrow.jpg" alt="" />
+      </td>
+      <td>
+        <a href="#">${_("Make as default page")}</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</%def>

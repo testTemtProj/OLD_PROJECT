@@ -1,0 +1,1587 @@
+# This Python file uses the following encoding: utf-8
+from ftplib import FTP
+from getmyad.config.social_ads import social_ads
+from getmyad.lib.helpers import progressBar
+from getmyad.lib.admaker_validator import validate_admaker
+from getmyad.lib.template_convertor import js2mako
+from getmyad.model import mq
+from pylons import config, app_globals
+import mako.template
+from uuid import uuid1
+import StringIO, codecs
+import datetime
+import logging
+import re
+from urlparse import urlparse
+import urllib2
+import json
+
+from slimit import minifier
+
+
+class Informer:
+    """ Рекламный информер (он же рекламный скрипт, рекламная выгрузка) """
+
+    def __init__(self):
+        self.guid = None
+        self.title = None
+        self.admaker = None
+        self.css = None
+        self.css_banner = None
+        self.user_login = None
+        self.non_relevant = None
+        self.domain = None
+        self.height = None
+        self.width = None
+        self.height_banner = None
+        self.width_banner = None
+        self.auto_reload = 0
+        self.track_attractor = False
+        self.cost = None
+        self.db = app_globals.db
+
+
+    def save(self):
+        """ Сохраняет информер, при необходимости создаёт """
+        update = {}
+        if self.guid:
+            update['guid'] = self.guid
+        if self.title:
+            update['title'] = self.title
+        if self.admaker:
+            update['admaker'] = self.admaker
+        if self.css:
+            update['css'] = self.css
+        else:
+            update['css'] = self.admaker_options_to_css(self.admaker)
+        if self.css_banner:
+            update['css_banner'] = self.css_banner
+        else:
+            update['css_banner'] = self.admaker_options_to_css_banner(self.admaker)
+        if self.domain:
+            update['domain'] = self.domain
+        if self.height:
+            update['height'] = self.height
+        if self.width:
+            update['width'] = self.width
+        if self.height_banner:
+            update['height_banner'] = self.height_banner
+        if self.width_banner:
+            update['width_banner'] = self.width_banner
+        #self.auto_reload = 0
+        #if self.auto_reload.isdigit():
+        #    update['auto_reload'] = self.auto_reload
+        #else:
+        update['auto_reload'] = 0
+        update['track_attractor'] = self.track_attractor
+        if self.cost:
+            update['cost'] = self.cost
+        if isinstance(self.non_relevant, dict) \
+                        and 'action' in self.non_relevant \
+                        and 'userCode' in self.non_relevant:
+            update['nonRelevant'] = {'action': self.non_relevant['action'],
+                                     'userCode': self.non_relevant['userCode']}
+        update['lastModified'] = datetime.datetime.now()
+
+        if not self.guid:
+            # Создание нового информера
+            if not self.user_login:
+                raise ValueError('User login must be specified when creating '
+                                 'informer!')
+            self.guid = str(uuid1()).lower()
+            update['user'] = self.user_login
+        else:
+            if self.user_login:
+                pass      # TODO: Выдавать предупреждение, что для
+                          # уже созданных информеров нельзя менять пользователя
+
+        self.db.informer.update({'guid': self.guid},
+                                       {'$set': update},
+                                       upsert=True,
+                                       safe=True)
+        InformerFtpUploader(self.guid).upload()
+        mq.MQ().informer_update(self.guid)
+
+    def load(self, id):
+        raise NotImplementedError
+
+    def loadGuid (self, id):
+        """ Загружает информер из MongoDB """
+        mongo_record = self.db.informer.find_one({'guid': id})
+        self.guid = mongo_record['guid']
+        self.title = mongo_record['title']
+        self.user_login = mongo_record["user"]
+        self.admaker = mongo_record.get('admaker')
+        self.css = mongo_record.get('css')
+        self.css_banner = mongo_record.get('css_banner')
+        self.domain = mongo_record.get('domain')
+        self.track_attractor = mongo_record.get('track_attractor', False)
+        self.cost = mongo_record.get('cost', None)
+        self.height = mongo_record.get('height')
+        self.width = mongo_record.get('width')
+        self.height_banner = mongo_record.get('height_banner')
+        self.width_banner = mongo_record.get('width_banner')
+        if 'nonRelevant' in mongo_record:
+            self.non_relevant = {}
+            self.non_relevant['action'] = \
+                mongo_record['nonRelevant'].get('action', 'social')
+            self.non_relevant['userCode'] = \
+                mongo_record['nonRelevant'].get('userCode', '')
+
+    @staticmethod
+    def load_from_mongo_record(mongo_record):
+        """ Загружает информер из записи MongoDB """
+        informer = Informer()
+        informer.guid = mongo_record['guid']
+        informer.title = mongo_record['title']
+        informer.user_login = mongo_record["user"]
+        informer.admaker = mongo_record.get('admaker')
+        informer.css = mongo_record.get('css')
+        informer.css_banner = mongo_record.get('css_banner')
+        informer.domain = mongo_record.get('domain')
+        informer.track_attractor = mongo_record.get('track_attractor', False)
+        informer.cost = mongo_record.get('cost', None)
+        informer.height = mongo_record.get('height')
+        informer.width = mongo_record.get('width')
+        informer.height_banner = mongo_record.get('height_banner')
+        informer.width_banner = mongo_record.get('width_banner')
+        if 'nonRelevant' in mongo_record:
+            informer.non_relevant = {}
+            informer.non_relevant['action'] = \
+                mongo_record['nonRelevant'].get('action', 'social')
+            informer.non_relevant['userCode'] = \
+                mongo_record['nonRelevant'].get('userCode', '')
+        return informer
+
+    def admaker_options_to_css(self, options):
+        """ Создаёт строку CSS из параметров Admaker """
+
+        def parseInt(value):
+            ''' Пытается выдрать int из строки.
+                
+                Например, для "128px" вернёт 128. '''
+            try:
+                return re.findall("\\d+", value)[0]
+            except IndexError:
+                return 0
+        options = validate_admaker(options)
+        template_name = '/advertise_style_template.mako.html'
+        src = app_globals.mako_lookup.get_template(template_name)\
+                .source.replace('<%text>', '').replace('</%text>', '')
+        template = mako.template.Template(
+            text=js2mako(src), 
+            format_exceptions=True)
+        return template.render_unicode(parseInt=parseInt, **options)
+
+    def admaker_options_to_css_banner(self, options):
+        """ Создаёт строку CSS Banner из параметров Admaker """
+
+        def parseInt(value):
+            ''' Пытается выдрать int из строки.
+                
+                Например, для "128px" вернёт 128. '''
+            try:
+                return re.findall("\\d+", value)[0]
+            except IndexError:
+                return 0
+
+        options = validate_admaker(options)
+        template_name = '/advertise_style_template_banner.mako.html'
+        src = app_globals.mako_lookup.get_template(template_name)\
+                .source.replace('<%text>', '').replace('</%text>', '')
+        template = mako.template.Template(
+            text=js2mako(src), 
+            format_exceptions=True)
+        return template.render_unicode(parseInt=parseInt, **options)
+#        return minify_css( template.render_unicode(parseInt=h.parseInt, **opt) )
+
+class InformerFtpUploader:
+    """ Заливает необходимое для работы информера файлы на сервер раздачи
+        статики:
+
+        1. Javascript-загрузчик информера.
+        2. Статическую заглушку с социальной рекламой на случай отказа GetMyAd.
+    """
+
+    def __init__(self, informer_id):
+        self.informer_id = informer_id
+        self.db = app_globals.db
+
+    def upload(self):
+        """ Заливает через FTP загрузчик и заглушку информера """
+        self.upload_loader()
+        self.upload_reserve()
+
+    def upload_loader(self):
+        ' Заливает загрузчик информера '
+        if config.get('informer_loader_ftp'):
+            try:
+                ftp = FTP(host=config.get('informer_loader_ftp'),
+                          user=config.get('informer_loader_ftp_user'),
+                          passwd=config.get('informer_loader_ftp_password'))
+                ftp.cwd(config.get('informer_loader_ftp_path'))
+                loader = StringIO.StringIO()
+                loader.write(self._generate_informer_loader())
+                loader.seek(0)
+                # TODO: Приведение к UPPER-CASE нужно будет убрать, когда
+                #       на сервере будет реализована case-insensitive раздача
+                #       статических файлов (задача #58).
+                ftp.storlines('STOR %s.js' % self.informer_id.lower(), loader)
+                ftp.storlines('STOR %s.js' % self.informer_id.upper(), loader)
+                ftp.quit()
+                loader.close()
+            except Exception, ex:
+                logging.error(ex)
+        else:
+            logging.warning('informer_loader_ftp settings not set! '
+                            'Check .ini file.')
+
+    def upload_reserve(self):
+        ' Заливает заглушку для информера '
+        if config.get('reserve_ftp'):
+            try:
+                ftp = FTP(config.get('reserve_ftp'))
+                ftp.login(config.get('reserve_ftp_user'),
+                          config.get('reserve_ftp_password'))
+                ftp.cwd(config.get('reserve_ftp_path'))
+                data = StringIO.StringIO()
+                data.write(self._generate_social_ads().encode('utf-8'))
+                data.seek(0)
+                ftp.storlines('STOR emergency-%s.html' % self.informer_id,
+                              data)
+                ftp.quit()
+                data.close()
+            except Exception, ex:
+                logging.error(ex)
+        else:
+            logging.warning('reserve_ftp settings not set! Check .ini file.')
+
+    def uploadAll(self):
+        """ Загружает на FTP скрипты для всех информеров """
+        advertises = self.db.informer.find({}, {'guid': 1})
+        prog = progressBar(0, advertises.count())
+        i = 0
+        for adv in advertises:
+            i += 1
+            prog.updateAmount(i)
+#            print "Saving informer %s... \t\t\t %s" % (adv['guid'], prog)
+            InformerFtpUploader(adv['guid']).upload()
+
+    def _generate_informer_loader(self):
+        ''' Возвращает код javascript-загрузчика информера '''
+        adv = self.db.informer.find_one({'guid': self.informer_id})
+        if not adv:
+            return False
+        try:
+            guid = adv['guid']
+            width = int(re.match('[0-9]+',
+                        adv['admaker']['Main']['width']).group(0))
+            height = int(re.match('[0-9]+',
+                         adv['admaker']['Main']['height']).group(0))
+        except:
+            raise Exception("Incorrect size dimensions for informer %s" %
+                             self.informer_id)
+        try:
+            border = int(re.match('[0-9]+',
+                         adv['admaker']['Main']['borderWidth']).group(0))
+        except:
+            border = 1
+        partner = adv.get('domain', 'other').replace('.', '-').replace('/', '')
+        domain = adv.get('domain', 'invalid.attractor.yottos.com')
+        auto_reload = adv.get('auto_reload', 300)
+        parsed_domain = urlparse(domain)
+        site_url = 'http://' + (parsed_domain.hostname if parsed_domain.hostname else domain)
+        secret_token = 'a4b03d409369e92ce4d8f088cd749b10' # admin account
+        tracking_enabled = adv.get('track_attractor', False)
+
+        site_id = None
+
+        if tracking_enabled:
+            request = urllib2.Request(url='http://attractor.yottos.com/index.php?module=API&method=SitesManager.getSitesIdFromSiteUrl&url=' + site_url + '&format=json&token_auth=' + secret_token)
+            response = urllib2.urlopen(request) 
+            try:
+                site_id = json.loads(response.read())[0]['idsite']
+            except:
+                site_id = None
+
+        width += border * 2
+        height += border * 2
+        script = (ur"""
+            ;function isLocalStorageAvailable() {
+                try {
+                    return 'localStorage' in window && window['localStorage'] !== null;
+                } catch (e) {
+                    return false;
+                }
+            }
+            ;function keyStorageAvailable(){
+                if (isLocalStorageAvailable()){
+                    if (localStorage.getItem('yottos-context'+window.document.URL) != null){
+                        return true;
+                    }
+                    else{
+                        return false;
+                    }
+                }
+                else{
+                    return false;
+                }
+            }
+            ;function parentTag(node) { 
+               return node.parentNode; 
+            } 
+            ;function previousTag(node) { 
+               ;var node = node.previousSibling; 
+               return (node && node.nodeType!=1) ? previousTag(node) : node; 
+            } 
+            ;function nextTag(node) { 
+               ;var node = node.nextSibling; 
+               return (node && node.nodeType!=1) ? nextTag(node) : node; 
+            } 
+            function firstChildTag(node) { 
+               var node = node.firstChild; 
+               return (node && node.nodeType!=1) ? nextTag(node) : node; 
+            } 
+            function lastChildTag(node) { 
+               var node = node.lastChild; 
+               return (node && node.nodeType!=1) ? previousTag(node) : node; 
+            }
+            ;function tagName(node){
+                if (node){
+                    return node.tagName;
+                }
+                else{
+                    return "";
+                }
+            }
+            ;function stripTags(s) {
+            ;var div = document.createElement('div');
+            ;div.innerHTML = s;
+            ;var tags = ['script','img','embed','applet','map','form','input','textarea','option','link','style','noscript','object'];
+            ;var c = tags.length;
+            while (c--) {
+                var tag = div.getElementsByTagName(tags[c]);
+                var i = tag.length;
+                while (i--) {
+                  tag[i].parentNode.removeChild(tag[i]);
+                }
+            }
+            ;var tags = ['li','td'];
+            ;var c = tags.length;
+            while (c--) {
+                ;var tag = div.getElementsByTagName(tags[c]);
+                ;var i = tag.length;
+                while (i--) {
+                   if (tagName(parentTag(tag[i])) =='UL' && tagName(tag[i]) == 'LI'&& tagName(firstChildTag(tag[i])) == 'A'){ 
+                      tag[i].parentNode.removeChild(tag[i]);
+                   }
+                   else if (tagName(parentTag(tag[i])) =='TR' && tagName(tag[i]) == 'TD'&& tagName(firstChildTag(tag[i])) == ''){ 
+                      tag[i].parentNode.removeChild(tag[i]);
+                   }
+                   else if (tagName(parentTag(tag[i])) =='TR' && tagName(tag[i]) == 'TD'&& tagName(firstChildTag(tag[i])) == 'A'){ 
+                      tag[i].parentNode.removeChild(tag[i]);
+                   }
+                   else{
+                        tag[i];
+                   }
+                }
+            }
+            return div.innerHTML;
+          }
+        (function () {
+            ;var oXMLHttpRequest = window.XMLHttpRequest;
+            ;var bGecko  = !!window.controllers;
+            ;var bIE     = !!window.document.namespaces;
+            ;var bIE7    = bIE && window.navigator.userAgent.match(/MSIE 7.0/);
+            function fXMLHttpRequest() {
+                this._object  = oXMLHttpRequest && !bIE7 ? new oXMLHttpRequest : new window.ActiveXObject("Microsoft.XMLHTTP");
+                this._listeners = [];
+            }
+            function cXMLHttpRequest() {
+                return new fXMLHttpRequest;
+            }
+            cXMLHttpRequest.prototype = fXMLHttpRequest.prototype;
+            if (bGecko && oXMLHttpRequest.wrapped) {
+                cXMLHttpRequest.wrapped = oXMLHttpRequest.wrapped;
+            }
+            ;cXMLHttpRequest.UNSENT            = 0;
+            ;cXMLHttpRequest.OPENED            = 1;
+            ;cXMLHttpRequest.HEADERS_RECEIVED  = 2;
+            ;cXMLHttpRequest.LOADING           = 3;
+            ;cXMLHttpRequest.DONE              = 4;
+            ;cXMLHttpRequest.prototype.UNSENT            = cXMLHttpRequest.UNSENT;
+            ;cXMLHttpRequest.prototype.OPENED            = cXMLHttpRequest.OPENED;
+            ;cXMLHttpRequest.prototype.HEADERS_RECEIVED  = cXMLHttpRequest.HEADERS_RECEIVED;
+            ;cXMLHttpRequest.prototype.LOADING           = cXMLHttpRequest.LOADING;
+            ;cXMLHttpRequest.prototype.DONE              = cXMLHttpRequest.DONE;
+            ;cXMLHttpRequest.prototype.readyState    = cXMLHttpRequest.UNSENT;
+            ;cXMLHttpRequest.prototype.responseText  = '';
+            ;cXMLHttpRequest.prototype.responseXML   = null;
+            ;cXMLHttpRequest.prototype.status        = 0;
+            ;cXMLHttpRequest.prototype.statusText    = '';
+            ;cXMLHttpRequest.prototype.priority    = "NORMAL";
+            ;cXMLHttpRequest.prototype.onreadystatechange  = null;
+            ;cXMLHttpRequest.onreadystatechange  = null;
+            ;cXMLHttpRequest.onopen              = null;
+            ;cXMLHttpRequest.onsend              = null;
+            ;cXMLHttpRequest.onabort             = null;
+            cXMLHttpRequest.prototype.open  = function(sMethod, sUrl, bAsync, sUser, sPassword) {
+                var sLowerCaseMethod = sMethod.toLowerCase();
+                if (sLowerCaseMethod == "connect" || sLowerCaseMethod == "trace" || sLowerCaseMethod == "track") {
+                    throw new Error(18);
+                }
+                delete this._headers;
+                if (arguments.length < 3) {
+                    bAsync  = true;
+                }
+                this._async   = bAsync;
+                var oRequest  = this;
+                var nState    = this.readyState;
+                var fOnUnload = null;
+                if (bIE && bAsync) {
+                    fOnUnload = function() {
+                        if (nState != cXMLHttpRequest.DONE) {
+                            fCleanTransport(oRequest);
+                            // Safe to abort here since onreadystatechange handler removed
+                            oRequest.abort();
+                        }
+                    };
+                    window.attachEvent("onunload", fOnUnload);
+                }
+                if (cXMLHttpRequest.onopen) {
+                    cXMLHttpRequest.onopen.apply(this, arguments);
+                }
+                if (arguments.length > 4) {
+                    this._object.open(sMethod, sUrl, bAsync, sUser, sPassword);
+                } else if (arguments.length > 3) {
+                    this._object.open(sMethod, sUrl, bAsync, sUser);
+                } else {
+                    this._object.open(sMethod, sUrl, bAsync);
+                }
+                this.readyState = cXMLHttpRequest.OPENED;
+                fReadyStateChange(this);
+                this._object.onreadystatechange = function() {
+                    if (bGecko && !bAsync) {
+                        return;
+                    }
+                    oRequest.readyState   = oRequest._object.readyState;
+                    fSynchronizeValues(oRequest);
+                    if (oRequest._aborted) {
+                        oRequest.readyState = cXMLHttpRequest.UNSENT;
+                        return;
+                    }
+                    if (oRequest.readyState == cXMLHttpRequest.DONE) {
+                        delete oRequest._data;
+                        fCleanTransport(oRequest);
+                        if (bIE && bAsync) {
+                            window.detachEvent("onunload", fOnUnload);
+                        }
+                        if (nState != oRequest.readyState) {
+                            fReadyStateChange(oRequest);
+                        }
+                        nState  = oRequest.readyState;
+                    }
+                };
+            };
+            cXMLHttpRequest.prototype.send = function(vData) {
+                if (cXMLHttpRequest.onsend) {
+                    cXMLHttpRequest.onsend.apply(this, arguments);
+                }
+                if (!arguments.length) {
+                    vData = null;
+                }
+                if (vData && vData.nodeType) {
+                    vData = window.XMLSerializer ? new window.XMLSerializer().serializeToString(vData) : vData.xml;
+                    if (!this._headers["Content-Type"]) {
+                        this._object.setRequestHeader("Content-Type", "application/xml");
+                    }
+                }
+                this._data = vData;
+                fXMLHttpRequest_send(this);
+            };
+            cXMLHttpRequest.prototype.abort = function() {
+                if (cXMLHttpRequest.onabort) {
+                    cXMLHttpRequest.onabort.apply(this, arguments);
+                }
+                if (this.readyState > cXMLHttpRequest.UNSENT) {
+                    this._aborted = true;
+                }
+                this._object.abort();
+                fCleanTransport(this);
+                this.readyState = cXMLHttpRequest.UNSENT;
+                delete this._data;
+            };
+            cXMLHttpRequest.prototype.getAllResponseHeaders = function() {
+                return this._object.getAllResponseHeaders();
+            };
+            cXMLHttpRequest.prototype.getResponseHeader = function(sName) {
+                return this._object.getResponseHeader(sName);
+            };
+            cXMLHttpRequest.prototype.setRequestHeader  = function(sName, sValue) {
+                if (!this._headers) {
+                    this._headers = {};
+                }
+                this._headers[sName]  = sValue;
+                return this._object.setRequestHeader(sName, sValue);
+            };
+            cXMLHttpRequest.prototype.addEventListener  = function(sName, fHandler, bUseCapture) {
+                for (var nIndex = 0, oListener; oListener = this._listeners[nIndex]; nIndex++) {
+                    if (oListener[0] == sName && oListener[1] == fHandler && oListener[2] == bUseCapture) {
+                        return;
+                    }
+                }
+                this._listeners.push([sName, fHandler, bUseCapture]);
+            };
+            cXMLHttpRequest.prototype.removeEventListener = function(sName, fHandler, bUseCapture) {
+                for (var nIndex = 0, oListener; oListener = this._listeners[nIndex]; nIndex++) {
+                    if (oListener[0] == sName && oListener[1] == fHandler && oListener[2] == bUseCapture) {
+                        break;
+                    }
+                }
+                if (oListener) {
+                    this._listeners.splice(nIndex, 1);
+                }
+            };
+            cXMLHttpRequest.prototype.dispatchEvent = function(oEvent) {
+                var oEventPseudo  = {
+                    'type':             oEvent.type,
+                    'target':           this,
+                    'currentTarget':    this,
+                    'eventPhase':       2,
+                    'bubbles':          oEvent.bubbles,
+                    'cancelable':       oEvent.cancelable,
+                    'timeStamp':        oEvent.timeStamp,
+                    'stopPropagation':  function() {},  
+                    'preventDefault':   function() {},  
+                    'initEvent':        function() {}   
+                };
+                if (oEventPseudo.type == "readystatechange" && this.onreadystatechange) {
+                    (this.onreadystatechange.handleEvent || this.onreadystatechange).apply(this, [oEventPseudo]);
+                }
+                for (var nIndex = 0, oListener; oListener = this._listeners[nIndex]; nIndex++) {
+                    if (oListener[0] == oEventPseudo.type && !oListener[2]) {
+                        (oListener[1].handleEvent || oListener[1]).apply(this, [oEventPseudo]);
+                    }
+                }
+            };
+            cXMLHttpRequest.prototype.toString  = function() {
+                return '[' + "object" + ' ' + "XMLHttpRequest" + ']';
+            };
+            cXMLHttpRequest.toString  = function() {
+                return '[' + "XMLHttpRequest" + ']';
+            };
+            function fXMLHttpRequest_send(oRequest) {
+                oRequest._object.send(oRequest._data);
+                if (bGecko && !oRequest._async) {
+                    oRequest.readyState = cXMLHttpRequest.OPENED;
+                    fSynchronizeValues(oRequest);
+                    while (oRequest.readyState < cXMLHttpRequest.DONE) {
+                        oRequest.readyState++;
+                        fReadyStateChange(oRequest);
+                        if (oRequest._aborted) {
+                            return;
+                        }
+                    }
+                }
+            }
+            function fReadyStateChange(oRequest) {
+                if (cXMLHttpRequest.onreadystatechange){
+                    cXMLHttpRequest.onreadystatechange.apply(oRequest);
+                }
+                oRequest.dispatchEvent({
+                    'type':       "readystatechange",
+                    'bubbles':    false,
+                    'cancelable': false,
+                    'timeStamp':  new Date + 0
+                });
+            }
+            function fGetDocument(oRequest) {
+                var oDocument = oRequest.responseXML;
+                var sResponse = oRequest.responseText;
+                if (bIE && sResponse && oDocument && !oDocument.documentElement && oRequest.getResponseHeader("Content-Type").match(/[^\/]+\/[^\+]+\+xml/)) {
+                    oDocument = new window.ActiveXObject("Microsoft.XMLDOM");
+                    oDocument.async       = false;
+                    oDocument.validateOnParse = false;
+                    oDocument.loadXML(sResponse);
+                }
+                if (oDocument){
+                    if ((bIE && oDocument.parseError !== 0) || !oDocument.documentElement || (oDocument.documentElement && oDocument.documentElement.tagName == "parsererror")) {
+                        return null;
+                    }
+                }
+                return oDocument;
+            }
+            function fSynchronizeValues(oRequest) {
+                try { oRequest.responseText = oRequest._object.responseText;  } catch (e) {}
+                try { oRequest.responseXML  = fGetDocument(oRequest._object); } catch (e) {}
+                try { oRequest.status       = oRequest._object.status;        } catch (e) {}
+                try { oRequest.statusText   = oRequest._object.statusText;    } catch (e) {}
+            }
+            function fCleanTransport(oRequest) {
+                oRequest._object.onreadystatechange = new window.Function;
+            }
+            if (!window.Function.prototype.apply) {
+                window.Function.prototype.apply = function(oRequest, oArguments) {
+                    if (!oArguments) {
+                        oArguments  = [];
+                    }
+                    oRequest.__func = this;
+                    oRequest.__func(oArguments[0], oArguments[1], oArguments[2], oArguments[3], oArguments[4]);
+                    delete oRequest.__func;
+                };
+            }
+            window.XMLHttpRequest = cXMLHttpRequest;
+        })();
+        ;function elementInViewport(el) {
+            if (el.getBoundingClientRect){
+                ;var rect = el.getBoundingClientRect();
+                ;var inner_width = 0;
+                ;var inner_height = 0;
+                if (typeof(window.innerWidth) == 'number'){
+                    inner_width = window.innerWidth;
+                    inner_height = window.innerHeight;
+                }   
+                else if (window.document.documentElement && (window.document.documentElement.clientWidth || window.document.documentElement.clientHeight)){
+                    inner_width = window.document.documentElement.clientWidth;
+                    inner_height = window.document.documentElement.clientHeight;
+                }   
+                else if (window.document.body && (window.document.body.clientWidth || window.document.body.clientHeight)){
+                    inner_width = window.document.body.clientWidth;
+                    inner_height = window.document.body.clientHeight;
+                }   
+                if (
+                    rect.top >= 0 &&
+                    rect.left >= 0 &&
+                    rect.bottom <= inner_height &&
+                    rect.right <= inner_width
+                )   
+                    return 100;
+                if ((inner_height - rect.top) > 0) {
+                    var percent = ((inner_height - rect.top) / el.height) * 100;
+                    if (percent < 100)
+                        return percent;
+                    else if(rect.bottom > 0)
+                        return (rect.bottom / el.height) * 100;
+                }   
+                return 0;
+            }
+            else{
+                return 100;
+            }
+        }
+        ;function addHandler(object, event, handler, useCapture){
+            if (typeof object.addEventListener != 'undefined')
+                object.addEventListener(event, handler, useCapture ? useCapture : false);
+            else if (typeof object.attachEvent != 'undefined')
+                object.attachEvent('on' + event, handler);
+            else
+                document.getElementById(iframe_id).contentWindow.location.replace(src());
+        }
+        ;function removeHandler(object, event, handler, useCapture){
+            if (typeof object != 'undefined')
+            {
+                if (typeof object.removeEventListener != 'undefined')
+                    object.removeEventListener(event, handler, useCapture ? useCapture : false);
+                else if (typeof object.detachEvent != 'undefined')
+                    object.detachEvent('on' + event, handler);
+                else
+                    document.getElementById(iframe_id).contentWindow.location.replace(src());
+            }
+        }
+        ;function yottos_reloadByTimer(id){
+            var iframe = document.getElementById(id);
+            var srct = "http://%(partner)s.rg.yottos.com/adshow.fcgi" + yottos_iframe_query() + randParam + Math.floor(Math.random() * 1000000);
+            iframe.contentWindow.location.replace(srct);
+        }
+        ;function yottos_windowWidth(){
+            var document_element = document.documentElement;
+            return self.innerWidth || document_element && document_element.clientWidth || document.body.clientWidth
+        }
+        ;function yottos_windowHeight(){
+            var document_element = document.documentElement;
+            return self.innerHeight || document_element && document_element.clientHeight || document.body.clientHeight
+        }
+        ;function yottos_Snowball(lng) {
+                function Among(s, substring_i, result, method) {
+                    this.s_size = s.length;
+                    this.s = this.toCharArray(s);
+                    this.substring_i = substring_i;
+                    this.result = result;
+                    this.method = method;
+                }
+                Among.prototype.toCharArray = function(s) {
+                    var sLength = s.length, charArr = new Array(sLength);
+                    for (var i = 0; i < sLength; i++)
+                        charArr[i] = s.charCodeAt(i);
+                    return charArr;
+                }
+                function SnowballProgram() {
+                    var current;
+                    return {
+                        b : 0,
+                        k : 0,
+                        l : 0,
+                        c : 0,
+                        lb : 0,
+                        s_c : function(word) {
+                            current = word;
+                            this.c = 0;
+                            this.l = word.length;
+                            this.lb = 0;
+                            this.b = this.c;
+                            this.k = this.l;
+                        },
+                        g_c : function() {
+                            var result = current;
+                            current = null;
+                            return result;
+                        },
+                        i_g : function(s, min, max) {
+                            if (this.c < this.l) {
+                                var ch = current.charCodeAt(this.c);
+                                if (ch <= max && ch >= min) {
+                                    ch -= min;
+                                    if (s[ch >> 3] & (0X1 << (ch & 0X7))) {
+                                        this.c++;
+                                        return true;
+                                    }
+                                }
+                            }
+                            return false;
+                        },
+                        i_g_b : function(s, min, max) {
+                            if (this.c > this.lb) {
+                                var ch = current.charCodeAt(this.c - 1);
+                                if (ch <= max && ch >= min) {
+                                    ch -= min;
+                                    if (s[ch >> 3] & (0X1 << (ch & 0X7))) {
+                                        this.c--;
+                                        return true;
+                                    }
+                                }
+                            }
+                            return false;
+                        },
+                        o_g : function(s, min, max) {
+                            if (this.c < this.l) {
+                                var ch = current.charCodeAt(this.c);
+                                if (ch > max || ch < min) {
+                                    this.c++;
+                                    return true;
+                                }
+                                ch -= min;
+                                if (!(s[ch >> 3] & (0X1 << (ch & 0X7)))) {
+                                    this.c++;
+                                    return true;
+                                }
+                            }
+                            return false;
+                        },
+                        o_g_b : function(s, min, max) {
+                            if (this.c > this.lb) {
+                                var ch = current.charCodeAt(this.c - 1);
+                                if (ch > max || ch < min) {
+                                    this.c--;
+                                    return true;
+                                }
+                                ch -= min;
+                                if (!(s[ch >> 3] & (0X1 << (ch & 0X7)))) {
+                                    this.c--;
+                                    return true;
+                                }
+                            }
+                            return false;
+                        },
+                        e_s : function(s_size, s) {
+                            if (this.l - this.c < s_size)
+                                return false;
+                            for (var i = 0; i < s_size; i++)
+                                if (current.charCodeAt(this.c + i) != s.charCodeAt(i))
+                                    return false;
+                            this.c += s_size;
+                            return true;
+                        },
+                        e_s_b : function(s_size, s) {
+                            if (this.c - this.lb < s_size)
+                                return false;
+                            for (var i = 0; i < s_size; i++)
+                                if (current.charCodeAt(this.c - s_size + i) != s
+                                        .charCodeAt(i))
+                                    return false;
+                            this.c -= s_size;
+                            return true;
+                        },
+                        f_a : function(v, v_size) {
+                            var i = 0, j = v_size, c = this.c, l = this.l, common_i = 0, common_j = 0, first_key_inspected = false;
+                            while (true) {
+                                var k = i + ((j - i) >> 1), diff = 0, common = common_i < common_j
+                                        ? common_i
+                                        : common_j, w = v[k];
+                                for (var i2 = common; i2 < w.s_size; i2++) {
+                                    if (c + common == l) {
+                                        diff = -1;
+                                        break;
+                                    }
+                                    diff = current.charCodeAt(c + common) - w.s[i2];
+                                    if (diff)
+                                        break;
+                                    common++;
+                                }
+                                if (diff < 0) {
+                                    j = k;
+                                    common_j = common;
+                                } else {
+                                    i = k;
+                                    common_i = common;
+                                }
+                                if (j - i <= 1) {
+                                    if (i > 0 || j == i || first_key_inspected)
+                                        break;
+                                    first_key_inspected = true;
+                                }
+                            }
+                            while (true) {
+                                var w = v[i];
+                                if (common_i >= w.s_size) {
+                                    this.c = c + w.s_size;
+                                    if (!w.method)
+                                        return w.result;
+                                    var res = w.method();
+                                    this.c = c + w.s_size;
+                                    if (res)
+                                        return w.result;
+                                }
+                                i = w.substring_i;
+                                if (i < 0)
+                                    return 0;
+                            }
+                        },
+                        f_a_b : function(v, v_size) {
+                            var i = 0, j = v_size, c = this.c, lb = this.lb, common_i = 0, common_j = 0, first_key_inspected = false;
+                            while (true) {
+                                var k = i + ((j - i) >> 1), diff = 0, common = common_i < common_j
+                                        ? common_i
+                                        : common_j, w = v[k];
+                                for (var i2 = w.s_size - 1 - common; i2 >= 0; i2--) {
+                                    if (c - common == lb) {
+                                        diff = -1;
+                                        break;
+                                    }
+                                    diff = current.charCodeAt(c - 1 - common) - w.s[i2];
+                                    if (diff)
+                                        break;
+                                    common++;
+                                }
+                                if (diff < 0) {
+                                    j = k;
+                                    common_j = common;
+                                } else {
+                                    i = k;
+                                    common_i = common;
+                                }
+                                if (j - i <= 1) {
+                                    if (i > 0 || j == i || first_key_inspected)
+                                        break;
+                                    first_key_inspected = true;
+                                }
+                            }
+                            while (true) {
+                                var w = v[i];
+                                if (common_i >= w.s_size) {
+                                    this.c = c - w.s_size;
+                                    if (!w.method)
+                                        return w.result;
+                                    var res = w.method();
+                                    this.c = c - w.s_size;
+                                    if (res)
+                                        return w.result;
+                                }
+                                i = w.substring_i;
+                                if (i < 0)
+                                    return 0;
+                            }
+                        },
+                        r_s : function(c_bra, c_ket, s) {
+                            var adjustment = s.length - (c_ket - c_bra), left = current
+                                    .substring(0, c_bra), right = current.substring(c_ket);
+                            current = left + s + right;
+                            this.l += adjustment;
+                            if (this.c >= c_ket)
+                                this.c += adjustment;
+                            else if (this.c > c_bra)
+                                this.c = c_bra;
+                            return adjustment;
+                        },
+                        s_ch : function() {
+                            if (this.b < 0 || this.b > this.k || this.k > this.l
+                                    || this.l > current.length)
+                                throw ("faulty slice operation");
+                        },
+                        s_f : function(s) {
+                            this.s_ch();
+                            this.r_s(this.b, this.k, s);
+                        },
+                        s_d : function() {
+                            this.s_f("");
+                        },
+                        i_ : function(c_bra, c_ket, s) {
+                            var adjustment = this.r_s(c_bra, c_ket, s);
+                            if (c_bra <= this.b)
+                                this.b += adjustment;
+                            if (c_bra <= this.k)
+                                this.k += adjustment;
+                        },
+                        s_t : function() {
+                            this.s_ch();
+                            return current.substring(this.b, this.k);
+                        },
+                        e_v_b : function(s) {
+                            return this.e_s_b(s.length, s);
+                        }
+                    };
+                }
+                var stemFactory = {
+                    RussianStemmer : function() {
+                        var a_0 = [new Among("\u0432", -1, 1),
+                                new Among("\u0438\u0432", 0, 2),
+                                new Among("\u044B\u0432", 0, 2),
+                                new Among("\u0432\u0448\u0438", -1, 1),
+                                new Among("\u0438\u0432\u0448\u0438", 3, 2),
+                                new Among("\u044B\u0432\u0448\u0438", 3, 2),
+                                new Among("\u0432\u0448\u0438\u0441\u044C", -1, 1),
+                                new Among("\u0438\u0432\u0448\u0438\u0441\u044C", 6, 2),
+                                new Among("\u044B\u0432\u0448\u0438\u0441\u044C", 6, 2)], a_1 = [
+                                new Among("\u0435\u0435", -1, 1),
+                                new Among("\u0438\u0435", -1, 1),
+                                new Among("\u043E\u0435", -1, 1),
+                                new Among("\u044B\u0435", -1, 1),
+                                new Among("\u0438\u043C\u0438", -1, 1),
+                                new Among("\u044B\u043C\u0438", -1, 1),
+                                new Among("\u0435\u0439", -1, 1),
+                                new Among("\u0438\u0439", -1, 1),
+                                new Among("\u043E\u0439", -1, 1),
+                                new Among("\u044B\u0439", -1, 1),
+                                new Among("\u0435\u043C", -1, 1),
+                                new Among("\u0438\u043C", -1, 1),
+                                new Among("\u043E\u043C", -1, 1),
+                                new Among("\u044B\u043C", -1, 1),
+                                new Among("\u0435\u0433\u043E", -1, 1),
+                                new Among("\u043E\u0433\u043E", -1, 1),
+                                new Among("\u0435\u043C\u0443", -1, 1),
+                                new Among("\u043E\u043C\u0443", -1, 1),
+                                new Among("\u0438\u0445", -1, 1),
+                                new Among("\u044B\u0445", -1, 1),
+                                new Among("\u0435\u044E", -1, 1),
+                                new Among("\u043E\u044E", -1, 1),
+                                new Among("\u0443\u044E", -1, 1),
+                                new Among("\u044E\u044E", -1, 1),
+                                new Among("\u0430\u044F", -1, 1),
+                                new Among("\u044F\u044F", -1, 1)], a_2 = [
+                                new Among("\u0435\u043C", -1, 1),
+                                new Among("\u043D\u043D", -1, 1),
+                                new Among("\u0432\u0448", -1, 1),
+                                new Among("\u0438\u0432\u0448", 2, 2),
+                                new Among("\u044B\u0432\u0448", 2, 2),
+                                new Among("\u0449", -1, 1),
+                                new Among("\u044E\u0449", 5, 1),
+                                new Among("\u0443\u044E\u0449", 6, 2)], a_3 = [
+                                new Among("\u0441\u044C", -1, 1),
+                                new Among("\u0441\u044F", -1, 1)], a_4 = [
+                                new Among("\u043B\u0430", -1, 1),
+                                new Among("\u0438\u043B\u0430", 0, 2),
+                                new Among("\u044B\u043B\u0430", 0, 2),
+                                new Among("\u043D\u0430", -1, 1),
+                                new Among("\u0435\u043D\u0430", 3, 2),
+                                new Among("\u0435\u0442\u0435", -1, 1),
+                                new Among("\u0438\u0442\u0435", -1, 2),
+                                new Among("\u0439\u0442\u0435", -1, 1),
+                                new Among("\u0435\u0439\u0442\u0435", 7, 2),
+                                new Among("\u0443\u0439\u0442\u0435", 7, 2),
+                                new Among("\u043B\u0438", -1, 1),
+                                new Among("\u0438\u043B\u0438", 10, 2),
+                                new Among("\u044B\u043B\u0438", 10, 2),
+                                new Among("\u0439", -1, 1),
+                                new Among("\u0435\u0439", 13, 2),
+                                new Among("\u0443\u0439", 13, 2),
+                                new Among("\u043B", -1, 1),
+                                new Among("\u0438\u043B", 16, 2),
+                                new Among("\u044B\u043B", 16, 2),
+                                new Among("\u0435\u043C", -1, 1),
+                                new Among("\u0438\u043C", -1, 2),
+                                new Among("\u044B\u043C", -1, 2),
+                                new Among("\u043D", -1, 1),
+                                new Among("\u0435\u043D", 22, 2),
+                                new Among("\u043B\u043E", -1, 1),
+                                new Among("\u0438\u043B\u043E", 24, 2),
+                                new Among("\u044B\u043B\u043E", 24, 2),
+                                new Among("\u043D\u043E", -1, 1),
+                                new Among("\u0435\u043D\u043E", 27, 2),
+                                new Among("\u043D\u043D\u043E", 27, 1),
+                                new Among("\u0435\u0442", -1, 1),
+                                new Among("\u0443\u0435\u0442", 30, 2),
+                                new Among("\u0438\u0442", -1, 2),
+                                new Among("\u044B\u0442", -1, 2),
+                                new Among("\u044E\u0442", -1, 1),
+                                new Among("\u0443\u044E\u0442", 34, 2),
+                                new Among("\u044F\u0442", -1, 2),
+                                new Among("\u043D\u044B", -1, 1),
+                                new Among("\u0435\u043D\u044B", 37, 2),
+                                new Among("\u0442\u044C", -1, 1),
+                                new Among("\u0438\u0442\u044C", 39, 2),
+                                new Among("\u044B\u0442\u044C", 39, 2),
+                                new Among("\u0435\u0448\u044C", -1, 1),
+                                new Among("\u0438\u0448\u044C", -1, 2),
+                                new Among("\u044E", -1, 2),
+                                new Among("\u0443\u044E", 44, 2)], a_5 = [
+                                new Among("\u0430", -1, 1),
+                                new Among("\u0435\u0432", -1, 1),
+                                new Among("\u043E\u0432", -1, 1),
+                                new Among("\u0435", -1, 1),
+                                new Among("\u0438\u0435", 3, 1),
+                                new Among("\u044C\u0435", 3, 1),
+                                new Among("\u0438", -1, 1),
+                                new Among("\u0435\u0438", 6, 1),
+                                new Among("\u0438\u0438", 6, 1),
+                                new Among("\u0430\u043C\u0438", 6, 1),
+                                new Among("\u044F\u043C\u0438", 6, 1),
+                                new Among("\u0438\u044F\u043C\u0438", 10, 1),
+                                new Among("\u0439", -1, 1),
+                                new Among("\u0435\u0439", 12, 1),
+                                new Among("\u0438\u0435\u0439", 13, 1),
+                                new Among("\u0438\u0439", 12, 1),
+                                new Among("\u043E\u0439", 12, 1),
+                                new Among("\u0430\u043C", -1, 1),
+                                new Among("\u0435\u043C", -1, 1),
+                                new Among("\u0438\u0435\u043C", 18, 1),
+                                new Among("\u043E\u043C", -1, 1),
+                                new Among("\u044F\u043C", -1, 1),
+                                new Among("\u0438\u044F\u043C", 21, 1),
+                                new Among("\u043E", -1, 1), new Among("\u0443", -1, 1),
+                                new Among("\u0430\u0445", -1, 1),
+                                new Among("\u044F\u0445", -1, 1),
+                                new Among("\u0438\u044F\u0445", 26, 1),
+                                new Among("\u044B", -1, 1), new Among("\u044C", -1, 1),
+                                new Among("\u044E", -1, 1),
+                                new Among("\u0438\u044E", 30, 1),
+                                new Among("\u044C\u044E", 30, 1),
+                                new Among("\u044F", -1, 1),
+                                new Among("\u0438\u044F", 33, 1),
+                                new Among("\u044C\u044F", 33, 1)], a_6 = [
+                                new Among("\u043E\u0441\u0442", -1, 1),
+                                new Among("\u043E\u0441\u0442\u044C", -1, 1)], a_7 = [
+                                new Among("\u0435\u0439\u0448\u0435", -1, 1),
+                                new Among("\u043D", -1, 2),
+                                new Among("\u0435\u0439\u0448", -1, 1),
+                                new Among("\u044C", -1, 3)], g_v = [33, 65, 8, 232], I_p2, I_pV, sbp = new SnowballProgram();
+                        this.setCurrent = function(word) {
+                            sbp.s_c(word);
+                        };
+                        this.getCurrent = function() {
+                            return sbp.g_c();
+                        };
+                        function habr3() {
+                            while (!sbp.i_g(g_v, 1072, 1103)) {
+                                if (sbp.c >= sbp.l)
+                                    return false;
+                                sbp.c++;
+                            }
+                            return true;
+                        }
+                        function habr4() {
+                            while (!sbp.o_g(g_v, 1072, 1103)) {
+                                if (sbp.c >= sbp.l)
+                                    return false;
+                                sbp.c++;
+                            }
+                            return true;
+                        }
+                        function r_mark_regions() {
+                            I_pV = sbp.l;
+                            I_p2 = I_pV;
+                            if (habr3()) {
+                                I_pV = sbp.c;
+                                if (habr4())
+                                    if (habr3())
+                                        if (habr4())
+                                            I_p2 = sbp.c;
+                            }
+                        }
+                        function r_R2() {
+                            return I_p2 <= sbp.c;
+                        }
+                        function habr2(a, n) {
+                            var a_v, v_1;
+                            sbp.k = sbp.c;
+                            a_v = sbp.f_a_b(a, n);
+                            if (a_v) {
+                                sbp.b = sbp.c;
+                                switch (a_v) {
+                                    case 1 :
+                                        v_1 = sbp.l - sbp.c;
+                                        if (!sbp.e_s_b(1, "\u0430")) {
+                                            sbp.c = sbp.l - v_1;
+                                            if (!sbp.e_s_b(1, "\u044F"))
+                                                return false;
+                                        }
+                                    case 2 :
+                                        sbp.s_d();
+                                        break;
+                                }
+                                return true;
+                            }
+                            return false;
+                        }
+                        function r_perfective_gerund() {
+                            return habr2(a_0, 9);
+                        }
+                        function habr1(a, n) {
+                            var a_v;
+                            sbp.k = sbp.c;
+                            a_v = sbp.f_a_b(a, n);
+                            if (a_v) {
+                                sbp.b = sbp.c;
+                                if (a_v == 1)
+                                    sbp.s_d();
+                                return true;
+                            }
+                            return false;
+                        }
+                        function r_adjective() {
+                            return habr1(a_1, 26);
+                        }
+                        function r_adjectival() {
+                            var a_v;
+                            if (r_adjective()) {
+                                habr2(a_2, 8);
+                                return true;
+                            }
+                            return false;
+                        }
+                        function r_reflexive() {
+                            return habr1(a_3, 2);
+                        }
+                        function r_verb() {
+                            return habr2(a_4, 46);
+                        }
+                        function r_noun() {
+                            habr1(a_5, 36);
+                        }
+                        function r_derivational() {
+                            var a_v;
+                            sbp.k = sbp.c;
+                            a_v = sbp.f_a_b(a_6, 2);
+                            if (a_v) {
+                                sbp.b = sbp.c;
+                                if (r_R2() && a_v == 1)
+                                    sbp.s_d();
+                            }
+                        }
+                        function r_tidy_up() {
+                            var a_v;
+                            sbp.k = sbp.c;
+                            a_v = sbp.f_a_b(a_7, 4);
+                            if (a_v) {
+                                sbp.b = sbp.c;
+                                switch (a_v) {
+                                    case 1 :
+                                        sbp.s_d();
+                                        sbp.k = sbp.c;
+                                        if (!sbp.e_s_b(1, "\u043D"))
+                                            break;
+                                        sbp.b = sbp.c;
+                                    case 2 :
+                                        if (!sbp.e_s_b(1, "\u043D"))
+                                            break;
+                                    case 3 :
+                                        sbp.s_d();
+                                        break;
+                                }
+                            }
+                        }
+                        this.stem = function() {
+                            r_mark_regions();
+                            sbp.c = sbp.l;
+                            if (sbp.c < I_pV)
+                                return false;
+                            sbp.lb = I_pV;
+                            if (!r_perfective_gerund()) {
+                                sbp.c = sbp.l;
+                                if (!r_reflexive())
+                                    sbp.c = sbp.l;
+                                if (!r_adjectival()) {
+                                    sbp.c = sbp.l;
+                                    if (!r_verb()) {
+                                        sbp.c = sbp.l;
+                                        r_noun();
+                                    }
+                                }
+                            }
+                            sbp.c = sbp.l;
+                            sbp.k = sbp.c;
+                            if (sbp.e_s_b(1, "\u0438")) {
+                                sbp.b = sbp.c;
+                                sbp.s_d();
+                            } else
+                                sbp.c = sbp.l;
+                            r_derivational();
+                            sbp.c = sbp.l;
+                            r_tidy_up();
+                            return true;
+                        }
+                    }}
+                var stemName = lng.substring(0, 1).toUpperCase()
+                        + lng.substring(1).toLowerCase() + "Stemmer";
+                return new stemFactory[stemName]();
+        }   
+        ;var yottos_Stem = function(lng) {
+            var yottos_testStemmer = new yottos_Snowball(lng);
+            return function(word) {
+              yottos_testStemmer.setCurrent(word);
+              yottos_testStemmer.stem();
+              return yottos_testStemmer.getCurrent();
+            }
+        };
+        ;function yottos_stremer(word){
+            if (yottos_snowball_cache[word]){
+                w = yottos_snowball_cache[word];
+            }
+            else{
+                w = new yottos_Stem('russian')(word);
+                yottos_snowball_cache[word] = w;
+            }
+            return w;
+        }; 
+        ;function yottos_getHeadText(){
+            var iFrame =  document.getElementById('yottos-temp-frame');
+            var ifdocument;
+            if ( iFrame.contentDocument )
+                ifdocument = iFrame.contentDocument;
+            else if ( iFrame.contentWindow )
+                ifdocument = iFrame.contentWindow.document;
+            var yottos_result = '';
+            yottos_result += (ifdocument.title.replace(/[^a-zA-Zа-яА-Я]/g,' ').replace(/\s+$/g,'').replace(/^\s+/g,'').replace(/[\n\t\r\f\s]{2,}/g,' ')) + ' ';
+            var yottos_metas = ifdocument.getElementsByTagName('meta');
+            if (yottos_metas) {
+                for (var x=0,y=yottos_metas.length; x<y; x++) {
+                    if (yottos_metas[x].name.toLowerCase() == "description") {
+                        yottos_result += (yottos_metas[x].content.replace(/[^a-zA-Zа-яА-Я]/g,' ').replace(/\s+$/g,'').replace(/^\s+/g,'').replace(/[\n\t\r\f\s]{2,}/g,' ')) + ' ';
+                    }
+                }
+            }
+            return yottos_result;
+        }
+        ;function yottos_getBodyText() {
+            var iFrame =  document.getElementById('yottos-temp-frame');
+            var ifdocument;
+            if ( iFrame.contentDocument )
+                ifdocument = iFrame.contentDocument;
+            else if ( iFrame.contentWindow )
+                ifdocument = iFrame.contentWindow.document;
+            var doc = ifdocument, body = doc.body, selection, range, bodyText;
+            if (body.createTextRange) {
+                return body.createTextRange().text.replace(/[^a-zA-Zа-яА-Я]/g,' ').replace(/\s+$/g,'').replace(/^\s+/g,'').replace(/[\n\t\r\f\s]{2,}/g,' ') + ' ';
+            } else if (window.getSelection) {
+                if (window.opera) {
+                    if (parseInt(window.opera.version()) == 10 || parseInt(window.opera.version()) == 11){
+                        return window.document.body.textContent.toString().replace(/[^a-zA-Zа-яА-Я]/g,' ').replace(/\s+$/g,'').replace(/^\s+/g,'').replace(/[\n\t\r\f\s]{2,}/g,' ') + ' ';
+                    }
+                }
+                selection = window.getSelection();
+                range = doc.createRange();
+                range.selectNodeContents(body);
+                selection.addRange(range);
+                bodyText = selection.toString();
+                selection.removeAllRanges();
+                return bodyText.replace(/[^a-zA-Zа-яА-Я]/g,' ').replace(/\s+$/g,'').replace(/^\s+/g,'').replace(/[\n\t\r\f\s]{2,}/g,' ') + ' ';
+            }
+        }
+        ;function yottos_getContext(){
+            if (keyStorageAvailable()){
+                ;yottos_output = JSON.parse(localStorage.getItem('yottos-context'+window.document.URL));
+            }
+            else{
+                ;var yottos_s = '';
+                ;var  site_stucture = '';
+                function fSynchronousGet() {
+                    var oXMLHttpRequest = new XMLHttpRequest;
+                    oXMLHttpRequest.open("GET", window.document.URL, false);
+                    oXMLHttpRequest.onreadystatechange  = function() {
+                        if (this.readyState == XMLHttpRequest.DONE) {
+                            site_stucture = (oXMLHttpRequest.responseText);
+                        }
+                    }
+                    oXMLHttpRequest.send(null);
+                }
+                fSynchronousGet();
+                var iframe = document.createElement('iframe');
+                iframe.frameBorder=0;
+                iframe.width="0px";
+                iframe.height="0px";
+                iframe.setAttribute("id", "yottos-temp-frame");
+                document.write('<div id="conteiner-yottos-temp-frame"></div>');
+                document.getElementById('conteiner-yottos-temp-frame').appendChild(iframe);
+                iframe.contentWindow.document.open('text/html', 'replace');
+                iframe.contentWindow.document.write(stripTags(site_stucture));
+                iframe.contentWindow.document.close();
+                yottos_s += yottos_getHeadText();
+                yottos_s += yottos_getBodyText();
+                removenode = document.getElementById('conteiner-yottos-temp-frame');
+                removenode.parentNode.removeChild(removenode);
+                var yottos_splitted = yottos_s.toLowerCase().split(' ');
+                var yottos_collector = {};
+                var yottos_counter = {};
+                var yottos_ignore = ['бол','больш','будет','будут','как','пок','коментар','будт','был','быт','вдруг','вед','впроч','всегд','всег','всех',
+                'говор','главн','даж','друг','дальш','добав','есл','ест','жизн','зач','зде','иногд','кажет','кажд','как','когд','конечн','котор','куд',
+                'лучш','либ','межд','мен','долж','смысл','след','чита','люб','постара','помим','числ','соб','ждат','част','использ','велик','член','некотор',
+                'мног','может','можн','наконец','нег','нельз','нибуд','никогд','нич','один','опя','опубликова','перед','посл','пот','почт','разв','сво',
+                'себ','сегодн','сейчас','сказа','совс','так','теб','тепер','тогд','тог','тож','тольк','хорош','хот','чег','человек','пут','вполн','возможн',
+                'через','чтоб','чут','эт','позж','все','поэт','точн','этот','над','итог','недел','сведен','тем','город','гроз','зон','принят','балл','перв',
+                'вход','лент','оста','мир','образ','идет','выйт','нол','сил','наш','мнен','одн','ищ','выш','взял','откр','нов','удив','всем','важн','ожида',
+                'сам','ход','пущ','тег','выж','комментар','ваш','цен','коснут','слаб','ситуац','назов','уход','дол','основн','ряд','заверш','дополнен','влия',
+                'описа','меньш','двум','слаб','стал','новост','отраз','вопрос','выбор','сдела','смерт','последн','поворот','высок','опозор','текст',
+                'назов','основн','причин','групп','похож','with','that','this','about','above','after','again','against','because','been','before','being',
+                'below','between','both','cannot','could','does','down','than','that','important','partner','border','link','text','radius','none','document',
+                'height','color','title','normal','font','down','display','width','block','margin','yandex','item','type','left','padding','auto','inner',
+                'function','decorati','google','position','http','align','webkit','inherit','direct','hover','referrer','write','size','math','spacing',
+                'line','sizing','float','bottom','vert','charset','vertical','background','underline','visited','inline','unescape','value','style','visible',
+                'address','else','true','tail','iframe','adriver','white','space','collapse','content','list','window','absolute','script','random','transparent',
+                'repeat','scroll','container','piclayout','email','site','form','location','place','table','show','indent','visibility','clickable','last',
+                'agewarn','opts','toggler','errormsg','getcode','href','relative','overflow','clear','cursor','outline','index','full','baseline','hide',
+                'focus','catch','async','https','escape','round','target','blank','frameborder','scrolling','click','hidden','empty','cells','letter','static',
+                'layout','transform','word','right','weight','warn','active','used','context','undefined','counter','page','mail','body','domain','region',
+                'pointer','nowrap','family','first','data','online','push','metrika','callbacks','image','classname','protocol','init','icon','wrap','root',
+                'solid','facebook','options','defaults','offset','false','return','like','opera','frames','typeof','decoration'];
+                yottos_ignore = (function(){
+                    var yottos_o = {};
+                    var yottos_iCount = yottos_ignore.length;
+                    for (var i=0;i<yottos_iCount;i++){
+                        yottos_o[yottos_ignore[i]] = true;
+                    }
+                    return yottos_o;
+                }());
+                for (i = 0; i < yottos_splitted.length; i++) {
+                   var yottos_key = yottos_splitted[i].replace(/^\s*/, "").replace(/\s*$/, "");
+                   if (yottos_key.length > 3){
+                        var yottos_streem_key = yottos_stremer(yottos_key);
+                        if (!yottos_ignore[yottos_streem_key]) {
+                            yottos_collector[yottos_streem_key] = yottos_key;
+                            yottos_counter[yottos_streem_key] = yottos_counter[yottos_streem_key] || 0;
+                            yottos_counter[yottos_streem_key]++;
+                        }
+                    }
+                }
+                var yottos_arr = [];
+                for (yottos_sWord in yottos_counter) {
+                    if (yottos_counter[yottos_sWord] > 1){
+                        yottos_arr.push({
+                        text: yottos_collector[yottos_sWord],
+                        streem:yottos_sWord,
+                        frequency: yottos_counter[yottos_sWord]
+                        });
+                    }
+                }
+                var yottos_sort_arr = yottos_arr.sort(function(a,b){return (a.frequency > b.frequency) ? -1 : ((a.frequency < b.frequency) ? 1 : 0);});
+                var yottos_out = [];
+                for (var i=0; i<yottos_sort_arr.length; i++) {
+                    yottos_out.push(yottos_sort_arr[i].text);
+                }
+
+                ;var yottos_out_length = 0;
+                ;var yottos_output = [];
+                for (var i=0; i<yottos_out.length; i++)
+                {
+                    yottos_out_length += yottos_out[i].length;
+                    if (navigator.appName == 'Microsoft Internet Explorer'){
+                        if (yottos_out_length < 200) {
+                            yottos_output.push(yottos_out[i]);
+                        }
+                    }
+                    else{
+                        if (yottos_out_length < 1000) {
+                            yottos_output.push(yottos_out[i]);
+                        }
+                    }
+                }
+                if (isLocalStorageAvailable()){
+                    try {
+                            localStorage.setItem('yottos-context'+window.document.URL, JSON.stringify(yottos_output));
+                        } catch (e){
+                            if (e == QUOTA_EXCEEDED_ERR) {
+                                localStorage.clear();
+                                localStorage.setItem('yottos-context'+window.document.URL, JSON.stringify(yottos_output));
+                            }
+                        }
+                }
+            }
+            return (encodeURIComponent(yottos_output.join(' ')));
+        }
+        ;yottos_snowball_cache = typeof yottos_snowball_cache !== 'undefined' ? yottos_snowball_cache : {};
+        ;yottos_context = typeof yottos_context !== 'undefined' ? yottos_context : '';
+        if (yottos_context.length < 1){
+            ;yottos_context = yottos_getContext();
+        }
+        ;var rand = Math.floor(Math.random() * 1000000);
+        ;var yottos_auto_reload = %(auto_reload)s;
+        ;var iframe_id = 'yottos' + rand;
+        ;var timer_id = 'timer_' + iframe_id;
+        ;var randParam = "&rand=" + rand;
+        ;var check_iframe = 'checkIframe';
+        ;function yottos_iframe_query(){
+            return "?scr=%(guid)s&location=" + encodeURIComponent(window.location.href) + "&referrer=" + encodeURIComponent(document.referrer) + "&w=" + yottos_windowWidth() + "&h=" + yottos_windowHeight();
+        }
+        ;function yottos_src(){
+            return "http://%(partner)s.rg.yottos.com/adshow.fcgi" + yottos_iframe_query() + randParam;
+        }
+        """ + u"""
+        ;window[check_iframe] = function(id, event, src){
+            var tid = 'timer_' + id;
+            var iframe = document.getElementById(id);
+            if (elementInViewport(iframe) > 10) {
+                if (event){
+                    setTimeout(function(){removeHandler(window, 'scroll', event)}, 1500);
+                    setTimeout(function(){removeHandler(iframe, 'load', event)}, 1500);
+                }
+                if(!iframe.showed){
+                    ;eval("clearInterval("+tid+")");
+                    src = src + "&context=" + yottos_context;
+                    iframe.contentWindow.location.replace(src);
+                    iframe.showed = true;
+                    if(yottos_auto_reload){
+                        setInterval(function(){yottos_reloadByTimer(id)}, yottos_auto_reload);
+                    }
+                }
+            }
+        }
+        ;var event_name = 'el' + rand;
+        ;if (typeof(yottos_advertise_div_display) == "undefined")
+        {
+            ;document.write("<iframe id='" + iframe_id + "' src='http://%(partner)s.rg.yottos.com/adshow_garant.fcgi" + yottos_iframe_query() + randParam + "&context=" + yottos_context + "' width='%(width)s' height='%(height)s'  frameborder='0' scrolling='no'></iframe>");
+        }
+        else
+        {
+            ;if (yottos_advertise_div_display == 'none')
+            {
+                ;document.write("<iframe id='" + iframe_id + "' src='http://%(partner)s.rg.yottos.com/adshow_garant.fcgi" + yottos_iframe_query() + randParam + "&context=" + yottos_context +  "' width='%(width)s' height='%(height)s'  frameborder='0' scrolling='no'></iframe>");
+            }
+            else
+            {
+                if (document.getElementById(yottos_advertise_div_display) != null)
+                {
+                    ;document.getElementById(yottos_advertise_div_display).innerHTML = "<iframe id='" + iframe_id + "' src='http://%(partner)s.rg.yottos.com/adshow_garant.fcgi" + yottos_iframe_query() + randParam + "&context=" + yottos_context +  "' width='%(width)s' height='%(height)s'  frameborder='0' scrolling='no'></iframe>";
+                }
+                else
+                {
+                    ;document.write("<iframe id='" + iframe_id + "' src='http://%(partner)s.rg.yottos.com/adshow_garant.fcgi" + yottos_iframe_query() + randParam + "&context=" + yottos_context +  "' width='%(width)s' height='%(height)s'  frameborder='0' scrolling='no'></iframe>");
+                }
+                delete yottos_advertise_div_display;
+            }
+        }
+        ;eval("window['el'+'"+rand+"']=function(e){checkIframe('"+iframe_id+"',window['el'+'"+rand+"'],'"+yottos_src()+"');};");
+        ;addHandler(window, 'scroll', window[event_name]);
+        try{
+            ;addHandler(document.getElementById(iframe_id), 'load', window[event_name]);
+            ;eval("var "+timer_id+" = setInterval(function(){window['checkIframe']('"+iframe_id+"',window['el'+'"+rand+"'],'"+yottos_src()+"')}, 1000);");
+        }
+        catch(e){
+            ;eval("var "+timer_id+" = setInterval(function(){window['checkIframe']('"+iframe_id+"',window['el'+'"+rand+"'],'"+yottos_src()+"')}, 1000);");
+        };
+            """) % {'partner':partner, 'guid':guid, 'width':width, 'height':height, 'auto_reload':(int(auto_reload) * 1000)}
+        
+        if site_id and tracking_enabled:
+            piwik_tracker_code = (r"""if(!this.JSON2){this.JSON2={}}(function(){function d(f){return f<10?"0"+f:f}function l(n,m){var f=Object.prototype.toString.apply(n);if(f==="[object Date]"){return isFinite(n.valueOf())?n.getUTCFullYear()+"-"+d(n.getUTCMonth()+1)+"-"+d(n.getUTCDate())+"T"+d(n.getUTCHours())+":"+d(n.getUTCMinutes())+":"+d(n.getUTCSeconds())+"Z":null}if(f==="[object String]"||f==="[object Number]"||f==="[object Boolean]"){return n.valueOf()}if(f!=="[object Array]"&&typeof n.toJSON==="function"){return n.toJSON(m)}return n}var c=new RegExp("[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]","g"),e='\\\\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]',i=new RegExp("["+e,"g"),j,b,k={"\b":"\\b","\t":"\\t","\n":"\\n","\f":"\\f","\r":"\\r",'"':'\\"',"\\":"\\\\"},h;
+function a(f){i.lastIndex=0;return i.test(f)?'"'+f.replace(i,function(m){var n=k[m];return typeof n==="string"?n:"\\u"+("0000"+m.charCodeAt(0).toString(16)).slice(-4)})+'"':'"'+f+'"'}function g(s,p){var n,m,t,f,q=j,o,r=p[s];if(r&&typeof r==="object"){r=l(r,s)}if(typeof h==="function"){r=h.call(p,s,r)}switch(typeof r){case"string":return a(r);case"number":return isFinite(r)?String(r):"null";case"boolean":case"null":return String(r);case"object":if(!r){return"null"}j+=b;o=[];if(Object.prototype.toString.apply(r)==="[object Array]"){f=r.length;for(n=0;n<f;n+=1){o[n]=g(n,r)||"null"}t=o.length===0?"[]":j?"[\n"+j+o.join(",\n"+j)+"\n"+q+"]":"["+o.join(",")+"]";j=q;return t}if(h&&typeof h==="object"){f=h.length;for(n=0;n<f;n+=1){if(typeof h[n]==="string"){m=h[n];t=g(m,r);if(t){o.push(a(m)+(j?": ":":")+t)}}}}else{for(m in r){if(Object.prototype.hasOwnProperty.call(r,m)){t=g(m,r);if(t){o.push(a(m)+(j?": ":":")+t)}}}}t=o.length===0?"{}":j?"{\n"+j+o.join(",\n"+j)+"\n"+q+"}":"{"+o.join(",")+"}";j=q;
+return t}}if(typeof JSON2.stringify!=="function"){JSON2.stringify=function(o,m,n){var f;j="";b="";if(typeof n==="number"){for(f=0;f<n;f+=1){b+=" "}}else{if(typeof n==="string"){b=n}}h=m;if(m&&typeof m!=="function"&&(typeof m!=="object"||typeof m.length!=="number")){throw new Error("JSON.stringify")}return g("",{"":o})}}if(typeof JSON2.parse!=="function"){JSON2.parse=function(o,f){var n;function m(s,r){var q,p,t=s[r];if(t&&typeof t==="object"){for(q in t){if(Object.prototype.hasOwnProperty.call(t,q)){p=m(t,q);if(p!==undefined){t[q]=p}else{delete t[q]}}}}return f.call(s,r,t)}o=String(o);c.lastIndex=0;if(c.test(o)){o=o.replace(c,function(p){return"\\u"+("0000"+p.charCodeAt(0).toString(16)).slice(-4)})}if((new RegExp("^[\\],:{}\\s]*$")).test(o.replace(new RegExp('\\\\(?:["\\\\/bfnrt]|u[0-9a-fA-F]{4})',"g"),"@").replace(new RegExp('"[^"\\\\\n\r]*"|true|false|null|-?\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d+)?',"g"),"]").replace(new RegExp("(?:^|:|,)(?:\\s*\\[)+","g"),""))){n=eval("("+o+")");
+return typeof f==="function"?m({"":n},""):n}throw new SyntaxError("JSON.parse")}}}());var _paq=_paq||[],Piwik=Piwik||(function(){var f,a={},p=document,c=navigator,A=screen,x=window,m=false,v=[],h=x.encodeURIComponent,w=x.decodeURIComponent,d=unescape,B,D;function r(i){return typeof i!=="undefined"}function n(i){return typeof i==="function"}function z(i){return typeof i==="object"}function j(i){return typeof i==="string"||i instanceof String}function G(){var L,N,M;for(L=0;L<arguments.length;L+=1){M=arguments[L];N=M.shift();if(j(N)){B[N].apply(B,M)}else{N.apply(B,M)}}}function J(N,M,L,i){if(N.addEventListener){N.addEventListener(M,L,i);return true}if(N.attachEvent){return N.attachEvent("on"+M,L)}N["on"+M]=L}function E(M,P){var L="",O,N;for(O in a){if(Object.prototype.hasOwnProperty.call(a,O)){N=a[O][M];if(n(N)){L+=N(P)}}}return L}function H(){var i;E("unload");if(f){do{i=new Date()}while(i.getTimeAlias()<f)}}function F(){var L;if(!m){m=true;E("load");for(L=0;L<v.length;L++){v[L]()}}return true
+}function k(){var L;if(p.addEventListener){J(p,"DOMContentLoaded",function i(){p.removeEventListener("DOMContentLoaded",i,false);F()})}else{if(p.attachEvent){p.attachEvent("onreadystatechange",function i(){if(p.readyState==="complete"){p.detachEvent("onreadystatechange",i);F()}});if(p.documentElement.doScroll&&x===x.top){(function i(){if(!m){try{p.documentElement.doScroll("left")}catch(M){setTimeout(i,0);return}F()}}())}}}if((new RegExp("WebKit")).test(c.userAgent)){L=setInterval(function(){if(m||/loaded|complete/.test(p.readyState)){clearInterval(L);F()}},10)}J(x,"load",F,false)}function s(){var i="";try{i=x.top.document.referrer}catch(M){if(x.parent){try{i=x.parent.document.referrer}catch(L){i=""}}}if(i===""){i=p.referrer}return i}function g(i){var M=new RegExp("^([a-z]+):"),L=M.exec(i);return L?L[1]:null}function b(i){var M=new RegExp("^(?:(?:https?|ftp):)/*(?:[^@]+@)?([^:/#]+)"),L=M.exec(i);return L?L[1]:i}function y(M,L){var P=new RegExp("^(?:https?|ftp)(?::/*(?:[^?]+)[?])([^#]+)"),O=P.exec(M),N=new RegExp("(?:^|&)"+L+"=([^&]*)"),i=O?N.exec(O[1]):0;
+return i?w(i[1]):""}function l(Q,N,M,P,L,O){var i;if(M){i=new Date();i.setTime(i.getTime()+M)}p.cookie=Q+"="+h(N)+(M?";expires="+i.toGMTString():"")+";path="+(P||"/")+(L?";domain="+L:"")+(O?";secure":"")}function e(M){var i=new RegExp("(^|;)[ ]*"+M+"=([^;]*)"),L=i.exec(p.cookie);return L?w(L[2]):0}function o(i){return d(h(i))}function I(ab){var N=function(W,i){return(W<<i)|(W>>>(32-i))},ac=function(ai){var ah="",ag,W;for(ag=7;ag>=0;ag--){W=(ai>>>(ag*4))&15;ah+=W.toString(16)}return ah},Q,ae,ad,M=[],U=1732584193,S=4023233417,R=2562383102,P=271733878,O=3285377520,aa,Z,Y,X,V,af,L,T=[];ab=o(ab);L=ab.length;for(ae=0;ae<L-3;ae+=4){ad=ab.charCodeAt(ae)<<24|ab.charCodeAt(ae+1)<<16|ab.charCodeAt(ae+2)<<8|ab.charCodeAt(ae+3);T.push(ad)}switch(L&3){case 0:ae=2147483648;break;case 1:ae=ab.charCodeAt(L-1)<<24|8388608;break;case 2:ae=ab.charCodeAt(L-2)<<24|ab.charCodeAt(L-1)<<16|32768;break;case 3:ae=ab.charCodeAt(L-3)<<24|ab.charCodeAt(L-2)<<16|ab.charCodeAt(L-1)<<8|128;break}T.push(ae);while((T.length&15)!==14){T.push(0)
+}T.push(L>>>29);T.push((L<<3)&4294967295);for(Q=0;Q<T.length;Q+=16){for(ae=0;ae<16;ae++){M[ae]=T[Q+ae]}for(ae=16;ae<=79;ae++){M[ae]=N(M[ae-3]^M[ae-8]^M[ae-14]^M[ae-16],1)}aa=U;Z=S;Y=R;X=P;V=O;for(ae=0;ae<=19;ae++){af=(N(aa,5)+((Z&Y)|(~Z&X))+V+M[ae]+1518500249)&4294967295;V=X;X=Y;Y=N(Z,30);Z=aa;aa=af}for(ae=20;ae<=39;ae++){af=(N(aa,5)+(Z^Y^X)+V+M[ae]+1859775393)&4294967295;V=X;X=Y;Y=N(Z,30);Z=aa;aa=af}for(ae=40;ae<=59;ae++){af=(N(aa,5)+((Z&Y)|(Z&X)|(Y&X))+V+M[ae]+2400959708)&4294967295;V=X;X=Y;Y=N(Z,30);Z=aa;aa=af}for(ae=60;ae<=79;ae++){af=(N(aa,5)+(Z^Y^X)+V+M[ae]+3395469782)&4294967295;V=X;X=Y;Y=N(Z,30);Z=aa;aa=af}U=(U+aa)&4294967295;S=(S+Z)&4294967295;R=(R+Y)&4294967295;P=(P+X)&4294967295;O=(O+V)&4294967295}af=ac(U)+ac(S)+ac(R)+ac(P)+ac(O);return af.toLowerCase()}function C(M,i,L){if(M==="translate.googleusercontent.com"){if(L===""){L=i}i=y(i,"u");M=b(i)}else{if(M==="cc.bingj.com"||M==="webcache.googleusercontent.com"||M.slice(0,5)==="74.6."){i=p.links[0].href;M=b(i)}}return[M,i,L]}function t(L){var i=L.length;
+if(L.charAt(--i)==="."){L=L.slice(0,i)}if(L.slice(0,2)==="*."){L=L.slice(1)}return L}function K(L){if(!j(L)){L=L.text||"";var i=p.getElementsByTagName("title");if(i&&r(i[0])){L=i[0].text}}return L}function u(ad,aB){var O=C(p.domain,x.location.href,s()),aT=t(O[0]),a7=O[1],aH=O[2],aF="GET",N=ad||"",aX=aB||"",ar,ai=p.title,ak="7z|aac|ar[cj]|as[fx]|avi|bin|csv|deb|dmg|doc|exe|flv|gif|gz|gzip|hqx|jar|jpe?g|js|mp(2|3|4|e?g)|mov(ie)?|ms[ip]|od[bfgpst]|og[gv]|pdf|phps|png|ppt|qtm?|ra[mr]?|rpm|sea|sit|tar|t?bz2?|tgz|torrent|txt|wav|wm[av]|wpd||xls|xml|z|zip",aD=[aT],R=[],aw=[],ac=[],aC=500,S,ae,T,U,am=["pk_campaign","piwik_campaign","utm_campaign","utm_source","utm_medium"],ah=["pk_kwd","piwik_kwd","utm_term"],a5="_pk_",W,a6,a0,ao,aq,aa=63072000000,ab=1800000,at=15768000000,Z=p.location.protocol==="https",Q=false,ax={},a1=200,aN={},aY={},aK=false,aI=false,aG,ay,X,al=I,aJ,ap;function a2(ba){var bb;if(T){bb=new RegExp("#.*");return ba.replace(bb,"")}return ba}function aS(bc,ba){var bd=g(ba),bb;if(bd){return ba
+}if(ba.slice(0,1)==="/"){return g(bc)+"://"+b(bc)+ba}bc=a2(bc);if((bb=bc.indexOf("?"))>=0){bc=bc.slice(0,bb)}if((bb=bc.lastIndexOf("/"))!==bc.length-1){bc=bc.slice(0,bb+1)}return bc+ba}function aE(bd){var bb,ba,bc;for(bb=0;bb<aD.length;bb++){ba=t(aD[bb].toLowerCase());if(bd===ba){return true}if(ba.slice(0,1)==="."){if(bd===ba.slice(1)){return true}bc=bd.length-ba.length;if((bc>0)&&(bd.slice(bc)===ba)){return true}}}return false}function a9(ba){var bb=new Image(1,1);bb.onload=function(){};bb.src=N+(N.indexOf("?")<0?"?":"&")+ba}function aP(ba){try{var bc=x.XDomainRequest?new x.XDomainRequest():x.XMLHttpRequest?new x.XMLHttpRequest():x.ActiveXObject?new ActiveXObject("Microsoft.XMLHTTP"):null;bc.open("POST",N,true);bc.onreadystatechange=function(){if(this.readyState===4&&this.status!==200){a9(ba)}};bc.setRequestHeader("Content-Type","application/x-www-form-urlencoded; charset=UTF-8");bc.send(ba)}catch(bb){a9(ba)}}function an(bc,bb){var ba=new Date();if(!a0){if(aF==="POST"){aP(bc)}else{a9(bc)
+}f=ba.getTime()+bb}}function aO(ba){return a5+ba+"."+aX+"."+aJ}function P(){var ba=aO("testcookie");if(!r(c.cookieEnabled)){l(ba,"1");return e(ba)==="1"?"1":"0"}return c.cookieEnabled?"1":"0"}function az(){aJ=al((W||aT)+(a6||"/")).slice(0,4)}function Y(){var bb=aO("cvar"),ba=e(bb);if(ba.length){ba=JSON2.parse(ba);if(z(ba)){return ba}}return{}}function M(){if(Q===false){Q=Y()}}function aW(){var ba=new Date();aG=ba.getTime()}function V(be,bb,ba,bd,bc,bf){l(aO("id"),be+"."+bb+"."+ba+"."+bd+"."+bc+"."+bf,aa,a6,W,Z)}function L(){var bb=new Date(),ba=Math.round(bb.getTime()/1000),bd=e(aO("id")),bc;if(bd){bc=bd.split(".");bc.unshift("0")}else{if(!ap){ap=al((c.userAgent||"")+(c.platform||"")+JSON2.stringify(aY)+ba).slice(0,16)}bc=["1",ap,ba,0,ba,"",""]}return bc}function i(){var ba=e(aO("ref"));if(ba.length){try{ba=JSON2.parse(ba);if(z(ba)){return ba}}catch(bb){}}return["","",0,""]}function aj(bc,bA,bB,be){var by,bb=new Date(),bk=Math.round(bb.getTime()/1000),bD,bz,bg,br,bv,bj,bt,bh,bx,bf=1024,bE,bn,bu=Q,bp=aO("id"),bl=aO("ses"),bm=aO("ref"),bF=aO("cvar"),bs=L(),bo=e(bl),bw=i(),bC=ar||a7,bi,ba;
+if(a0){l(bp,"",-1,a6,W);l(bl,"",-1,a6,W);l(bF,"",-1,a6,W);l(bm,"",-1,a6,W);return""}bD=bs[0];bz=bs[1];br=bs[2];bg=bs[3];bv=bs[4];bj=bs[5];if(!r(bs[6])){bs[6]=""}bt=bs[6];if(!r(be)){be=""}bi=bw[0];ba=bw[1];bh=bw[2];bx=bw[3];if(!bo){bg++;bj=bv;if(!aq||!bi.length){for(by in am){if(Object.prototype.hasOwnProperty.call(am,by)){bi=y(bC,am[by]);if(bi.length){break}}}for(by in ah){if(Object.prototype.hasOwnProperty.call(ah,by)){ba=y(bC,ah[by]);if(ba.length){break}}}}bE=b(aH);bn=bx.length?b(bx):"";if(bE.length&&!aE(bE)&&(!aq||!bn.length||aE(bn))){bx=aH}if(bx.length||bi.length){bh=bk;bw=[bi,ba,bh,a2(bx.slice(0,bf))];l(bm,JSON2.stringify(bw),at,a6,W,Z)}}bc+="&idsite="+aX+"&rec=1&r="+String(Math.random()).slice(2,8)+"&h="+bb.getHours()+"&m="+bb.getMinutes()+"&s="+bb.getSeconds()+"&url="+h(a2(bC))+(aH.length?"&urlref="+h(a2(aH)):"")+"&_id="+bz+"&_idts="+br+"&_idvc="+bg+"&_idn="+bD+(bi.length?"&_rcn="+h(bi):"")+(ba.length?"&_rck="+h(ba):"")+"&_refts="+bh+"&_viewts="+bj+(String(bt).length?"&_ects="+bt:"")+(String(bx).length?"&_ref="+h(a2(bx.slice(0,bf))):"");
+var bd=JSON2.stringify(ax);if(bd.length>2){bc+="&cvar="+h(bd)}for(by in aY){if(Object.prototype.hasOwnProperty.call(aY,by)){bc+="&"+by+"="+aY[by]}}if(bA){bc+="&data="+h(JSON2.stringify(bA))}else{if(U){bc+="&data="+h(JSON2.stringify(U))}}if(Q){var bq=JSON2.stringify(Q);if(bq.length>2){bc+="&_cvar="+h(bq)}for(by in bu){if(Object.prototype.hasOwnProperty.call(bu,by)){if(Q[by][0]===""||Q[by][1]===""){delete Q[by]}}}l(bF,JSON2.stringify(Q),ab,a6,W,Z)}V(bz,br,bg,bk,bj,r(be)&&String(be).length?be:bt);l(bl,"*",ab,a6,W,Z);bc+=E(bB);return bc}function aR(bd,bc,bh,be,ba,bk){var bf="idgoal=0",bg,bb=new Date(),bi=[],bj;if(String(bd).length){bf+="&ec_id="+h(bd);bg=Math.round(bb.getTime()/1000)}bf+="&revenue="+bc;if(String(bh).length){bf+="&ec_st="+bh}if(String(be).length){bf+="&ec_tx="+be}if(String(ba).length){bf+="&ec_sh="+ba}if(String(bk).length){bf+="&ec_dt="+bk}if(aN){for(bj in aN){if(Object.prototype.hasOwnProperty.call(aN,bj)){if(!r(aN[bj][1])){aN[bj][1]=""}if(!r(aN[bj][2])){aN[bj][2]=""}if(!r(aN[bj][3])||String(aN[bj][3]).length===0){aN[bj][3]=0
+}if(!r(aN[bj][4])||String(aN[bj][4]).length===0){aN[bj][4]=1}bi.push(aN[bj])}}bf+="&ec_items="+h(JSON2.stringify(bi))}bf=aj(bf,U,"ecommerce",bg);an(bf,aC)}function aQ(ba,be,bd,bc,bb,bf){if(String(ba).length&&r(be)){aR(ba,be,bd,bc,bb,bf)}}function a4(ba){if(r(ba)){aR("",ba,"","","","")}}function av(bd,be){var ba=new Date(),bc=aj("action_name="+h(K(bd||ai)),be,"log");an(bc,aC);if(S&&ae&&!aI){aI=true;J(p,"click",aW);J(p,"mouseup",aW);J(p,"mousedown",aW);J(p,"mousemove",aW);J(p,"mousewheel",aW);J(x,"DOMMouseScroll",aW);J(x,"scroll",aW);J(p,"keypress",aW);J(p,"keydown",aW);J(p,"keyup",aW);J(x,"resize",aW);J(x,"focus",aW);J(x,"blur",aW);aG=ba.getTime();setTimeout(function bb(){var bf=new Date(),bg;if((aG+ae)>bf.getTime()){if(S<bf.getTime()){bg=aj("ping=1",be,"ping");an(bg,aC)}setTimeout(bb,ae)}},ae)}}function aA(ba,bd,bc){var bb=aj("idgoal="+ba+(bd?"&revenue="+bd:""),bc,"goal");an(bb,aC)}function aV(bb,ba,bd){var bc=aj(ba+"="+h(a2(bb)),bd,"link");an(bc,aC)}function aZ(bb,ba){if(bb!==""){return bb+ba.charAt(0).toUpperCase()+ba.slice(1)
+}return ba}function ag(bf){var be,ba,bd=["","webkit","ms","moz"],bc;if(!ao){for(ba=0;ba<bd.length;ba++){bc=bd[ba];if(Object.prototype.hasOwnProperty.call(p,aZ(bc,"hidden"))){if(p[aZ(bc,"visibilityState")]==="prerender"){be=true}break}}}if(be){J(p,bc+"visibilitychange",function bb(){p.removeEventListener(bc+"visibilitychange",bb,false);bf()});return}bf()}function af(bc,bb){var bd,ba="(^| )(piwik[_-]"+bb;if(bc){for(bd=0;bd<bc.length;bd++){ba+="|"+bc[bd]}}ba+=")( |$)";return new RegExp(ba)}function aU(bd,ba,be){if(!be){return"link"}var bc=af(aw,"download"),bb=af(ac,"link"),bf=new RegExp("\\.("+ak+")([?&#]|$)","i");return bb.test(bd)?"link":(bc.test(bd)||bf.test(ba)?"download":0)}function aM(bf){var bd,bb,ba;while((bd=bf.parentNode)!==null&&r(bd)&&((bb=bf.tagName.toUpperCase())!=="A"&&bb!=="AREA")){bf=bd}if(r(bf.href)){var bg=bf.hostname||b(bf.href),bh=bg.toLowerCase(),bc=bf.href.replace(bg,bh),be=new RegExp("^(javascript|vbscript|jscript|mocha|livescript|ecmascript|mailto):","i");if(!be.test(bc)){ba=aU(bf.className,bc,aE(bh));
+if(ba){bc=d(bc);aV(bc,ba)}}}}function a8(ba){var bb,bc;ba=ba||x.event;bb=ba.which||ba.button;bc=ba.target||ba.srcElement;if(ba.type==="click"){if(bc){aM(bc)}}else{if(ba.type==="mousedown"){if((bb===1||bb===2)&&bc){ay=bb;X=bc}else{ay=X=null}}else{if(ba.type==="mouseup"){if(bb===ay&&bc===X){aM(bc)}ay=X=null}}}}function aL(bb,ba){if(ba){J(bb,"mouseup",a8,false);J(bb,"mousedown",a8,false)}else{J(bb,"click",a8,false)}}function au(bb){if(!aK){aK=true;var bc,ba=af(R,"ignore"),bd=p.links;if(bd){for(bc=0;bc<bd.length;bc++){if(!ba.test(bd[bc].className)){aL(bd[bc],bb)}}}}}function a3(){var ba,bb,bc={pdf:"application/pdf",qt:"video/quicktime",realp:"audio/x-pn-realaudio-plugin",wma:"application/x-mplayer2",dir:"application/x-director",fla:"application/x-shockwave-flash",java:"application/x-java-vm",gears:"application/x-googlegears",ag:"application/x-silverlight"};if(c.mimeTypes&&c.mimeTypes.length){for(ba in bc){if(Object.prototype.hasOwnProperty.call(bc,ba)){bb=c.mimeTypes[bc[ba]];aY[ba]=(bb&&bb.enabledPlugin)?"1":"0"
+}}}if(typeof navigator.javaEnabled!=="unknown"&&r(c.javaEnabled)&&c.javaEnabled()){aY.java="1"}if(n(x.GearsFactory)){aY.gears="1"}aY.res=A.width+"x"+A.height;aY.cookie=P()}a3();az();return{getVisitorId:function(){return(L())[1]},getVisitorInfo:function(){return L()},getAttributionInfo:function(){return i()},getAttributionCampaignName:function(){return i()[0]},getAttributionCampaignKeyword:function(){return i()[1]},getAttributionReferrerTimestamp:function(){return i()[2]},getAttributionReferrerUrl:function(){return i()[3]},setTrackerUrl:function(ba){N=ba},setSiteId:function(ba){aX=ba},setCustomData:function(ba,bb){if(z(ba)){U=ba}else{if(!U){U=[]}U[ba]=bb}},getCustomData:function(){return U},setCustomVariable:function(bb,ba,be,bc){var bd;if(!r(bc)){bc="visit"}if(bb>0){ba=r(ba)&&!j(ba)?String(ba):ba;be=r(be)&&!j(be)?String(be):be;bd=[ba.slice(0,a1),be.slice(0,a1)];if(bc==="visit"||bc===2){M();Q[bb]=bd}else{if(bc==="page"||bc===3){ax[bb]=bd}}}},getCustomVariable:function(bb,bc){var ba;if(!r(bc)){bc="visit"
+}if(bc==="page"||bc===3){ba=ax[bb]}else{if(bc==="visit"||bc===2){M();ba=Q[bb]}}if(!r(ba)||(ba&&ba[0]==="")){return false}return ba},deleteCustomVariable:function(ba,bb){if(this.getCustomVariable(ba,bb)){this.setCustomVariable(ba,"","",bb)}},setLinkTrackingTimer:function(ba){aC=ba},setDownloadExtensions:function(ba){ak=ba},addDownloadExtensions:function(ba){ak+="|"+ba},setDomains:function(ba){aD=j(ba)?[ba]:ba;aD.push(aT)},setIgnoreClasses:function(ba){R=j(ba)?[ba]:ba},setRequestMethod:function(ba){aF=ba||"GET"},setReferrerUrl:function(ba){aH=ba},setCustomUrl:function(ba){ar=aS(a7,ba)},setDocumentTitle:function(ba){ai=ba},setDownloadClasses:function(ba){aw=j(ba)?[ba]:ba},setLinkClasses:function(ba){ac=j(ba)?[ba]:ba},setCampaignNameKey:function(ba){am=j(ba)?[ba]:ba},setCampaignKeywordKey:function(ba){ah=j(ba)?[ba]:ba},discardHashTag:function(ba){T=ba},setCookieNamePrefix:function(ba){a5=ba;Q=Y()},setCookieDomain:function(ba){W=t(ba);az()},setCookiePath:function(ba){a6=ba;az()},setVisitorCookieTimeout:function(ba){aa=ba*1000
+},setSessionCookieTimeout:function(ba){ab=ba*1000},setReferralCookieTimeout:function(ba){at=ba*1000},setConversionAttributionFirstReferrer:function(ba){aq=ba},setDoNotTrack:function(bb){var ba=c.doNotTrack||c.msDoNotTrack;a0=bb&&(ba==="yes"||ba==="1")},addListener:function(bb,ba){aL(bb,ba)},enableLinkTracking:function(ba){if(m){au(ba)}else{v.push(function(){au(ba)})}},setHeartBeatTimer:function(bc,bb){var ba=new Date();S=ba.getTime()+bc*1000;ae=bb*1000},killFrame:function(){if(x.location!==x.top.location){x.top.location=x.location}},redirectFile:function(ba){if(x.location.protocol==="file:"){x.location=ba}},setCountPreRendered:function(ba){ao=ba},trackGoal:function(ba,bc,bb){ag(function(){aA(ba,bc,bb)})},trackLink:function(bb,ba,bc){ag(function(){aV(bb,ba,bc)})},trackPageView:function(ba,bb){ag(function(){av(ba,bb)})},setEcommerceView:function(bd,ba,bc,bb){if(!r(bc)||!bc.length){bc=""}else{if(bc instanceof Array){bc=JSON2.stringify(bc)}}ax[5]=["_pkc",bc];if(r(bb)&&String(bb).length){ax[2]=["_pkp",bb]
+}if((!r(bd)||!bd.length)&&(!r(ba)||!ba.length)){return}if(r(bd)&&bd.length){ax[3]=["_pks",bd]}if(!r(ba)||!ba.length){ba=""}ax[4]=["_pkn",ba]},addEcommerceItem:function(be,ba,bc,bb,bd){if(be.length){aN[be]=[be,ba,bc,bb,bd]}},trackEcommerceOrder:function(ba,be,bd,bc,bb,bf){aQ(ba,be,bd,bc,bb,bf)},trackEcommerceCartUpdate:function(ba){a4(ba)}}}function q(){return{push:G}}J(x,"beforeunload",H,false);k();Date.prototype.getTimeAlias=Date.prototype.getTime;B=new u();for(D=0;D<_paq.length;D++){G(_paq[D])}_paq=new q();return{addPlugin:function(i,L){a[i]=L},getTracker:function(i,L){return new u(i,L)},getAsyncTracker:function(){return B}}}()),piwik_track,piwik_log=function(b,f,d,g){function a(h){try{return eval("piwik_"+h)}catch(i){}return}var c,e=Piwik.getTracker(d,f);e.setDocumentTitle(b);e.setCustomData(g);c=a("tracker_pause");if(c){e.setLinkTrackingTimer(c)}c=a("download_extensions");if(c){e.setDownloadExtensions(c)}c=a("hosts_alias");if(c){e.setDomains(c)}c=a("ignore_classes");if(c){e.setIgnoreClasses(c)
+}e.trackPageView();if(a("install_tracker")){piwik_track=function(i,k,j,h){e.setSiteId(k);e.setTrackerUrl(j);e.trackLink(i,h)};e.enableLinkTracking()}}; var pkBaseURL = (("https:" == document.location.protocol) ? "https://attractor.yottos.com/" : "http://attractor.yottos.com/");try{var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", %(piwik_site_id)s);piwikTracker.trackPageView();piwikTracker.enableLinkTracking();} catch (err) {}""") % {'piwik_site_id': str(site_id)}
+            return """//<![CDATA[\n""" +  minifier.minify(script.encode('utf-8'), mangle=False) + piwik_tracker_code + """\n//]]>"""
+        return """//<![CDATA[\n""" +  minifier.minify(script.encode('utf-8') , mangle=False) + """\n//]]>"""
+        #return """//<![CDATA[\n""" + script.encode('utf-8') + """\n//]]>"""
+
+    def _generate_social_ads(self):
+        ''' Возвращает HTML-код заглушки с социальной рекламой,
+            которая будет показана при падении сервиса
+        '''
+        inf = self.db.informer.find_one({'guid': self.informer_id})
+        if not inf:
+            return
+
+        try:
+            items_count = int(inf['admaker']['Main']['itemsNumber'])
+        except:
+            items_count = 0
+
+        offers = ''
+        for i in xrange(0, items_count):
+            adv = social_ads[i % len(social_ads)]
+
+            offers += ('''<div class="advBlock"><a class="advHeader" href="%(url)s" target="_blank">''' +
+                       '''%(title)s</a><a class="advDescription" href="%(url)s" target="_blank">''' +
+                       '''%(description)s</a><a class="advCost" href="%(url)s" target="_blank"></a>''' +
+                       '''<a href="%(url)s" target="_blank"><img class="advImage" src="%(img)s" alt="%(title)s"/></a></div>'''
+                       ) % {'url': adv['url'], 'title': adv['title'], 'description': adv['description'], 'img': adv['image']}
+        return '''
+<html><head><META http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="robots" content="nofollow" /><style type="text/css">html, body { padding: 0; margin: 0; border: 0; }</style><!--[if lte IE 6]><script type="text/javascript" src="http://cdn.yottos.com/getmyad/supersleight-min.js"></script><![endif]-->
+%(css)s
+</head>
+<body>
+<div id='mainContainer'><div id="ads" style="position: absolute; left:0; top: 0">
+%(offers)s
+</div><div id='adInfo'><a href="http://yottos.com.ua" target="_blank"></a></div>
+</body>
+</html>''' % {'css': inf.get('css'), 'offers': offers}
+
+
+
+
+
+def minify_css(css):
+    # remove comments - this will break a lot of hacks :-P
+    css = re.sub( r'\s*/\*\s*\*/', "$$HACK1$$", css ) # preserve IE<6 comment hack
+    css = re.sub( r'/\*[\s\S]*?\*/', "", css )
+    css = css.replace( "$$HACK1$$", '/**/' ) # preserve IE<6 comment hack
+    
+    # url() doesn't need quotes
+    css = re.sub( r'url\((["\'])([^)]*)\1\)', r'url(\2)', css )
+    
+    # spaces may be safely collapsed as generated content will collapse them anyway
+    css = re.sub( r'\s+', ' ', css )
+    
+    # shorten collapsable colors: #aabbcc to #abc
+    css = re.sub( r'#([0-9a-f])\1([0-9a-f])\2([0-9a-f])\3(\s|;)', r'#\1\2\3\4', css )
+    
+    # fragment values can loose zeros
+    css = re.sub( r':\s*0(\.\d+([cm]m|e[mx]|in|p[ctx]))\s*;', r':\1;', css )
+    
+    result = []
+    for rule in re.findall( r'([^{]+){([^}]*)}', css ):
+    
+        # we don't need spaces around operators
+        selectors = [re.sub( r'(?<=[\[\(>+=])\s+|\s+(?=[=~^$*|>+\]\)])', r'', selector.strip() ) for selector in rule[0].split( ',' )]
+    
+        # order is important, but we still want to discard repetitions
+        properties = {}
+        porder = []
+        for prop in re.findall( '(.*?):(.*?)(;|$)', rule[1] ):
+            key = prop[0].strip().lower()
+            if key not in porder: porder.append( key )
+            properties[ key ] = prop[1].strip()
+    
+        # output rule if it contains any declarations
+        if properties:
+            result.append( "%s{%s}" % ( ','.join( selectors ), ''.join(['%s:%s;' % (key, properties[key]) for key in porder])[:-1] ))
+    return "\n".join(result)

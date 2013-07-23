@@ -1,0 +1,36 @@
+# -*- coding: utf-8 -*-
+<%inherit file="/main.mako.html" />
+<%def name="head()">
+	<title>Yottos GetMyAd</title>
+	
+</%def>
+##%>	(для парсера)
+
+<style type="text/css">
+	table.data-table tr td {
+		border-bottom: 1px dotted gray;
+	}
+	
+	.odd {
+		background-color: #ccc;
+	}
+	
+	a:link, a:visited {
+		text-decoration: none;
+	}
+	
+	a:hover {
+		text-decoration: underline;
+	}
+</style>
+
+<h2>Активные рекламные кампании:</h2>
+
+<table class="data-table">
+% for camp in c.campaigns:
+<tr>
+	<td><a href="${h.url_for(controller='adload', action='campaign_overview', id=camp['id'])}">${camp['title']}</a></td>
+	<td style="color: #252525">${'getmyad' if camp.get('getmyad', False) else ''}</td>
+</tr>
+% endfor
+</table>
