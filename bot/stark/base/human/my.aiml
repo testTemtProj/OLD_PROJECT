@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml version="1.0.1" xmlns:aiml="http://alicebot.org/2001/AIML-1.0.1">
+<category>
+<pattern>О ТЕБЕ</pattern>
+<template>
+Обо мне можно разговаривать очень долго. А что конкретно тебя интересует?
+</template>
+</category>
+</aiml>

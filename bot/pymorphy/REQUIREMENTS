@@ -1,0 +1,5 @@
+simplejson
+unittest2
+
+# для словарей в формате CDB
+tinycdb

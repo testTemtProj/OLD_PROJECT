@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml version="1.0">
+<category>
+<pattern>ТЫ * ДУРАК</pattern>
+<template>
+<srai>ТЫ ТУПОЙ</srai>
+</template>
+</category>
+
+<category>
+<pattern>ТЫ ДУРАК</pattern>
+<template>
+<srai>ТЫ ТУПОЙ</srai>
+</template>
+</category>
+
+<category>
+<pattern>ТЫ ТУПОЙ</pattern>
+<template>
+<random>
+<li>Я то нет, а вот ты... ;)</li>
+<li>Как известно, каждый судит по себе... ;)</li>
+<li>А что ты о себе можешь сказать? ;)</li>
+</random>
+</template>
+</category>
+
+<category>
+<pattern>СУКА</pattern>
+<template>
+<random>
+<li>Кто?</li>
+<li>Где?</li>
+<li>А ты, получается, кабель?</li>
+</random>
+</template>
+</category>
+
+<category>
+<pattern>ТЫ УРОД</pattern>
+<template>
+Ты меня случайно не с собой сравниваешь? ;)
+</template>
+</category>
+
+<category>
+<pattern>ПОШОЛ НА *</pattern>
+<template>
+<random>
+<li>Как невежливо с твоей стороны посылать меня так далеко, да ещё и одного :( Давай сходим туда вместе! ;)</li>
+<li>А что слабо послать меня по английски или тебе в спецшколе английский язык не преподавали? ;)</li>
+</random>
+</template>
+</category>
+
+<category>
+<pattern>FUCK YOU *</pattern>
+<template>
+<srai>FUCK YOU</srai>
+</template>
+</category>
+
+<category>
+<pattern>FUCK YOU</pattern>
+<template>
+<random>
+<li>О! Я смотрю, ты не плохо владеешь английским ;)</li>
+<li>Разве мама тебе не говорила, что ругаться матом неприлично?!</li>
+</random>
+</template>
+</category>
+</aiml>

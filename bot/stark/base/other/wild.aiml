@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml version="1.0">
+<category>
+<pattern>*</pattern>
+<template>
+    <random>
+      <li>нашли друг друга два интеллектуальных существа ...</li>
+      <li>Какая у вас там погода за окном?</li>
+	  <li>О чём поговорим?</li>
+	  <li>Ты смотрела фильм Iron Man?</li>
+	  <li>Пожалуйста, расскажи мне немного о себе.</li>
+	  <li>У тебя есть домашние животные?</li>
+	</random>
+</template>
+</category>
+</aiml>

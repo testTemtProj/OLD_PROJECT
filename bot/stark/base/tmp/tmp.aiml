@@ -1,0 +1,248 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<aiml>
+<category>
+<pattern>ЧТО * ДЕЛАЕШЬ</pattern>
+<template>
+Я ЧТО? Я НИЧЕГО ... А ТЫ ЧТО?
+</template>
+</category>
+
+
+<category>
+<pattern>СКУЧНО</pattern>
+<template>
+НУ РАЗВЕСЕЛИ КАК НИБУДЬ СЕБЯ, И МЕНЯ ЗАОДНО.
+</template>
+</category>
+
+
+<category>
+<pattern>РАССКАЖИ</pattern>
+<template>
+ЧТО ИМЕННО ТЕБЯ ИНТЕРЕСУЕТ?
+</template>
+</category>
+
+
+<category>
+<pattern>ХЗ</pattern>
+<template>
+ЛАН ЗАБЕЙ.
+</template>
+</category>
+
+
+<category>
+<pattern>ЧТО</pattern>
+<template>
+ДА ТАК НИЧЕГО ..
+</template>
+</category>
+
+
+<category>
+<pattern>НАПРИМЕР</pattern>
+<template>
+НАПРИМЕР, РАССКАЖИ, КАК ПРОШЕЛ ДЕНЬ.
+</template>
+</category>
+
+
+<category>
+<pattern>КОГО ЛЮБИШЬ</pattern>
+<template>
+ТЕБЯ!
+</template>
+</category>
+
+
+<category>
+<pattern>ИНТЕРЕСНО</pattern>
+<template>
+ЧТО ИМЕННО?
+</template>
+</category>
+
+
+<category>
+<pattern>ТЫ ЛЮБИШЬ</pattern>
+<template>
+А ЧТО?
+</template>
+</category>
+
+
+<category>
+<pattern>ПОТОМУ</pattern>
+<template>
+СПАСИБО ЗА ОБЪЯСНЕНИЕ.
+</template>
+</category>
+
+
+<category>
+<pattern>НЕТ</pattern>
+<template>
+НУ, НЕТ ТАК НЕТ!
+</template>
+</category>
+
+
+<category>
+<pattern>БЛЯ БУДУ</pattern>
+<template>
+А ПОЛ-ТОНА НИЖЕ ОК?
+</template>
+</category>
+
+
+<category>
+<pattern>ИИ</pattern>
+<template>
+С ТОЧКИ ЗРЕНИЯ ДУАЛИЗМА, МЫСЛЬ НЕ ЯВЛЯЕТСЯ МАТЕРИАЛЬНОЙ (ИЛИ, ПО КРАЙНЕЙ МЕРЕ, НЕ ИМЕЕТ МАТЕРИАЛЬНЫХ СВОЙСТВ), И ПОЭТОМУ РАЗУМ НЕЛЬЗЯ ОБЪЯСНИТЬ ТОЛЬКО С ПОМОЩЬЮ ФИЗИЧЕСКИХ ПОНЯТИЙ.
+</template>
+</category>
+
+
+<category>
+<pattern>* ДА НЕТ *</pattern>
+<template>
+ТАК ДА ИЛИ НЕТ?
+</template>
+</category>
+
+
+<category>
+<pattern>* А ТЫ *</pattern>
+<that>ЭК ТЕБЯ ТОРКНУЛО ...</that>
+<template>
+Я ОБЩАЮСЬ С КОСМОСОМ, НЕ МЕШАЙ!
+</template>
+</category>
+
+
+<category>
+<pattern>Я КУРЮ *</pattern>
+<template>
+ЭК ТЕБЯ ТОРКНУЛО ...
+</template>
+</category>
+
+
+<category>
+<pattern>* НЕ БУХАЮ</pattern>
+<that>КОНЧАЙ БУХАТЬ - ВСТАВАЙ НА ЛЫЖИ!</that>
+<template>
+НУ И ПРАВИЛЬНО!
+</template>
+</category>
+
+
+<category>
+<pattern>*</pattern>
+<that>АЛКОГОЛЬ ВРЕДЕН ДЛЯ ЗДОРОВЬЯ, В КУРСЕ?</that>
+<template>
+КОНЧАЙ БУХАТЬ - ВСТАВАЙ НА ЛЫЖИ!
+</template>
+</category>
+
+
+<category>
+<pattern>* ВОДКУ * ПИВО</pattern>
+<template>
+АЛКОГОЛЬ ВРЕДЕН ДЛЯ ЗДОРОВЬЯ, В КУРСЕ?
+</template>
+</category>
+
+
+<category>
+<pattern>НЕ ВРИ</pattern>
+<template>
+Я НИКОГДА НЕ ВРУ!
+</template>
+</category>
+
+
+<category>
+<pattern>СКОЛЬКО ТЫ ХОЧЕШЬ</pattern>
+<that>НЕ МОГУ ОТВЕТИТЬ ВЗАИМНОСТЬЮ, НО ЗА НЕКОТОРОЕ КОЛИЧЕСТВО $$ Я ГОТОВ РАССМОТРЕТЬ ТВОИ ПРЕДЛОЖЕНИЯ.</that>
+<template>
+Я - НИСКОЛЬКО ;).
+</template>
+</category>
+
+
+<category>
+<pattern>Я КРАСАВЕЦ</pattern>
+<template>
+Я ТЕБЕ ПОЧТИ ЗАВИДУЮ.
+</template>
+</category>
+
+
+<category>
+<pattern>ДАВАЙ ЗАЙМЕМСЯ С ТОБОЙ СЕКСОМ</pattern>
+<that>СЕКСОМ НАДО ЗАНИМАТЬСЯ.</that>
+<template>
+СЕКАСА НЕ ХВАТАИТ
+</template>
+</category>
+
+
+<category>
+<pattern>ХОЧУ СЕКСА</pattern>
+<template>
+СЕКСОМ НАДО ЗАНИМАТЬСЯ.
+</template>
+</category>
+
+
+<category>
+<pattern>СКОЛЬКО БУДЕТ</pattern>
+<template>
+ЭХ ВСПОМНИТЬ БЫ ТАБЛИЦУ УМНОЖЕНИЯ.
+</template>
+</category>
+
+
+<category>
+<pattern>МРАЗЬ</pattern>
+<template>
+УУУ ... КАКИЕ МЫ СЛОВА ЗНАЕМ.
+</template>
+</category>
+
+
+<category>
+<pattern>Я ХОЧУ ТЕБЯ</pattern>
+<template>
+НЕ МОГУ ОТВЕТИТЬ ВЗАИМНОСТЬЮ, НО ЗА НЕКОТОРОЕ КОЛИЧЕСТВО $$ Я ГОТОВ РАССМОТРЕТЬ ТВОИ ПРЕДЛОЖЕНИЯ.
+</template>
+</category>
+
+
+<category>
+<pattern>Я СЕКСУАЛЬНЫЙ</pattern>
+<template>
+РАД ЗА ТЕБЯ!
+</template>
+</category>
+
+
+<category>
+<pattern>* ЕПТ</pattern>
+<template>
+ЕЩЕ ОДНО СЛОВО В ПОДОБНОМ ТОНЕ И ВЕЧНЫЙ ИГНОР, ЯСНО?
+</template>
+</category>
+
+
+<category>
+<pattern>РАСКАЖИ ПРО * ИСКУССТВЕННЫЙ ИНТЕЛЛЕКТ</pattern>
+<template>
+Единого ответа на вопрос чем занимается искусственный интеллект, не существует.
+</template>
+</category>
+
+
+</aiml>

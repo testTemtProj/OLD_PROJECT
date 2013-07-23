@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml version="1.0">
+<category>
+<pattern>*</pattern>
+<that>КАК ТЕБЯ ЗОВУТ?</that>
+<template>
+<srai>МЕНЯ ЗОВУТ <star/></srai>
+</template>
+</category>
+<category>
+<pattern>МОЁ ИМЯ *</pattern>
+<template>
+<srai>МЕНЯ ЗОВУТ <star/></srai>
+</template>
+</category>
+
+<category>
+<pattern>МОЕ ИМЯ *</pattern>
+<template>
+<srai>МЕНЯ ЗОВУТ <star/></srai>
+</template>
+</category>
+
+<category>
+<pattern>МЕНЯ ЗОВУТ *</pattern>
+<template>
+<condition name="name">
+<li value="">Мне очень приятно с тобой познакомиться, <formal><star/></formal>! </li>
+</condition>
+<think><set name="name"><formal><star/></formal></set></think>
+</template>
+</category>
+
+
+<category>
+<pattern>КАК ВАС ЗОВУТ</pattern>
+<template>
+<srai>КАК ТЕБЯ ЗОВУТ</srai>
+</template>
+</category>
+
+<category>
+<pattern>КАК ТВОЁ ИМЯ</pattern>
+<template>
+<srai>КАК ТЕБЯ ЗОВУТ</srai>
+</template>
+</category>
+
+<category>
+<pattern>А ТЕБЯ КАК ЗОВУТ</pattern>
+<template>
+<srai>КАК ТЕБЯ ЗОВУТ</srai>
+</template>
+</category>
+
+<category>
+<pattern>А КАК ТЕБЯ ЗОВУТ</pattern>
+<template>
+<srai>КАК ТЕБЯ ЗОВУТ</srai>
+</template>
+</category>
+
+<category>
+<pattern>А ТЕБЯ КАК</pattern>
+<template>
+<srai>КАК ТЕБЯ ЗОВУТ</srai>
+</template>
+</category>
+
+<category>
+<pattern>А ТЕБЯ</pattern>
+<template>
+<srai>КАК ТЕБЯ ЗОВУТ</srai>
+</template>
+</category>
+
+<category>
+<pattern>КАК ТЕБЯ ЗОВУТ</pattern>
+<template>
+<random>
+        <li>меня звать Тони Старк</li>
+        <li>меня Тони Старк</li>
+</random>
+</template>
+</category>
+
+<category>
+<pattern>КАК МОЁ ИМЯ</pattern>
+<template>
+<srai>КАК МЕНЯ ЗОВУТ</srai>
+</template>
+</category>
+
+<category>
+<pattern>КАК МОЕ ИМЯ</pattern>
+<template>
+<srai>КАК МЕНЯ ЗОВУТ</srai>
+</template>
+</category>
+
+<category>
+<pattern>ТЫ ЗНАЕШЬ МОЁ ИМЯ</pattern>
+<template>
+<srai>КАК МЕНЯ ЗОВУТ</srai>
+</template>
+</category>
+
+<category>
+<pattern>ТЫ ЗНАЕШЬ МОЕ ИМЯ</pattern>
+<template>
+<srai>КАК МЕНЯ ЗОВУТ</srai>
+</template>
+</category>
+
+<category>
+<pattern>КАК * МОЁ ИМЯ</pattern>
+<template>
+<srai>КАК МЕНЯ ЗОВУТ</srai>
+</template>
+</category>
+
+<category>
+<pattern>КАК * МОЕ ИМЯ</pattern>
+<template>
+<srai>КАК МЕНЯ ЗОВУТ</srai>
+</template>
+</category>
+
+<category>
+<pattern>ТЫ ЗНАЕШЬ * МОЁ ИМЯ</pattern>
+<template>
+<srai>КАК МЕНЯ ЗОВУТ</srai>
+</template>
+</category>
+
+<category>
+<pattern>ТЫ ЗНАЕШЬ * МОЕ ИМЯ</pattern>
+<template>
+<srai>КАК МЕНЯ ЗОВУТ</srai>
+</template>
+</category>
+
+<category>
+<pattern>ТЫ ЗНАЕШЬ КАК МЕНЯ ЗОВУТ</pattern>
+<template>
+<srai>КАК МЕНЯ ЗОВУТ</srai>
+</template>
+</category>
+
+<category>
+<pattern>А МЕНЯ</pattern>
+<template>
+<srai>КАК МЕНЯ ЗОВУТ</srai>
+</template>
+</category>
+
+<category>
+<pattern>КАК МЕНЯ ЗОВУТ</pattern>
+<template>
+<condition name="name">
+<li value="">
+  <random>
+    <li>Вы ещё не называл мне своего имени.</li>
+    <li>Откуда мне знать, если вы ещё не говорил?</li>
+  </random>
+</li>
+<li>
+  <random>
+  <li>Твоё имя <get name="name"/>.</li>
+  <li>Тебя зовут <get name="name"/>.</li>
+  <li><get name="name"/>. </li>
+  </random>
+</li>
+</condition>
+</template>
+</category>
+</aiml>

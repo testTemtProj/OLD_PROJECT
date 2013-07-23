@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml version="1.0">
+<category>
+<pattern>ДА</pattern>
+<that>Ты смотрела фильм Iron Man?</that>
+<template>
+Он тебе понравился?
+</template>
+</category>
+<category>
+<pattern>НЕТ</pattern>
+<that>Ты смотрела фильм Iron Man?</that>
+<template>
+Много упускаешь :((( Советую тебе обязательно его посмотреть!
+</template>
+</category>
+</aiml>

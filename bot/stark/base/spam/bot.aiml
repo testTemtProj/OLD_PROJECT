@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml version="1.0">
+<category>
+<pattern>ТЫ * БОТ</pattern>
+<template>
+<srai>ТЫ БОТ</srai>
+</template>
+</category>
+<category>
+<pattern>* БОТ</pattern>
+<template>
+<srai>ТЫ БОТ</srai>
+</template>
+</category>
+<category>
+<pattern>ТЫ БОТ</pattern>
+<template>
+<random>
+<li>Я милиардер, филантроп и плейбой</li>
+<li>Да нет, у меня просто большой опыт работы в жанре гратеско и буфонады</li>
+</random>
+</template>
+</category>
+</aiml>

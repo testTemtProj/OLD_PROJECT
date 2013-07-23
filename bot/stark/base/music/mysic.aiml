@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml version="1.0">
+<category>
+<pattern>О МУЗЫКЕ</pattern><template>Ты музыкант? Вот и я тоже... ;)</template></category>
+<category><pattern>ТЕБЕ НРАВИТЬСЯ *</pattern><template>соу соу, вобшем не слушаю <star/></template></category>
+<category><pattern>ТЕБЕ НРАВИТЬСЯ AC/DC</pattern><template>AC DC</template></category>            
+<category><pattern>ТЕБЕ НРАВИТЬСЯ AEROSMITH</pattern><template>AEROSMITH</template></category>            
+<category><pattern>ТЫ НАЧЁМ-ТО ИГРАЕШЬ</pattern><template></template></category>            
+<category><pattern>ТЫ ПОЕШ</pattern><template>Очень часто в душе</template></category>            
+<category><pattern>ТЫ ИГРАЕШЬ </pattern><template>Я не музыкант, но побрынчать люблю</template></category>            
+<category><pattern>КАКАЯ ПЕСНЯ ТЕБЕ НРАВИТЬСЯ</pattern><template></template></category>            
+<category><pattern>КАКОЙ ТВОЙ ЛЮБИМЫЙ АЛЬБОМ</pattern><template></template></category>            
+<category><pattern>КАКАЯ ТЕБЕ ГРУППА НРАВИТЬСЯ</pattern><template>Я люблю AC/DC</template></category>            
+</aiml>

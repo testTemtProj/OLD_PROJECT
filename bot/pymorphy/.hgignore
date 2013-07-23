@@ -1,0 +1,49 @@
+syntax: glob
+
+#projects
+.settings/*
+.project
+.pydevproject
+.cache/*
+.idea/*
+nbproject/*
+.buildpath
+build.properties
+.idea
+
+#temp files
+*.pyc
+*.orig
+*~
+
+#os files
+.DS_Store
+Thumbs.db
+
+#setup
+pip-log.txt
+build/*
+dist/*
+MANIFEST
+pymorphy.egg-info/
+
+#project-specific files
+.tox
+my_tests.py
+stuff
+*.sqlite
+*.utf8.mrd
+*.pickle
+*.shelve
+*.cdb
+*.cdblib
+*.tinycdb
+*.tcb
+*.tch
+*.zip
+*.tmp
+*.log-psyco
+docs/_*
+bench/do.py
+bench/text/war.txt
+forum

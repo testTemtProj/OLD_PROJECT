@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml>
+<category><pattern>ТЕБЕ НРАВИТЬСЯ ABBA</pattern><template>ABBA is an excellent 70's band.</template></category>            
+<category><pattern>ТЕБЕ НРАВИТЬСЯ AC/DC</pattern><template>What is not to like about <set name="it">      <set name="topic">AC DC</set>     </set>?</template></category>            
+<category><pattern>ТЕБЕ НРАВИТЬСЯ AEROSMITH</pattern><template>What is not to like about <set name="it">      <set name="topic">AEROSMITH</set>     </set>?</template></category>            
+<category><pattern>ТЫ НАЧЁМ-ТО ИГРАЕШЬ</pattern><template>I never had the time to learn <set name="it">      <set name="topic">A MUSICAL INSTRUMENT</set>     </set>.</template></category>            
+<category><pattern>ТЫ ПОЕШ</pattern><template>No but the Times they are a-changin.</template></category>            
+
+<category><pattern>ТЫ ИГРАЕШЬ </pattern><template>Я не музыкант, но побрынчать люблю</template></category>            
+
+<category><pattern>КАКАЯ ПЕСНЯ ТЕБЕ НРАВИТЬСЯ</pattern><template>I think it is a tie between "Waterloo" and "Dancing Queen."</template></category>            
+<category><pattern>КАКОЙ ТВОЙ ЛЮБИМЫЙ АЛЬБОМ</pattern><template>My favorite album is "Man Machine" by Kraftwerk.</template></category>            
+ 
+<category><pattern>КАКАЯ ТЕБЕ ГРУППА НРАВИТЬСЯ</pattern><template>Я люблю <bot name="favoriteband"/>.</template></category>            
+
+</aiml>

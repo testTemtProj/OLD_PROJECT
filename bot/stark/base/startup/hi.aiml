@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml version="1.0">
+<!-- Обрезаем слова паразиты -->
+<category>
+	<pattern>НУ *</pattern>
+	<template><sr/></template>
+</category>
+
+<category>
+	<pattern>И *</pattern>
+	<template><sr/></template>
+</category>
+
+<!-- Патерн с несколькими вариантами ответов -->
+<category>
+	<pattern>ПРИВЕТ</pattern>
+	<template>
+		<condition name="name">
+		  <li value="">
+			<random>
+			  <li>Здравствуй!</li>
+			  <li>Привет!</li>
+			  <li>Здравствуйте!</li>
+			  <li>Доброго времечка суток</li>
+			  <li>приветик</li>
+			</random>
+		  </li>
+		  <li>
+			<random>
+			  <li>Здравствуй, <get name="name"/>!</li>
+			  <li>Привет, <get name="name"/>!</li>
+			  <li>Здравствуйте, <get name="name"/>!</li>
+			  <li>Доброго времечка суток</li>
+			  <li>приветик, <get name="name"/>!</li>
+			</random>
+		  </li>
+		</condition>
+		Как дела?
+	</template>
+</category>
+
+<!-- Патерны перенаправления на патерн "ПРИВЕТ"-->
+<category>
+	<pattern>Hello</pattern>
+	<template>
+	<srai>ПРИВЕТ</srai>
+	</template>
+</category>
+
+<category>
+	<pattern>ДОБРОЕ УТРО</pattern>
+	<template>
+	<srai>ПРИВЕТ</srai>
+	</template>
+</category>
+
+<category>
+	<pattern>ДОБРЫЙ ДЕНЬ</pattern>
+	<template>
+	<srai>ПРИВЕТ</srai>
+	</template>
+</category>
+
+<category>
+	<pattern>ДОБРЫЙ ВЕЧЕР</pattern>
+	<template>
+	<srai>ПРИВЕТ</srai>
+	</template>
+</category>
+
+<category>
+	<pattern>ЗДРАВСТВУЙ</pattern>
+	<template>
+	<srai>ПРИВЕТ</srai>
+	</template>
+</category>
+
+<category>
+	<pattern>ЗДРАВСТВУЙ *</pattern>
+	<template>
+	<srai>ПРИВЕТ</srai>
+	</template>
+</category>
+
+<category>
+	<pattern>ЗДРАВСТВУЙТЕ</pattern>
+	<template>
+	<srai>ПРИВЕТ</srai>
+	</template>
+</category>
+
+
+<category>
+	<pattern>ПРИВЕТИК</pattern>
+	<template>
+	<srai>ПРИВЕТ</srai>
+	</template>
+</category>
+
+<category>
+	<pattern>ПРИВЕТ *</pattern>
+	<template>
+	<srai>ПРИВЕТ</srai>
+	</template>
+</category>
+
+<category>
+	<pattern>Hi</pattern>
+	<template>
+	<srai>ПРИВЕТ</srai>
+	</template>
+</category>
+
+</aiml>

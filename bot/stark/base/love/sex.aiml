@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml version="1.0">
+<category>
+    <pattern>О СЕКСЕ</pattern>
+    <template>Сексом надо заниматься, а не разговаривать о нём ;)</template>
+</category>
+<category>
+    <pattern>СОГЛАСЕН</pattern>
+    <that>СЕКСОМ НАДО ЗАНИМАТЬСЯ, А НЕ РАЗГОВАРИВАТЬ О НЁМ ;)</that>
+    <template>Как тебе больше нравиться?</template>
+</category>
+<category>
+    <pattern>*</pattern>
+    <that>КАК ТЕБЕ БОЛЬШЕ НРАВИТЬСЯ?</that>
+    <template>мне тоже нравиться <star/></template>
+</category>
+</aiml>

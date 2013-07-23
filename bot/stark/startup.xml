@@ -1,0 +1,14 @@
+[gender]
+он = она
+она = он
+ему = ей
+для него = для неё
+с ним = с ней
+на него = на неё
+его = её
+[person]
+I was = he or she was
+[person2]
+with you = with me
+[normal]
+what's = what is

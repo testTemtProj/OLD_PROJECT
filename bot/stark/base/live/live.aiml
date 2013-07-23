@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml version="1.0.1" xmlns:aiml="http://alicebot.org/2001/AIML-1.0.1">
+<category>
+<pattern>О ЖИЗНИ</pattern>
+<template>
+Это слишком сложная тема для общения.
+</template>
+</category>
+</aiml>

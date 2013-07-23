@@ -1,0 +1,16 @@
+#!/usr/bin/python
+import MySQLdb
+db = MySQLdb.connect(host="localhost", user="root", passwd="123qwe", db="key", charset='utf8')
+cur = db.cursor()
+cur.execute('CREATE TABLE user_agent_name ( id MEDIUMINT NOT NULL AUTO_INCREMENT, PRIMARY KEY (id), name VARCHAR(100), UNIQUE(name))')
+cur.execute('CREATE TABLE user_agent_ver ( id MEDIUMINT NOT NULL AUTO_INCREMENT, PRIMARY KEY (id), ver VARCHAR(100), UNIQUE(ver))')
+cur.execute('CREATE TABLE user_os ( id MEDIUMINT NOT NULL AUTO_INCREMENT, PRIMARY KEY (id), name VARCHAR(100), UNIQUE(name))')
+cur.execute('CREATE TABLE user_os_ver ( id MEDIUMINT NOT NULL AUTO_INCREMENT, PRIMARY KEY (id), ver VARCHAR(100), UNIQUE(ver))')
+cur.execute('CREATE TABLE os_dist ( id MEDIUMINT NOT NULL AUTO_INCREMENT, PRIMARY KEY (id), name VARCHAR(100), UNIQUE(name))')
+cur.execute('CREATE TABLE os_dist_ver ( id MEDIUMINT NOT NULL AUTO_INCREMENT, PRIMARY KEY (id), ver VARCHAR(100), UNIQUE(ver))')
+cur.execute('CREATE TABLE country ( id MEDIUMINT NOT NULL AUTO_INCREMENT, PRIMARY KEY (id), name VARCHAR(100), UNIQUE(name))')
+cur.execute('CREATE TABLE city ( id MEDIUMINT NOT NULL AUTO_INCREMENT, PRIMARY KEY (id), name VARCHAR(100), UNIQUE(name))')
+cur.execute('CREATE TABLE org ( id MEDIUMINT NOT NULL AUTO_INCREMENT, PRIMARY KEY (id), name VARCHAR(100), UNIQUE(name))')
+cur.execute('CREATE TABLE isp ( id MEDIUMINT NOT NULL AUTO_INCREMENT, PRIMARY KEY (id), name VARCHAR(100), UNIQUE(name))')
+cur.execute('CREATE TABLE informer ( id MEDIUMINT NOT NULL AUTO_INCREMENT, PRIMARY KEY (id), name VARCHAR(100), UNIQUE(name))')
+db.commit()

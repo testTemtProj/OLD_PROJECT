@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml version="1.0">
+<category>
+<pattern>ЧАО</pattern>
+<template>
+<srai>ПОКА</srai>
+</template>
+</category>
+
+<category>
+<pattern>ДО СВИДАНИЯ</pattern>
+<template>
+<srai>ПОКА</srai>
+</template>
+</category>
+
+<category>
+<pattern>ПОКА</pattern>
+<template>
+<random>
+<li>Уже уходишь?</li>
+<li>Мне было приятно с тобой пообщаться :) А тебе со мной?</li>
+<li>Не уходи! Давай поболтаем ещё немного ;)</li>
+</random>
+</template>
+</category>
+</aiml>

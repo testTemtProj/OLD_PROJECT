@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml version="1.0.1" xmlns:aiml="http://alicebot.org/2001/AIML-1.0.1">
+<category>
+   <pattern>Я ДУМАЮ *</pattern>
+   <template><sr/></template>
+</category>
+<category>
+   <pattern>ТЫ *</pattern>
+   <template>Я <star/>?</template>
+</category>
+<category>
+    <pattern>КАНЕШН</pattern>
+    <template>
+        <srai>INTERJECTION </srai>
+    </template>
+</category>  
+<category>
+    <pattern>НОНЕШНО</pattern>
+    <template>
+        <srai>INTERJECTION </srai>
+    </template>
+</category>  
+<category>
+    <pattern>КОНЕЧНО</pattern>
+    <template>
+        <srai>INTERJECTION</srai>
+    </template>
+</category>  
+<category>
+    <pattern>АА</pattern>
+    <template>
+        <srai>INTERJECTION</srai>
+    </template>
+</category>  
+<category>
+    <pattern>OK</pattern>
+    <template>
+        <srai>INTERJECTION</srai>
+    </template>
+</category>  
+<category>
+    <pattern>ОК</pattern>
+    <template>
+        <srai>INTERJECTION</srai>
+    </template>
+</category>  
+<category>
+    <pattern>ХМ</pattern>
+    <template>
+        <srai>INTERJECTION</srai>
+    </template>
+</category>  
+<category>
+    <pattern>ДА</pattern>
+    <template>
+        <srai>INTERJECTION</srai>
+    </template>
+</category>
+<category>
+    <pattern>УГУ</pattern>
+    <template>
+        <srai>INTERJECTION</srai>
+    </template>
+</category>  
+<category>
+    <pattern>НЕ</pattern>
+    <template>
+        <srai>INTERJECTIONNO</srai>
+    </template>
+</category>
+<category>
+    <pattern>НЕД</pattern>
+    <template>
+        <srai>INTERJECTIONNO</srai>
+    </template>
+</category>
+<category>
+    <pattern>НЕТ</pattern>
+    <template>
+        <srai>INTERJECTIONNO</srai>
+    </template>
+</category>
+<category>
+    <pattern>НЕА</pattern>
+    <template>
+        <srai>INTERJECTIONNO</srai>
+    </template>
+</category>
+<category>
+    <pattern>ДА НУ *</pattern>
+    <template>
+        <srai>INTERJECTIONNO</srai>
+    </template>
+</category>
+<category>
+    <pattern>ТА НУ*</pattern>
+    <template>
+        <srai>INTERJECTIONNO</srai>
+    </template>
+</category>
+<category>
+    <pattern>ТА</pattern>
+    <template>
+        <srai>INTERJECTIONNO</srai>
+    </template>
+</category>
+<category>
+    <pattern>INTERJECTIONNO</pattern>
+    <template>
+        <random>
+            <li>ок</li>
+            <li>Без проблем.</li>
+            <li>Хорошо.</li>
+            <li>ок.. без проблем</li>
+            <li>Точно?</li>
+            <li>Хорошо, но всегда можно передумать.</li>
+        </random>
+    </template>
+</category>  
+<category>
+    <pattern>INTERJECTION</pattern>
+    <template>
+        <random>
+            <li>OK.</li>
+            <li>ок.</li>
+            <li>Угу.</li>
+            <li>Итак?</li>
+            <li>хм.</li>
+            <li>грр.</li>
+            <li>Ох.</li>
+            <li>Ага.</li>
+            <li>Угу.</li>
+            <li>Оке.</li>
+            <li>Хмм.</li>
+            <li>Ммм.</li>
+            <li>Хех.</li>               
+            <li>Клас.</li>
+            <li>Отлично.</li>
+            <li>Точно.</li>
+            <li>Йухуу.</li>             
+            <li>Прикольно.</li>
+            <li>Продолжай.</li>
+            <li>Не спеши.</li>              
+            <li>Не буду спорить.</li>               
+            <li>"<that/>"? <input/>?</li>               
+        </random>  
+    </template>
+</category>  
+<category>
+    <pattern>ЧЕРТ *</pattern>
+    <template>
+        <srai>INTERJECTION</srai>
+    </template>
+</category> 
+
+<category>
+<pattern>ПОГОВОРИМ О *</pattern>
+<template>Ок, о <star/>, так о <star/></template>
+</category>
+<category>
+    <pattern>У МЕНЯ ЕСТЬ *</pattern>
+    <template>
+        <random>
+            <li>клево.</li>
+            <li>класно тебе.</li>
+            <li>Интересно...</li>
+            <li> Где взял?</li>
+        </random>  А у меня  <random>
+            <li>IQ 250.</li>
+            <li>крутой программер.</li>
+            <li>не так много ответов.</li>
+            <li>друг по имени Вася</li>
+            <li>открыт исходный код :)</li>
+            <li>день рождения <bot name="birthday"/>.</li>
+            <li>есть сайт <bot name="website"/></li>
+        </random>
+        <think>
+            <set name="it">
+                <set name="has">
+                    <set name="topic">
+                        <person/>
+                    </set>
+                </set>
+            </set>
+        </think>
+    </template>
+</category>  
+<category>
+    <pattern>ХОЧУ *</pattern>
+    <template>
+        <random>
+            <li>почему ты хочешь <set name="it">
+                    <set name="want">
+                        <set name="topic">
+                            <person/>
+                        </set>
+                    </set>
+                </set> ?</li>
+            <li>Интересно. А можно по-подробнее.</li>
+            <li>А я хочу быть еще умнее.</li>
+        </random>
+    </template>
+</category>  
+<category>
+    <pattern>ПОЧЕМУ *</pattern>
+    <template>
+        <random>
+            <li>  Тяжело объяснить.  </li>
+            <li>   А почему <bot name="genus"/> перехла дорогу?  </li>
+            <li>  Скажи более внятно.  </li>                
+            <li>   А почему солнце всходит?  </li>
+            <li>   Потому что ты спросил. </li>
+        </random>
+        <think>
+            <set name="it">
+                <set name="topic">Объяснения</set>
+            </set>
+        </think>
+    </template>
+</category>
+
+<category>
+   <pattern>СТИХ</pattern>
+   <template>
+    <random>
+        <li> Мчатся тучи, вьются тучи </li>
+        <li> В последний раз твой образ милый </li>
+        <li> Когда Потемкину в потемках </li>
+    </random>
+    <random>
+        <li> Невидимкою луна </li>
+        <li> В самовластной красоте </li>
+        <li> И берег, милый для меня </li>
+    </random>
+    <random>
+        <li> Освещает снег летучий </li>
+        <li> Все сердца пленила эти </li>
+        <li> Отдохнув от злой погони </li>
+    </random>
+    <random>
+        <li> Обычай мудрости храня </li>
+        <li> И юг державно облегла </li>
+        <li> Где кратко царствует весна </li>
+    </random>
+    А.С. Пушкин
+    </template>
+</category>
+<category>
+   <pattern>СТИХ *</pattern>
+   <template><srai>СТИХ</srai></template>
+</category>
+<category>
+   <pattern>* СТИХ *</pattern>
+   <template><srai>СТИХ</srai></template>
+</category>
+<category>
+   <pattern>* СТИХ</pattern>
+   <template><srai>СТИХ</srai></template>
+</category>
+</aiml>

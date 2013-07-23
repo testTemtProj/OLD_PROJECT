@@ -1,0 +1,26 @@
+<aiml version="1.0">
+<!-- This category works with the Standard AIML Set -->
+<category>
+<pattern>LOAD AIML</pattern>
+<template>
+<!-- Load standard AIML set -->
+<learn>base/startup/hi.aiml</learn>
+<learn>base/startup/name.aiml</learn>
+<learn>base/startup/bye.aiml</learn>
+<learn>base/dialog/dialog.aiml</learn>
+<learn>base/human/age.aiml</learn>
+<learn>base/human/my.aiml</learn>
+<learn>base/live/live.aiml</learn>
+<learn>base/love/sex.aiml</learn>
+<learn>base/movies/favoritmovies.aiml</learn>
+<learn>base/mysic/mysic.aiml</learn>
+<!--learn>base/other/wild.aiml</learn-->
+<learn>base/spam/bot.aiml</learn>
+<learn>base/spam/mat.aiml</learn>
+<learn>base/zoo/home.aiml</learn>
+<learn>base/tmp/tmp.aiml</learn>
+
+</template>
+</category>
+
+</aiml>

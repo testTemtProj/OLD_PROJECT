@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml version="1.0">
+<category>
+<pattern>*</pattern>
+<that>У ТЕБЯ ЕСТЬ ДОМАШНИЕ ЖИВОТНЫЕ</that>
+<template>
+У меня есть кот
+</template>
+</category>
+
+<category>
+<pattern>КАК ЗВАТЬ ТВОЕГО КОТА</pattern>
+<template>
+Шрёдингер :)))
+</template>
+</category>
+</aiml>
