@@ -1,0 +1,327 @@
+# -*- coding: utf-8 -*-
+<%inherit file="/main.mako.html" />
+<%def name="title()"></%def>
+<%def name="keywords()"></%def>
+<%def name="description()"></%def>
+<%def name="js()">
+</%def>
+<div id="content" style="max-width: 100%;">
+    <div id="preload" class="imgCache">
+        <textarea name="text" cols="60" rows="7" id="edit-text-preload"></textarea>
+        <script>
+            preloadEditor();
+        </script>
+    </div>
+    <div id="tabs">
+        <ul>
+            <li><a href="#tabs-1">Clevad</a></li>
+            <li><a href="#tabs-2">Getmyad</a></li>
+            <li><a href="#tabs-3">Help</a></li>
+        </ul>
+        <div id="tabs-1">
+            <ul>
+                <li><a href="#tabs-1-1">Помошь</a></li>
+                <li><a href="#tabs-1-2">Правила</a></li>
+                <li><a href="#tabs-1-3">Описание</a></li>
+                <li><a href="#tabs-1-4">Новости</a></li>
+            </ul>
+            <div id="tabs-1-1">
+                <div class="edit-lang" style="display: block;">
+                    <span>Язык редактируемой записи</span>
+                    <select>
+                        <option value="ru" selected>Русский</option>
+                        <option value="en">Англиский</option>
+                        <option value="uk">Украинский</option>
+                    </select>
+                    <input type="submit" value="Редактировать" onclick="openAllHelp('tabs-1-1','clevad');" />
+                </div>
+                <div class="edit-list" style="display: none;">
+                    <table id="tabs-1-1-grid"></table>
+                    <input type="submit" value="Редактировать выделенное правило" onclick="openEditHelp('tabs-1-1','clevad',false);" />
+                    <input type="submit" value="Создать новое правило" onclick="openEditHelp('tabs-1-1','clevad',true);" />
+                </div>
+                <div class="edit-form" style="display: none;">
+                     <textarea name="doc" cols="0" rows="o" id="doc-tabs-1-1" style="display: none;"></textarea>
+                     <textarea name="title" cols="60" rows="1" id="title-tabs-1-1"></textarea>
+                     <textarea name="description" cols="60" rows="1" id="description-tabs-1-1"></textarea>
+                     <textarea name="metakey" cols="60" rows="1" id="metakey-tabs-1-1"></textarea>
+                     <textarea name="text" cols="60" rows="7" id="edit-text-tabs-1-1"></textarea>
+                     <input type="submit" value="Сохранить" onclick="submitEditHelp('tabs-1-1','clevad');" />
+                </div>
+            </div>
+            <div id="tabs-1-2">
+                <div class="edit-lang" style="display: block;">
+                    <span>Язык редактируемой записи</span>
+                    <select>
+                        <option value="ru" selected>Русский</option>
+                        <option value="en">Англиский</option>
+                        <option value="uk">Украинский</option>
+                    </select>
+                    <input type="submit" value="Редактировать" onclick="openAllRules('tabs-1-2','clevad');" />
+                </div>
+                <div class="edit-list" style="display: none;">
+                    <table id="tabs-1-2-grid"></table>
+                    <input type="submit" value="Редактировать выделенное правило" onclick="openEditRules('tabs-1-2','clevad',false);" />
+                    <input type="submit" value="Создать новое правило" onclick="openEditRules('tabs-1-2','clevad',true);" />
+                </div>
+                <div class="edit-form" style="display: none;">
+                     <textarea name="doc" cols="0" rows="o" id="doc-tabs-1-2" style="display: none;"></textarea>
+                     <textarea name="title" cols="60" rows="1" id="title-tabs-1-2"></textarea>
+                     <textarea name="description" cols="60" rows="1" id="description-tabs-1-2"></textarea>
+                     <textarea name="metakey" cols="60" rows="1" id="metakey-tabs-1-2"></textarea>
+                     <textarea name="text" cols="60" rows="7" id="edit-text-tabs-1-2"></textarea>
+                     <input type="submit" value="Сохранить" onclick="submitEditRules('tabs-1-2','clevad');" />
+                </div>
+            </div>
+            <div id="tabs-1-3">
+                <div class="edit-lang" style="display: block;">
+                    <span>Язык редактируемой записи</span>
+                    <select>
+                        <option value="ru" selected>Русский</option>
+                        <option value="en">Англиский</option>
+                        <option value="uk">Украинский</option>
+                    </select>
+                    <input type="submit" value="Редактировать" onclick="openEditAbout('tabs-1-3','clevad');" />
+                </div>
+                <div class="edit-form" style="display: none;">
+                     <textarea name="doc" cols="0" rows="o" id="doc-tabs-1-3" style="display: none;"></textarea>
+                     <textarea name="title" cols="60" rows="1" id="title-tabs-1-3"></textarea>
+                     <textarea name="description" cols="60" rows="1" id="description-tabs-1-3"></textarea>
+                     <textarea name="metakey" cols="60" rows="1" id="metakey-tabs-1-3"></textarea>
+                     <textarea name="text" cols="60" rows="7" id="edit-text-tabs-1-3"></textarea>
+                     <input type="submit" value="Сохранить" onclick="submitEditAbout('tabs-1-3','clevad');" />
+                </div>
+            </div>
+            <div id="tabs-1-4">
+                <div class="edit-lang" style="display: block;">
+                    <span>Язык редактируемой записи</span>
+                    <select>
+                        <option value="ru" selected>Русский</option>
+                        <option value="en">Англиский</option>
+                        <option value="uk">Украинский</option>
+                    </select>
+                    <input type="submit" value="Редактировать" onclick="openAllNews('tabs-1-4','clevad');" />
+                </div>
+                <div class="edit-list" style="display: none;">
+                    <table id="tabs-1-4-grid"></table>
+                    <input type="submit" value="Редактировать выделенное правило" onclick="openEditNews('tabs-1-4','clevad',false);" />
+                    <input type="submit" value="Создать новое правило" onclick="openEditNews('tabs-1-4','clevad',true);" />
+                </div>
+                <div class="edit-form" style="display: none;">
+                     <textarea name="doc" cols="0" rows="o" id="doc-tabs-1-4" style="display: none;"></textarea>
+                     <textarea name="title" cols="60" rows="1" id="title-tabs-1-4"></textarea>
+                     <textarea name="description" cols="60" rows="1" id="description-tabs-1-4"></textarea>
+                     <textarea name="metakey" cols="60" rows="1" id="metakey-tabs-1-4"></textarea>
+                     <textarea name="text" cols="60" rows="7" id="edit-text-tabs-1-4"></textarea>
+                     <input type="submit" value="Сохранить" onclick="submitEditNews('tabs-1-4','clevad');" />
+                </div>
+            </div>
+        </div>
+        <div id="tabs-2">
+            <ul>
+                <li><a href="#tabs-2-1">Помошь</a></li>
+                <li><a href="#tabs-2-2">Правила</a></li>
+                <li><a href="#tabs-2-3">Описание</a></li>
+                <li><a href="#tabs-2-4">Новости</a></li>
+            </ul>
+            <div id="tabs-2-1">
+                <div class="edit-lang" style="display: block;">
+                    <span>Язык редактируемой записи</span>
+                    <select>
+                        <option value="ru" selected>Русский</option>
+                        <option value="en">Англиский</option>
+                        <option value="uk">Украинский</option>
+                    </select>
+                    <input type="submit" value="Редактировать" onclick="openAllHelp('tabs-2-1','getmyad');" />
+                </div>
+                <div class="edit-list" style="display: none;">
+                    <table id="tabs-2-1-grid"></table>
+                    <input type="submit" value="Редактировать выделенное правило" onclick="openEditHelp('tabs-2-1','getmyad',false);" />
+                    <input type="submit" value="Создать новое правило" onclick="openEditHelp('tabs-2-1','getmyad',true);" />
+                </div>
+                <div class="edit-form" style="display: none;">
+                     <textarea name="doc" cols="0" rows="o" id="doc-tabs-2-1" style="display: none;"></textarea>
+                     <textarea name="title" cols="60" rows="1" id="title-tabs-2-1"></textarea>
+                     <textarea name="description" cols="60" rows="1" id="description-tabs-2-1"></textarea>
+                     <textarea name="metakey" cols="60" rows="1" id="metakey-tabs-2-1"></textarea>
+                     <textarea name="text" cols="60" rows="7" id="edit-text-tabs-2-1"></textarea>
+                     <input type="submit" value="Сохранить" onclick="submitEditHelp('tabs-2-1','getmyad');" />
+                </div>
+            </div>
+            <div id="tabs-2-2">
+                <div class="edit-lang" style="display: block;">
+                    <span>Язык редактируемой записи</span>
+                    <select>
+                        <option value="ru" selected>Русский</option>
+                        <option value="en">Англиский</option>
+                        <option value="uk">Украинский</option>
+                    </select>
+                    <input type="submit" value="Редактировать" onclick="openAllRules('tabs-2-2','getmyad');" />
+                </div>
+                <div class="edit-list" style="display: none;">
+                    <table id="tabs-2-2-grid"></table>
+                    <input type="submit" value="Редактировать выделенное правило" onclick="openEditRules('tabs-2-2','getmyad',false);" />
+                    <input type="submit" value="Создать новое правило" onclick="openEditRules('tabs-2-2','getmyad',true);" />
+                </div>
+                <div class="edit-form" style="display: none;">
+                     <textarea name="doc" cols="0" rows="o" id="doc-tabs-2-2" style="display: none;"></textarea>
+                     <textarea name="title" cols="60" rows="1" id="title-tabs-2-2"></textarea>
+                     <textarea name="description" cols="60" rows="1" id="description-tabs-2-2"></textarea>
+                     <textarea name="metakey" cols="60" rows="1" id="metakey-tabs-2-2"></textarea>
+                     <textarea name="text" cols="60" rows="7" id="edit-text-tabs-2-2"></textarea>
+                     <input type="submit" value="Сохранить" onclick="submitEditRules('tabs-2-2','getmyad');" />
+                </div>
+            </div>
+            <div id="tabs-2-3">
+                <div class="edit-lang" style="display: block;">
+                    <span>Язык редактируемой записи</span>
+                    <select>
+                        <option value="ru" selected>Русский</option>
+                        <option value="en">Англиский</option>
+                        <option value="uk">Украинский</option>
+                    </select>
+                    <input type="submit" value="Редактировать" onclick="openEditAbout('tabs-2-3','getmyad');" />
+                </div>
+                <div class="edit-form" style="display: none;">
+                     <textarea name="doc" cols="0" rows="o" id="doc-tabs-2-3" style="display: none;"></textarea>
+                     <textarea name="title" cols="60" rows="1" id="title-tabs-2-3"></textarea>
+                     <textarea name="description" cols="60" rows="1" id="description-tabs-2-3"></textarea>
+                     <textarea name="metakey" cols="60" rows="1" id="metakey-tabs-2-3"></textarea>
+                     <textarea name="text" cols="60" rows="7" id="edit-text-tabs-2-3"></textarea>
+                     <input type="submit" value="Сохранить" onclick="submitEditAbout('tabs-2-3','getmyad');" />
+                </div>
+            </div>
+            <div id="tabs-2-4">
+                <div class="edit-lang" style="display: block;">
+                    <span>Язык редактируемой записи</span>
+                    <select>
+                        <option value="ru" selected>Русский</option>
+                        <option value="en">Англиский</option>
+                        <option value="uk">Украинский</option>
+                    </select>
+                    <input type="submit" value="Редактировать" onclick="openAllNews('tabs-2-4','getmyad');" />
+                </div>
+                <div class="edit-list" style="display: none;">
+                    <table id="tabs-2-4-grid"></table>
+                    <input type="submit" value="Редактировать выделенное правило" onclick="openEditNews('tabs-2-4','getmyad',false);" />
+                    <input type="submit" value="Создать новое правило" onclick="openEditNews('tabs-2-4','getmyad',true);" />
+                </div>
+                <div class="edit-form" style="display: none;">
+                     <textarea name="doc" cols="0" rows="o" id="doc-tabs-2-4" style="display: none;"></textarea>
+                     <textarea name="title" cols="60" rows="1" id="title-tabs-2-4"></textarea>
+                     <textarea name="description" cols="60" rows="1" id="description-tabs-2-4"></textarea>
+                     <textarea name="metakey" cols="60" rows="1" id="metakey-tabs-2-4"></textarea>
+                     <textarea name="text" cols="60" rows="7" id="edit-text-tabs-2-4"></textarea>
+                     <input type="submit" value="Сохранить" onclick="submitEditNews('tabs-2-4','getmyad');" />
+                </div>
+            </div>
+        </div>
+        <div id="tabs-3">
+            <ul>
+                <li><a href="#tabs-3-1">Помошь</a></li>
+                <li><a href="#tabs-3-2">Правила</a></li>
+                <li><a href="#tabs-3-3">Описание</a></li>
+                <li><a href="#tabs-3-4">Новости</a></li>
+            </ul>
+            <div id="tabs-3-1">
+                <div class="edit-lang" style="display: block;">
+                    <span>Язык редактируемой записи</span>
+                    <select>
+                        <option value="ru" selected>Русский</option>
+                        <option value="en">Англиский</option>
+                        <option value="uk">Украинский</option>
+                    </select>
+                    <input type="submit" value="Редактировать" onclick="openAllHelp('tabs-3-1','help');" />
+                </div>
+                <div class="edit-list" style="display: none;">
+                    <table id="tabs-3-1-grid"></table>
+                    <input type="submit" value="Редактировать выделенное правило" onclick="openEditHelp('tabs-3-1','help',false);" />
+                    <input type="submit" value="Создать новое правило" onclick="openEditHelp('tabs-3-1','help',true);" />
+                </div>
+                <div class="edit-form" style="display: none;">
+                     <textarea name="doc" cols="0" rows="o" id="doc-tabs-3-1" style="display: none;"></textarea>
+                     <textarea name="title" cols="60" rows="1" id="title-tabs-3-1"></textarea>
+                     <textarea name="description" cols="60" rows="1" id="description-tabs-3-1"></textarea>
+                     <textarea name="metakey" cols="60" rows="1" id="metakey-tabs-3-1"></textarea>
+                     <textarea name="text" cols="60" rows="7" id="edit-text-tabs-3-1"></textarea>
+                     <input type="submit" value="Сохранить" onclick="submitEditHelp('tabs-3-1','help');" />
+                </div>
+            </div>
+            <div id="tabs-3-2">
+                <div class="edit-lang" style="display: block;">
+                    <span>Язык редактируемой записи</span>
+                    <select>
+                        <option value="ru" selected>Русский</option>
+                        <option value="en">Англиский</option>
+                        <option value="uk">Украинский</option>
+                    </select>
+                    <input type="submit" value="Редактировать" onclick="openAllRules('tabs-3-2','help');" />
+                </div>
+                <div class="edit-list" style="display: none;">
+                    <table id="tabs-3-2-grid"></table>
+                    <input type="submit" value="Редактировать выделенное правило" onclick="openEditRules('tabs-3-2','help',false);" />
+                    <input type="submit" value="Создать новое правило" onclick="openEditRules('tabs-3-2','help',true);" />
+                </div>
+                <div class="edit-form" style="display: none;">
+                     <textarea name="doc" cols="0" rows="o" id="doc-tabs-3-2" style="display: none;"></textarea>
+                     <textarea name="title" cols="60" rows="1" id="title-tabs-3-2"></textarea>
+                     <textarea name="description" cols="60" rows="1" id="description-tabs-3-2"></textarea>
+                     <textarea name="metakey" cols="60" rows="1" id="metakey-tabs-3-2"></textarea>
+                     <textarea name="text" cols="60" rows="7" id="edit-text-tabs-3-2"></textarea>
+                     <input type="submit" value="Сохранить" onclick="submitEditRules('tabs-3-2','help');" />
+                </div>
+            </div>
+            <div id="tabs-3-3">
+                <div class="edit-lang" style="display: block;">
+                    <span>Язык редактируемой записи</span>
+                    <select>
+                        <option value="ru" selected>Русский</option>
+                        <option value="en">Англиский</option>
+                        <option value="uk">Украинский</option>
+                    </select>
+                    <input type="submit" value="Редактировать" onclick="openEditAbout('tabs-3-3','help');" />
+                </div>
+                <div class="edit-form" style="display: none;">
+                     <textarea name="doc" cols="0" rows="o" id="doc-tabs-3-3" style="display: none;"></textarea>
+                     <textarea name="title" cols="60" rows="1" id="title-tabs-3-3"></textarea>
+                     <textarea name="description" cols="60" rows="1" id="description-tabs-3-3"></textarea>
+                     <textarea name="metakey" cols="60" rows="1" id="metakey-tabs-3-3"></textarea>
+                     <textarea name="text" cols="60" rows="7" id="edit-text-tabs-3-3"></textarea>
+                     <input type="submit" value="Сохранить" onclick="submitEditAbout('tabs-3-3','help');" />
+                </div>
+            </div>
+            <div id="tabs-3-4">
+                <div class="edit-lang" style="display: block;">
+                    <span>Язык редактируемой записи</span>
+                    <select>
+                        <option value="ru" selected>Русский</option>
+                        <option value="en">Англиский</option>
+                        <option value="uk">Украинский</option>
+                    </select>
+                    <input type="submit" value="Редактировать" onclick="openAllNews('tabs-3-4','help');" />
+                </div>
+                <div class="edit-list" style="display: none;">
+                    <table id="tabs-3-4-grid"></table>
+                    <input type="submit" value="Редактировать выделенное правило" onclick="openEditNews('tabs-3-4','help',false);" />
+                    <input type="submit" value="Создать новое правило" onclick="openEditNews('tabs-3-4','help',true);" />
+                </div>
+                <div class="edit-form" style="display: none;">
+                     <textarea name="doc" cols="0" rows="o" id="doc-tabs-3-4" style="display: none;"></textarea>
+                     <textarea name="title" cols="60" rows="1" id="title-tabs-3-4"></textarea>
+                     <textarea name="description" cols="60" rows="1" id="description-tabs-3-4"></textarea>
+                     <textarea name="metakey" cols="60" rows="1" id="metakey-tabs-3-4"></textarea>
+                     <textarea name="text" cols="60" rows="7" id="edit-text-tabs-3-4"></textarea>
+                     <input type="submit" value="Сохранить" onclick="submitEditNews('tabs-3-4','help');" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+       $(function() {
+           $( "#tabs" ).tabs();
+           $( "#tabs-1" ).tabs();
+           $( "#tabs-2" ).tabs();
+           $( "#tabs-3" ).tabs();
+       });
+    </script>
+</div>

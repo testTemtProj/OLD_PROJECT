@@ -1,0 +1,31 @@
+# -*- coding: utf-8 -*-
+<%inherit file="/main.mako.html" />
+<%def name="title()"></%def>
+<%def name="keywords()"></%def>
+<%def name="description()"></%def>
+<%def name="js()">
+</%def>
+<div id="content" class="clearfix">
+    <div id ="content-right" class="fl">
+        <div id="content-bloc">
+            <div id="content-name" class="textBorder">
+                <span>${_(u"новости")} ${h.styleProjectName(c.name)| n}</span>
+            </div>
+            <%include file="/include/project/search.mako.html"/>
+            <div id="content-text" class="textBorder">
+                <div id="content-text-wraper">
+                Да, пока измененное объявление не пройдет модерацию, в результатах поиска будет показываться старый вариант
+                (в том числе и по старым ключевым фразам). При этом под текстом объявления рядом со статусом модерации будет отображено
+                сообщение о том, что в настоящий момент показывается предыдущая версия объявления.
+
+                После принятия объявления модератором предыдущий вариант будет автоматически заменен на новый.
+
+                В объявлении может быть отклонена только часть ключевых фраз. Если при этом сам текст объявления принят,
+                то оно начнет показываться по принятым фразам. В этом случае у объявления покажется статус "Часть фраз отклонена".
+            </div>
+            </div>
+        </div>
+    </div>
+    <div id ="content-left" class="fl">
+    </div>
+</div>

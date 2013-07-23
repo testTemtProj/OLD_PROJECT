@@ -1,0 +1,100 @@
+# -*- coding: utf-8 -*-
+<%inherit file="/main.mako.html" />
+<%def name="title()"></%def>
+<%def name="keywords()"></%def>
+<%def name="description()"></%def>
+<%def name="js()">
+</%def>
+<div id="content" class="clearfix">
+    <div id ="content-right" class="fl">
+        <div id="content-bloc">
+            <div id="content-name" class="textBorder">
+                <span>${_(u"справочный центр")} ${h.styleProjectName(c.name)| n}</span>
+            </div>
+            <%include file="/include/project/search.mako.html"/>
+            <div id="content-text" class="textBorder  clearfix">
+                <div style="width: 100%;" class='fl'>
+                    <div id="content-text-block">
+                        <div id="content-text-wraper">
+                            Да, пока измененное объявление не пройдет модерацию, в результатах поиска будет показываться старый вариант
+                            (в том числе и по старым ключевым фразам). При этом под текстом объявления рядом со статусом модерации будет отображено
+                            сообщение о том, что в настоящий момент показывается предыдущая версия объявления.
+
+                            После принятия объявления модератором предыдущий вариант будет автоматически заменен на новый.
+
+                            В объявлении может быть отклонена только часть ключевых фраз. Если при этом сам текст объявления принят,
+                            то оно начнет показываться по принятым фразам. В этом случае у объявления покажется статус "Часть фраз отклонена".
+                        </div>
+                    </div>
+                </div>
+                <div id="content-text-menu" class="fl">
+                    <ul id="accordion">
+                        <li><div>Sports</div>
+                            <ul>
+                                <li><div>Sports-Football</div>
+                                    <ul>
+                                        <li><a href="#">Golf</a></li>
+                                        <li><a href="#">Football</a></li>
+                                    </ul>
+                                </li>
+                                <li><div>Sports-Cricket</div>
+                                    <ul>
+                                        <li><a href="#">Cricket</a></li>
+                                        <li><a href="#">Football</a></li>
+                                    </ul>
+                                </li>
+                                <li><div>Sports-Golf</div>
+                                    <ul>
+                                        <li><a href="#">Golf</a></li>
+                                        <li><a href="#">Cricket</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><div>Technology</div>
+                            <ul>
+                                <li><div>Technology</div>
+                                    <ul>
+                                        <li><a href="#">iPhone</a></li>
+                                        <li><a href="#">Facebook</a></li>
+                                        <li><a href="#">Twitter</a></li>
+                                    </ul>
+                                </li>
+                                <li><div>Technology</div>
+                                    <ul>
+                                        <li><a href="#">iPhone</a></li>
+                                        <li><a href="#">Facebook</a></li>
+                                        <li><a href="#">Twitter</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><div>Latest</div>
+                            <ul>
+                                <li><div>Latest</div>
+                                    <ul>
+                                        <li><a href="#">Obama</a></li>
+                                        <li><a href="#">Iran Election</a></li>
+                                        <li><a href="#">Health Care</a></li>
+                                    </ul>
+                                </li>
+                                <li><div>Latest</div>
+                                    <ul>
+                                        <li><a href="#">Obama</a></li>
+                                        <li><a href="#">Iran Election</a></li>
+                                        <li><a href="#">Health Care</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <script type="text/javascript">
+                        accordion_menu();
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id ="content-left" class="fl">
+    </div>
+</div>

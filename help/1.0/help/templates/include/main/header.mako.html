@@ -1,0 +1,53 @@
+# -*- coding: utf-8 -*-
+<%!
+from pylons.i18n.translation import set_lang, get_lang
+%>
+% if (url.environ['pylons.routes_dict']['controller'] != 'manager'):
+<header id="header" class="clearfix">
+        <div id="menu" class="fl"> 
+            <div id="menu-level1" class="clearfix">
+                <div class="menu-center fl">
+                </div>
+                <div class="menu-right fr clearfix">
+                    <div id="index-lang-select">
+                        <div class='selectBoxLang'>
+                            <span class='selectedLang'></span>
+                            <span class='selectArrowLang'>&#9660</span>
+                            <div class="selectOptionsLang" >
+                                <span class="selectOptionLang" value="ru" onclick="setLang(this.attributes['value'].value)">${_(u"Русский")}</span>
+                                <span class="selectOptionLang" value="uk" onclick="setLang(this.attributes['value'].value)">${_(u"Украинский")}</span>
+                                <span class="selectOptionLang" value="en" onclick="setLang(this.attributes['value'].value)">${_(u"Англиский")}</span>
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                            var curentLang = '${get_lang()[0]}';
+                            enableSelectBoxes('Lang',curentLang);
+                        </script>
+                    </div> 
+                </div>
+            </div>
+            <div id="menu-level2" class="clearfix">
+                <div class="menu-center fl">
+                    <ul id="nav-menu">
+                        <li><a href="/" >${_(u"Главная")}</a></li>
+                        <li><a href="/help" >${_(u"Помощь")}</a></li>
+                        <li><a href="/news" >${_(u"Новости")}</a></li>
+                        <li><a href="/rules" >${_(u"Правила")}</a></li>
+                        <li><a href="/about" >${_(u"О")} ${c.name}</a></li>
+                    </ul>
+                    <script type="text/javascript">
+                        style_menu_url('#nav-menu');
+                    </script>
+                </div>
+                <div class="menu-right fr">
+                </div>
+            </div>
+        </div>
+        <div id="logo" class="fl">
+            <a href="/"><img src="/img/${c.controller}/logo.png"/></a>
+        </div>
+</header>
+%else:
+<header id="header" class="clearfix">
+</header>
+%endif

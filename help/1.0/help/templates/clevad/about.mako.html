@@ -1,0 +1,23 @@
+# -*- coding: utf-8 -*-
+<%inherit file="/main.mako.html" />
+<%def name="title()"></%def>
+<%def name="keywords()"></%def>
+<%def name="description()"></%def>
+<%def name="js()">
+</%def>
+<div id="content" class="clearfix">
+    <div id ="content-right" class="fl">
+        <div id="content-bloc">
+            <div id="content-name" class="textBorder">
+                <span>${_(u"o")} ${h.styleProjectName(c.name)| n}</span>
+            </div>
+            <div id="content-text" class="textBorder">
+                <div id="content-text-wraper">
+                    ${c.content| n}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id ="content-left" class="fl">
+    </div>
+</div>

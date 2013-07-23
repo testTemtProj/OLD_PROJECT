@@ -1,0 +1,47 @@
+# -*- coding: utf-8 -*-
+% if (url.environ['pylons.routes_dict']['controller'] != 'manager'):
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<link rel="icon" type="image/png" href="/img/${c.controller}/favicon.png">
+<link rel="icon" href="/img/${c.controller}/favicon.ico">
+<!--[if IE]>
+<link rel="SHORTCUT ICON" href="/img/${c.controller}/favicon.ico"/>
+<link rel="icon" type="image/vnd.microsoft.icon" href="/img/${c.controller}/favicon.ico"/>
+<link rel="address bar icon" href="/img/${c.controller}/favicon.ico">
+<![endif]-->
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" href="/css/normalize.css">
+<link rel="stylesheet" href="/css/main.css">
+<script src="/js/other/modernizr-2.6.2.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/lib/jquery/jquery-1.9.1.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/other/plugins.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/other/XMLHttpRequest.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/other/iepngfix_tilebg.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/main.js" type="text/javascript" charset="utf-8"></script>
+%else:
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<link rel="icon" type="image/png" href="/img/main/favicon.png">
+<link rel="icon" href="/img/main/favicon.ico">
+<!--[if IE]>
+<link rel="SHORTCUT ICON" href="/img/main/favicon.ico"/>
+<link rel="icon" type="image/vnd.microsoft.icon" href="/img/main/favicon.ico"/>
+<link rel="address bar icon" href="/img/main/favicon.ico">
+<![endif]-->
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" href="/css/normalize.css">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/plugin/ui-lightness/jquery-ui-1.10.2.custom.css">
+<link rel="stylesheet" href="/css/plugin/ui.jqgrid.css">
+<script src="/js/other/modernizr-2.6.2.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/lib/jquery/jquery-1.9.1.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/lib/jquery/jquery-ui-1.10.2.custom.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/lib/jqgrid/jquery.jqGrid.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/lib/jqgrid/i18n/grid.locale-ru.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/lib/tinymce/tiny_mce.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/lib/plugin/jquery.json-2.4.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/other/plugins.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/other/XMLHttpRequest.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/other/iepngfix_tilebg.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/manager.js" type="text/javascript" charset="utf-8"></script>
+%endif

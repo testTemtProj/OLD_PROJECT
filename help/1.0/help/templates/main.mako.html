@@ -1,0 +1,23 @@
+# -*- coding: utf-8 -*-
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+<title>${self.title()}</title>
+<meta name="keywords" content="${self.keywords()}"/>
+<meta name="description" content="${self.description()}"/>
+<%include file="/include/main/head.mako.html"/>
+${self.js()}
+</head>
+        <body>
+        <div class="imgCache">
+        </div>
+        <div id="wrapper">
+            <%include file="/include/main/header.mako.html"/>
+            ${self.body()}
+            <%include file="/include/main/footer.mako.html"/>
+        </div>
+    </body>
+</html>
