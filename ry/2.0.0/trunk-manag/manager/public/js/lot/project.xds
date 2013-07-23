@@ -1,0 +1,354 @@
+{
+    "name": "project.xds",
+    "projectId": "EA912FBB-2D40-499D-8DB4-A4432A0F7CDD",
+    "settings": {
+        "urlPrefix": "http://localhost/",
+        "directAPI": "",
+        "spacesToIndent": "4",
+        "codeGenFormat": "Class",
+        "extPath": "http://extjs.cachefly.net/ext-3.3.1/",
+        "exportPath": ".",
+        "lineEnding": "LF",
+        "instantiateStore": true,
+        "exportXDSFiles": true,
+        "genTimestamps": true
+    },
+    "xdsVersion": "1.1.2",
+    "components": [
+        {
+            "id": "MyPanel",
+            "cid": "panel",
+            "jsClass": "EditLot",
+            "snapToGrid": 10,
+            "userConfig": {
+                "title": "Редактирование эталонов",
+                "width": 782,
+                "height": 697
+            },
+            "cn": [
+                {
+                    "id": "MyGrid",
+                    "cid": "grid",
+                    "jsClass": "MyGrid",
+                    "snapToGrid": 10,
+                    "userConfig": {
+                        "title": "Список товаров",
+                        "store": "FeatcherStore",
+                        "width": 786,
+                        "height": 200,
+                        "footer": true,
+                        "frame": "-ext-undefined-",
+                        "header": true,
+                        "columnLines": true
+                    },
+                    "cn": [
+                        {
+                            "id": "MyColumn",
+                            "cid": "gridcolumn",
+                            "jsClass": "MyColumn",
+                            "snapToGrid": 10,
+                            "userConfig": {
+                                "dataIndex": "string",
+                                "header": "Название",
+                                "sortable": true,
+                                "resizable": "-ext-undefined-",
+                                "width": 100,
+                                "align": "center"
+                            }
+                        },
+                        {
+                            "id": "MyColumn1",
+                            "cid": "numbercolumn",
+                            "jsClass": "MyColumn1",
+                            "snapToGrid": 10,
+                            "userConfig": {
+                                "dataIndex": "number",
+                                "header": "урл",
+                                "sortable": true,
+                                "resizable": "-ext-undefined-",
+                                "width": 100,
+                                "align": "center"
+                            }
+                        },
+                        {
+                            "id": "MyColumn2",
+                            "cid": "booleancolumn",
+                            "jsClass": "MyColumn3",
+                            "snapToGrid": 10,
+                            "userConfig": {
+                                "dataIndex": "bool",
+                                "header": "Отображать",
+                                "sortable": true,
+                                "resizable": "-ext-undefined-",
+                                "width": 100
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "MyTabPanel",
+                    "cid": "tabpanel",
+                    "jsClass": "MyTabPanel",
+                    "snapToGrid": 10,
+                    "userConfig": {
+                        "activeTab": 0,
+                        "height": 470
+                    },
+                    "cn": [
+                        {
+                            "id": "MyPanel1",
+                            "cid": "panel",
+                            "jsClass": "MyPanel1",
+                            "snapToGrid": 10,
+                            "userConfig": {
+                                "title": "Характеристики",
+                                "height": 477
+                            },
+                            "cn": [
+                                {
+                                    "id": "MyGrid1",
+                                    "cid": "editorgrid",
+                                    "jsClass": "MyEditorGrid",
+                                    "snapToGrid": 10,
+                                    "userConfig": {
+                                        "title": "Эталон",
+                                        "store": "FeatcherStore",
+                                        "height": 358,
+                                        "width": 779
+                                    },
+                                    "userXType": "myeditorgrid",
+                                    "cn": [
+                                        {
+                                            "id": "MyColumn3",
+                                            "cid": "gridcolumn",
+                                            "jsClass": "MyColumn4",
+                                            "snapToGrid": 10,
+                                            "userConfig": {
+                                                "dataIndex": "string",
+                                                "header": "Название",
+                                                "sortable": true,
+                                                "resizable": "-ext-undefined-",
+                                                "width": 100
+                                            },
+                                            "cn": [
+                                                {
+                                                    "id": "MyTextField",
+                                                    "cid": "textfield",
+                                                    "jsClass": "MyTextField",
+                                                    "snapToGrid": 10
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "id": "MyColumn4",
+                                            "cid": "numbercolumn",
+                                            "jsClass": "MyColumn5",
+                                            "snapToGrid": 10,
+                                            "userConfig": {
+                                                "dataIndex": "number",
+                                                "header": "Значение",
+                                                "sortable": true,
+                                                "resizable": "-ext-undefined-",
+                                                "width": 100,
+                                                "align": "right"
+                                            },
+                                            "cn": [
+                                                {
+                                                    "id": "MyNumberField",
+                                                    "cid": "numberfield",
+                                                    "jsClass": "MyNumberField",
+                                                    "snapToGrid": 10
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "id": "MyColumn5",
+                                            "cid": "booleancolumn",
+                                            "jsClass": "MyColumn7",
+                                            "snapToGrid": 10,
+                                            "userConfig": {
+                                                "dataIndex": "bool",
+                                                "header": "Отображать",
+                                                "sortable": true,
+                                                "resizable": "-ext-undefined-",
+                                                "width": 100
+                                            },
+                                            "cn": [
+                                                {
+                                                    "id": "MyCheckbox",
+                                                    "cid": "checkbox",
+                                                    "jsClass": "MyCheckbox",
+                                                    "snapToGrid": 10,
+                                                    "userConfig": {
+                                                        "boxLabel": "BoxLabel"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "id": "MyPanel2",
+                            "cid": "panel",
+                            "jsClass": "MyPanel2",
+                            "snapToGrid": 10,
+                            "userConfig": {
+                                "title": "Описание"
+                            },
+                            "cn": [
+                                {
+                                    "id": "MyLabel",
+                                    "cid": "label",
+                                    "jsClass": "MyLabel",
+                                    "snapToGrid": 10,
+                                    "userConfig": {
+                                        "text": "Описание товара"
+                                    }
+                                },
+                                {
+                                    "id": "MyTextArea",
+                                    "cid": "textarea",
+                                    "jsClass": "MyTextArea",
+                                    "snapToGrid": 10,
+                                    "userConfig": {
+                                        "width": 770,
+                                        "height": 278,
+                                        "id": "txtDescription"
+                                    }
+                                },
+                                {
+                                    "id": "MyButton",
+                                    "cid": "button",
+                                    "jsClass": "MyButton",
+                                    "snapToGrid": 10,
+                                    "userConfig": {
+                                        "text": "Сохранить",
+                                        "itemId": "-ext-undefined-",
+                                        "arrowAlign": "-ext-undefined-",
+                                        "id": "btnSave"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "id": "MyPanel3",
+                            "cid": "panel",
+                            "jsClass": "MyPanel3",
+                            "snapToGrid": 10,
+                            "userConfig": {
+                                "title": "Товары"
+                            },
+                            "cn": [
+                                {
+                                    "id": "MyListView",
+                                    "cid": "listview",
+                                    "jsClass": "MyListView",
+                                    "snapToGrid": 10,
+                                    "userConfig": {
+                                        "columnResize": false,
+                                        "store": "ItemStore",
+                                        "height": 426,
+                                        "width": 776
+                                    },
+                                    "cn": [
+                                        {
+                                            "id": "MyColumn6",
+                                            "cid": "lvcolumn",
+                                            "jsClass": "MyColumn2",
+                                            "snapToGrid": 10,
+                                            "userConfig": {
+                                                "header": "ID",
+                                                "width": 0.25
+                                            }
+                                        },
+                                        {
+                                            "id": "MyColumn7",
+                                            "cid": "lvcolumn",
+                                            "jsClass": "MyColumn8",
+                                            "snapToGrid": 10,
+                                            "userConfig": {
+                                                "header": "Магазин"
+                                            }
+                                        },
+                                        {
+                                            "id": "MyColumn8",
+                                            "cid": "lvcolumn",
+                                            "jsClass": "MyColumn9",
+                                            "snapToGrid": 10,
+                                            "userConfig": {
+                                                "header": "Отображать"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "id": "MyPanel4",
+                            "cid": "panel",
+                            "jsClass": "MyPanel3",
+                            "snapToGrid": 10,
+                            "userConfig": {
+                                "title": "Обзоры"
+                            }
+                        },
+                        {
+                            "id": "MyPanel5",
+                            "cid": "panel",
+                            "jsClass": "MyPanel3",
+                            "snapToGrid": 10,
+                            "userConfig": {
+                                "title": "Отзывы"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "MyFieldSet",
+                    "cid": "fieldset",
+                    "jsClass": "MyFieldSet",
+                    "snapToGrid": 10,
+                    "userConfig": {
+                        "title": "Фильтр",
+                        "width": 780,
+                        "height": 87
+                    }
+                }
+            ]
+        }
+    ],
+    "stores": [
+        {
+            "id": "MyStore",
+            "cid": "jsonstore",
+            "jsClass": "MyStore",
+            "snapToGrid": 10,
+            "userConfig": {
+                "storeId": "MyStore"
+            }
+        },
+        {
+            "id": "MyStore1",
+            "cid": "jsonstore",
+            "jsClass": "FeatcherStore",
+            "snapToGrid": 10,
+            "userConfig": {
+                "storeId": "FeatcherStore",
+                "url": "http://localhost:4000/product/getone",
+                "root": "http://localhost:4000"
+            }
+        },
+        {
+            "id": "MyStore2",
+            "cid": "jsonstore",
+            "jsClass": "ItemStore",
+            "snapToGrid": 10,
+            "userConfig": {
+                "storeId": "ItemStore",
+                "url": "/product/get"
+            }
+        }
+    ]
+}

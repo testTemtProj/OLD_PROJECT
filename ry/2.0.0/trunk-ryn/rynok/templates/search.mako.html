@@ -1,0 +1,103 @@
+<%! from rynok.lib import viewhelpers as vh %>
+<%inherit file='/base/index.html' />
+<%def name="title()">${c.meta_title}</%def>
+<%def name="keywords()">${c.meta_keywords}</%def>
+<%def name="description()">${c.meta_description}</%def>
+    
+${vh.search_breadcrumbs(c.search_query, c.current_cat)}
+        <!--[if lte IE 7]>
+		<table class="ie-wrapper">
+			<tr>
+				<td class="col sidebar">
+		<![endif]-->
+			<div id="left-bar">
+                ${vh.search_filters(c.all_markets, c.markets, c.all_vendors, c.vendors, c.currency, c.price_query, c.search_query, c.cats)}
+			</div>
+			<!--[if lte IE 7]>
+				</td>
+				<td class="col">
+			<![endif]-->
+			<div id="wrapper">
+				<div id="content">
+					<div class="main">
+						<div class="main-holder">                            
+                            <div class="panel-sort">
+                                ${vh.sort_panel(c.sort_settings, c.current_url, c.price_min, c.price_max)}                                  
+                            </div>
+                            
+                            ${products(c.products)}
+                            ${vh.paging_toolbar(current_page=c.page, total_pages=c.total_pages)}
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--[if lte IE 7]>
+				</td>
+				<td class="col sidebar">
+			<![endif]-->
+			<div id="sidebar">
+                ${vh.banner_block(c.banner)}
+                ${vh.wishlist()}
+                ${vh.vendors()}
+				<input type="hidden" name="query" class="text" id="htxtFind" value="${c.find}"/>
+			</div>
+			<!--[if lte IE 7]>
+					</td>
+				</tr>
+			</table>
+			<div class="clr"></div>
+			<![endif]-->
+
+<%def name="products(products)">
+<div class="clr"></div>
+<ul class="list">
+
+% if len(c.noresult):
+    <li style="height: 38px; padding-top: 0px;">
+        <div class="desc-holder">
+                <h4 style="font-size: 14px; margin-top: 10px; color: #393939; border-bottom: none; background: none;"><center>${c.noresult}    
+                </center></h4>
+        </div>
+            <div class="clr"></div>
+    </li>
+% endif
+
+<%
+
+    for product in products:
+        context.write(vh.product_preview(product, c.currency))
+%>
+</ul>
+</%def>
+<script type="text/javascript">
+/**
+ * Решение на грани фола, Сaша должен поправить
+ */
+
+$(document).ready(function(){
+//    var expr = new RegExp('('+$("#txtFind").val()+')', 'ig');    
+//	$("#txtFind").val("${c.find}");
+//	$("#htxtFind").val("${c.find}");
+//    var expr = new RegExp('('+$("#txtFind").val()+')', 'ig');
+//    $('.descr a').each(function(){        
+//        $(this).html($(this).html().replace(expr, "<b>$1</b>"));
+//    });
+    $("#txtFind").val("${c.find}");
+    $("#htxtFind").val("${c.find}");
+    //var expr = new RegExp('('+$("#txtFind").val()+')', 'ig');
+    var _term = $("#txtFind").val().split(' ');
+    for(i in _term){
+        if (_term[i].length > 0) {
+            var expr = new RegExp('(' + _term[i] + ')', 'ig');
+            $('.title-wrap').each(function(){
+                var _id = $(this).attr('id')
+                var _text = $('#' + _id).html();
+                
+                console.log(_id);
+                _text = _text.replace(expr, '<b>$1</b>');
+                $('#' + _id).html(_text);
+            });
+        }
+    }  
+});
+</script>

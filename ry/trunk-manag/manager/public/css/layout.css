@@ -1,0 +1,69 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: helvetica, arial, verdana, tahoma, sans-serif;
+}
+
+#header {
+    background: #EDEDED url('/img/hd-bg.png') repeat-x;
+}
+
+#header h1 {
+    float: left;
+    padding: 8px;
+    color: #555;
+    font-weight: normal;
+}
+
+#exit {
+    float: right;
+    color: #555;
+    font-size: 12px;
+    text-decoration: none;
+    padding: 5px 10px;
+    display: block;
+}
+
+#exit:hover {
+    color: #9c0000;
+}
+
+.u-icon-download {
+    background: url('/img/download.new.png') no-repeat;
+}
+
+.u-icon-save {
+    background: url('/img/save.png') no-repeat;
+}
+
+.u-icon-search {
+    background: url('/img/search.png') no-repeat;
+}
+
+.u-icon-reset {
+    background: url('/img/reset.png') no-repeat;
+}
+
+.highlight {
+    background: #f5deb3;
+    padding: 2px 0 !important;
+}
+
+.x-grid3-row td,
+.x-grid3-summary-row td,
+.x-grid3-cell-text,
+.x-grid3-hd-text,
+.x-grid3-hd,
+.x-grid3-row {
+	-moz-user-select:inherit;
+	-khtml-user-select:text;
+}
+
+.x-grid3-cell-inner a {
+    color: #369;
+    text-decoration: none;
+}
+
+.x-grid3-cell-inner a:hover {
+    text-decoration: underline;
+}

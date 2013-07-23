@@ -1,0 +1,58 @@
+<%
+main = False
+if url.current() == '/main/index':
+    main = True
+all = True
+%>
+% if main:
+    <li>
+        <h2><a href="${c.root_url}">${c.root_title}</a><%
+            if c.show_count:
+                context.write('<span>%s</span>'%(c.root_count))
+        %></h2>
+        <div class="holder scroll-holder">
+            <div class="slider-wrap">
+                <div class="slider-vertical"></div>
+            </div>
+            <ul class="slider-content" tyle="right: 9px; left: -10px;">
+            <!--<ul class="slider-content">-->
+                ${childrens_cats(c.cats)}
+            </ul>
+        </div>
+    </li>
+% else:
+        <li>
+    % if len(c.root_title) < 20:
+            <h2 style="height: 27px; margin-top: 20px;"><a href="${c.root_url}">${c.root_title}</a><span>${c.root_count}</span></h2>
+    % else:
+            <h2 style="height: 40px; margin-top: 20px; padding-left: 10px;"><a href="${c.root_url}" style="padding-left: 0px;">${c.root_title}</a><span>${c.root_count}</span></h2>
+    % endif
+            <div class="holder" style="height: auto;">
+                <ul>
+                ${childrens_cats(c.cats)}
+                </ul>
+            </div>
+        </li>
+% endif
+<%def name="childrens_cats(cats)">
+<%
+    name_count = 0
+    brake_position = 29 
+    brake_character = '-<br/>'
+    for cat in cats:
+        if cat['category']['count'] > 0:
+            name = cat['category']['Name']
+            if len(name) > brake_position:
+                name = name[ : brake_position] + brake_character + name[brake_position : ]
+            name = name.replace(' ', '&nbsp; ')
+            if main or all:
+                context.write('<li><a href="'+cat["category"]["URL"]+'/" class="text-wrap">'+name+'</a></li>')
+                continue
+            name_count += len(name) + 1
+            if name_count < 85:
+                context.write('<span><a href="'+cat["category"]["URL"]+'/" class="text-wrap">'+name+'</a></span>')
+            else:
+                context.write('<span><a href="'+c.root_url+'">...</a></span>')
+                break
+%>
+</%def>

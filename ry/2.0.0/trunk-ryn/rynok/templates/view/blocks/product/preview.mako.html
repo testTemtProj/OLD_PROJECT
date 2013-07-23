@@ -1,0 +1,80 @@
+<li>
+    <ul class="rating" id="product-rating-${c.product_id}">
+<%
+    flag = True
+    st_class = ''
+    for x in range(1, 11):
+        x = float(x)/2
+        if flag:
+            flag = False
+            st_class = 'left'
+        else:
+            flag = True
+            st_class = 'right'
+
+        if x <= c.rating:
+            st_class += ' active'
+        context.write('<li class="'+st_class+'"><a href="">'+str(x)+'</a></li>')
+%>
+    </ul>
+    <div class="clr"></div>
+    <!--[if lte IE 7]>
+    <table class="ie-inner">
+        <tr>
+            <td>
+    <![endif]-->
+    <div class="image">
+        <div><a title="${c.name}">
+            <img id="item-${c.product_id}" class='image-file' src="/img/no-photo.png" alt="${c.name}" />
+<%
+for size in c.image:
+    context.write('<script type="thumb" id="item-'+size+'-'+c.product_id+'">')
+    for type in c.image[size]:
+        context.write(c.image[size][type]+'\n')
+    endor
+    context.write('</script>')
+endor
+%>
+
+        </a></div>
+        <div class="clr"></div>
+    </div>
+    <!--[if lte IE 7]>
+    </td>
+    <td>
+    <![endif]-->
+    <div class="descr-holder">
+        <div class="descr">
+            <h3 style="white-space: normal; width: auto;" class="text-wrap" style="border-bottom: none;"><a href="${c.url}" class='title-wrap' id="product-${c.product_id}" target="_blank" onclick="_redirectTo(this);" title="${c.name}">${c.name}</a></h3>
+            <div  class="description">${c.description}</div>
+        </div>
+    </div>
+    <!--[if lte IE 7]>
+            </td>
+            <td>
+    <![endif]-->
+    <div class="info">
+        <ul>
+            <li><span class="price">${h.literal(c.price)}</span></li>
+        </ul>
+        <input type="reset" value="Купить" class="add-to-cart" onclick="redirectToLocation('${c.url}'); addToViewList('${c.name}', '${c.url}', ${c.product_id}, true);"/>
+    </div>
+    <!--[if lte IE 7]>
+            </td>
+        </tr>
+    </table>
+    <![endif]-->
+    <div class="clr"></div>
+ 
+
+    <ul class="bottom">
+%if c.is_wishlist==True:        
+        <li><a href="javascript:void(0);" style="margin-bottom: 10px;" class="wishlist" onclick="addToWishList('${c.name}', '${c.url}', ${c.product_id}, true);" title="добавить в вишлист"><span>В вишлист</span></a></li>
+%else:
+        <li><a href="javascript:void(0);" style="margin-bottom: 10px;"><span>&nbsp;</span></a></li>            
+%endif
+    </ul>
+    <div class="clr"></div>
+
+    
+</li>

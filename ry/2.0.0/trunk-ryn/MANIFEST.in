@@ -1,0 +1,3 @@
+include rynok/config/deployment.ini_tmpl
+recursive-include rynok/public *
+recursive-include rynok/templates *

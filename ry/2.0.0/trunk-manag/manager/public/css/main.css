@@ -1,0 +1,84 @@
+body{
+	background-color: #dfe8f6;
+}
+
+table.categories{
+	margin-right: 50px;
+	margin-left: 100px;
+	margin-top: 5px;
+	float: left;
+	border:1px solid #c3daf9;
+}
+
+table.compare{
+	margin-top: 5px;
+	float: left;
+	border:1px solid #c3daf9;
+}
+
+#tree, #tree2 {
+	border:1px solid #c3daf9;
+	margin-left: 20px;
+}
+
+#mainMenu,
+#mainMenu ul {
+    margin: 0;
+    padding: 0;
+}
+
+#mainMenu ul li{
+    list-style: none;
+    display: inline-block;
+}
+
+#mainMenu ul li a {
+    display: block;
+    color: #369;
+    text-decoration: none;
+    padding: 6px 10px;
+}
+
+#mainMenu ul li:hover{
+	background-color: #c3daf9;
+}
+
+.folder .x-tree-node-icon{
+	background:transparent url(/js/ext/resources/images/default/tree/folder.gif);
+}
+
+.shop_folder .x-tree-node-leaf{
+	background: url(/js/ext/resources/images/default/tree/_leaf.gif) !important;
+}
+
+.x-tree-node-expanded .x-tree-node-icon{
+	background:transparent url(/js/ext/resources/images/default/tree/folder-open.gif);
+}
+
+#content-anchor-tip ul {
+    float: left;
+    width: 200px;
+    list-style-type: disc;
+    margin-left: 15px;
+} 
+
+.ext-ie #content-anchor-tip ul {
+    margin: 0;
+    padding-left: 15px;
+} 
+
+#content-anchor-tip .thumb {
+    float: right;
+} 
+
+#content-anchor-tip .status-icon {
+    position: absolute;
+    top: 4px;
+    right: 50px;
+    padding: 0;
+    line-height: 0;
+} 
+
+#content-anchor-tip a:link, #content-anchor-tip a:visited {
+    color: #339;
+}

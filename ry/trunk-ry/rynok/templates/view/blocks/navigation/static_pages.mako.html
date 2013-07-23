@@ -1,0 +1,25 @@
+<ul>
+    ${h.literal(render_navigation_list(c.tree['children'])['html'])}
+</ul>
+
+<%def name="render_navigation_list(elements)">
+<%
+
+elements = sorted(elements, key=lambda element: element['item']['title'])
+
+html = ''
+has_active = False
+for element in elements:
+    is_active = True if element['item']['id'] == c.page_id else False
+    has_active = is_active if is_active else False
+
+    childrens = render_navigation_list(element['children'])
+    html += '<li' + (' class=active' if is_active else '') + (' class=has_active' if childrens['has_active'] else '') + '>'
+    html += ('<a href="' + url('static_pages', static_page_slug=element['item']['slug']) + '">' + element['item']['title'] + '</a>') if not is_active else ('<strong>' + element['item']['title'] + '</strong>')
+    if childrens['html']:
+        html += '<ul>' + childrens['html'] + '</ul>'
+    html += '</li>'
+
+return {'html': html, 'has_active': has_active}
+%>
+</%def>

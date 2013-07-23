@@ -1,0 +1,84 @@
+<%! from rynok.lib import viewhelpers as vh %>
+<%inherit file='/base/index.html' />
+<%def name="title()">Все категории</%def>
+<%def name="keywords()">Все категории</%def>
+<%def name="description()">Все категории</%def>
+
+${vh.cat_breadcrumbs(c.category)}
+
+<!--[if lte IE 7]>
+<table class="ie-wrapper">
+<tr>
+    <td class="col sidebar">
+<![endif]-->
+<div id="left-bar">
+    ${vh.category_filters(c.price_min, c.price_max, c.affordable_price, c.category['ID'], c.markets, c.vendors, c.currency)}
+</div>
+<!--[if lte IE 7]>
+    </td>
+    <td class="col">
+<![endif]-->
+<div id="wrapper">
+    <div id="content">
+        <div class="main">
+            <div class="main-holder">
+                <div class="static notice">
+                <div class="content">
+                    <h1>В категории <em>«${c.category['Name']}»</em> нет товаров, удовлетворящих вашему запросу</h1>
+                    <p>Вы можете:</p>
+                    <ul>
+                        <li>изменить параметры фильтрации</li>
+                        <li>вернуться <a href="${c.back_url}">назад</a></li>
+                        <li>перейти <a href="/">на главную</a></li>
+                        <li>выбрать <em>другую категорию</em></li>
+                    </ul>
+                </div>
+            </div>
+            ${categories(c.cats)}
+            </div>
+        </div>
+    </div>
+</div>
+<!--[if lte IE 7]>
+    </td>
+    <td class="col sidebar">
+<![endif]-->
+<div id="sidebar">
+    ${vh.banner_block()}
+    ${vh.wishlist()}
+    ${vh.vendors()}
+</div>
+<!--[if lte IE 7]>
+        </td>
+    </tr>
+</table>
+<div class="clr"></div>
+<![endif]-->
+<%def name="categories(cats)" cached="False" cache_timeout="86400" cache_type="memory">
+<%
+    if cats is  None:
+        return  
+    remainder = len(cats)%3
+    per_c = len(cats)/3
+
+    begin = 0
+
+    for i in range(1, 4):
+        per_column = per_c
+
+        if remainder > 0:
+            per_column += 1
+            remainder -= 1
+
+        context.write('<ul class="category-list all" style="float:left; display: inline; width: 33%;">')
+
+        to = begin + per_column
+
+        for cat in cats[begin:to]:
+            context.write(vh.categories(cat["ID"]))
+
+        begin = to
+
+        context.write('</ul>')
+%>
+</%def>

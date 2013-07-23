@@ -1,0 +1,72 @@
+@charset "UTF-8";
+/*
+ * mopTip 2.1
+ * By Hiroki Miura (http://www.mopstudio.jp)
+ * Copyright (c) 2008 mopStudio
+ * Licensed under the MIT License: http://www.opensource.org/licenses/mit-license.php
+ * July 10, 2009
+*/
+
+#mopTip01, #mopTip01 *{
+	/*
+	overflow:visible;
+	*/
+}
+#mopTip01 {
+	position: absolute;
+	z-index: 999;
+}
+#mopTip01 .tip {
+	background:#FFF url(/img/baloon-bg.gif) repeat;
+}
+#mopTip01 .arrowSet{
+	height:35px;
+}
+#mopTip01 .content {
+	padding: 4px;
+	font-size: 11px;
+	cursor:default;
+	line-height:1.5em;
+}
+#mopTip01 .leftTop {
+	background:url(/img/baloon-top.png) no-repeat 0 0;	
+	height: 15px;
+	width: 5px;
+}
+#mopTip01 .rightTop {
+	background:url(/img/baloon-top.png) no-repeat 100% 0;	
+	width: 5px;
+}
+#mopTip01 .leftBottom {
+	background:url(/img/baloon-bottom.png) no-repeat;	
+	height: 3px;
+	width: 5px;
+}
+#mopTip01 .rightBottom {
+	background:url(/img/baloon-bottom.png) no-repeat 100% 0;	
+}
+#mopTip01 .arrow {
+	background:url(/img/baloon-top.png) no-repeat -153px 0;	
+	height: 35px;
+	width: 80px;
+}
+#mopTip01 .arrowBottom {
+	background:url(/img/baloon-bottom.png) no-repeat -155px 0;	
+	height: 40px;
+	width: 80px;
+}
+#mopTip01 .left {
+	background:url(/img/baloon-l-r.png) repeat-y left;
+	width: 20px;
+}
+#mopTip01 .right {
+	background:url(/img/baloon-l-r.png) repeat-y right;
+	width: 20px;
+}
+#mopTip01 .top {
+	background:url(/img/baloon-t-b.png) repeat-x 0 0;
+	height:31px !important;
+}
+#mopTip01 .bottom {
+	background:url(/img/baloon-t-b.png) repeat-x 0 -67px;
+}

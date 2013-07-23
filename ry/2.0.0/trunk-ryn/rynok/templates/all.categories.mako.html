@@ -1,0 +1,66 @@
+<%! from rynok.lib import viewhelpers as vh %>
+<%inherit file='/base/index.html' />
+<%def name="title()">Все категории</%def>
+<%def name="keywords()">Все категории</%def>
+<%def name="description()">Все категории</%def>
+
+			<!--[if lte IE 7]>
+		<table class="ie-wrapper">
+				<td class="col">
+		<![endif]-->
+		<div id="wrapper">
+            <div id="breadcrumbs">
+                <ul>
+                    <li class="home" style="display: inline;"><a href="/">Рынок</a></li>
+                    <li style="display: inline;"><a href="/category/all">Все категории</a></li>
+                </ul>
+            </div>
+            <div class="clr"></div>
+			<div id="content">
+                <!-- категории -->
+                ${categories(c.cats)}
+				<div class="clr"></div>
+			</div>
+		</div>
+			<!--[if lte IE 7]>
+				</td>
+				<td class="col sidebar">
+			<![endif]-->
+		<div id="sidebar">
+            <!-- баннер -->
+            ${vh.banner_block()}
+			<div class="clr"></div>
+		    ${vh.vendors()}
+		</div>
+			<!--[if lte IE 7]>
+					</td>
+				</tr>
+			</table>
+			<div class="clr"></div>
+			<![endif]-->
+<%def name="categories(cats)" cached="False" cache_timeout="86400" cache_type="memory">
+<%
+    remainder = len(cats)%3
+    per_c = len(cats)/3
+
+    begin = 0
+
+    for i in range(1, 4):
+        per_column = per_c
+
+        if remainder > 0:
+            per_column += 1
+            remainder -= 1
+
+        context.write('<ul class="category-list all" style="float:left; display: inline; width: 33%; clear: none !important;">')
+
+        to = begin + per_column
+    
+        for cat in cats[begin:to]:
+            context.write(vh.categories(cat["ID"]))
+
+        begin = to
+
+        context.write('</ul>')
+%>
+</%def>

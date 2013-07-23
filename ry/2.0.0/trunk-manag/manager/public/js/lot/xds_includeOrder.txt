@@ -1,0 +1,5 @@
+<script type="text/javascript" src="EditLot.ui.js"></script>
+<script type="text/javascript" src="EditLot.js"></script>
+<script type="text/javascript" src="MyStore.js"></script>
+<script type="text/javascript" src="FeatcherStore.js"></script>
+<script type="text/javascript" src="ItemStore.js"></script>

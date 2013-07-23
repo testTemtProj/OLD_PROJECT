@@ -1,0 +1,24 @@
+<div class="block widget products-${c.sort}" unselectable="on">
+    <h2>${c.title}<!--a href="${c.link}">${c.title}</a--><span>&nbsp;</span></h2>
+    <div class="holder" unselectable="on">
+        <div class="scroll-pane" unselectable="on">
+            <ul class="items scroll-content" unselectable="on">
+                ${h.literal(c.products)}
+            </ul>
+            <div class="clr"></div>
+        </div>
+        <div class="scroll-bar-container pngfix" unselectable="on">
+            <div class="scroll-bar-wrap" unselectable="on">
+                <div class="scroll" unselectable="on"></div>
+                <div class="scroll-bar" unselectable="on">
+                    ${h.literal(c.slider)}
+                </div>
+            </div>
+            <div class="scroll-bar-start ${c.additional_class}" unselectable="on"></div>
+            <div class="scroll-bar-end ${c.additional_class}" unselectable="on"></div>
+        </div>
+        <div class="clr"></div>
+    </div>
+    <div class="clr"></div>
+</div>
+${h.literal(c.scripts)}

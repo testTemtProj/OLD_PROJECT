@@ -1,0 +1,47 @@
+<%! from rynok.lib import viewhelpers as vh %>
+<%inherit file='/base/index.html' />
+<%def name="title()">Все производители</%def>
+<%def name="keywords()">Все производители</%def>
+<%def name="description()">Все производители</%def>
+
+${vh.vendor_breadcrumbs(vendor=c.vendor, cat=c.current_cat)}
+<!--[if lte IE 7]>
+<table class="ie-wrapper">
+<tr>
+    <td class="col sidebar">
+<![endif]-->
+<div id="left-bar">
+    ${vh.vendor_filters(c.price_min, c.price_max, c.affordable_price, c.current_cat, c.markets, c.vendor, c.currency, c.query)}
+</div>
+<!--[if lte IE 7]>
+    </td>
+    <td class="col">
+<![endif]-->
+<div id="wrapper">
+    <div id="content">
+        <div class="main">
+        <div class="main-holder">
+            <div class="static warning">
+                <div class="content">
+                <h1>К сожалению, производитель <em>«${c.vendor['name']}»</em> ещё не предоставил товаров по данным критериям</h1>
+                <p>Вы можете:</p>
+                <ul>
+                    <li>вернуться <a href="${c.back_url}">назад</a></li>
+                    <li>перейти <a href="/">на главную</a></li>
+                    <li>выбрать <em>другого производителя</em>:                    
+                    </li>
+                </ul>                
+                </div>                
+            </div>
+            ${vh.vendors_list()}
+        </div>
+        </div>
+    </div>
+</div>
+
+<div id="sidebar">
+    ${vh.wishlist()}
+    <div class="clr"></div>
+    ${vh.banner_block()}
+	<div class="clr"></div>
+</div>

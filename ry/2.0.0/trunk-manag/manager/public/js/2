@@ -1,0 +1,422 @@
+	store = new Ext.data.JsonStore({
+		url: '/campaigns/get_advertise_list',
+		root: 'data',
+		remoteSort: true,
+		fields: [
+			{
+				name: 'id'
+			}, {
+				name: 'title'
+			}, {
+				name: 'user'
+			}, {
+				name: 'lastUpdate'
+			}, {
+				name: 'state'
+			}, {
+				name: 'social'
+			},{
+				name: 'state_Adload'
+			},{
+				name: 'approved'
+			}
+		]
+	});
+	store.setDefaultSort('title', 'asc')
+	store.load()
+	function get_advert_status()
+	{
+		Ext.Ajax.request({
+			url: '/campaigns/get_advertise_status',
+			success: function(data){
+				data = Ext.util.JSON.decode(data.responseText)
+				for(var i=0; i<data.length;i++)
+				{
+					var rec_id = store.findExact('id', data[i]['id'])
+					var record = store.getAt(rec_id)
+					if(data[i]['status'] == true)
+					{
+						record.set('state', '<img src = "/img/start.png" />')
+					}
+					if(data[i]['status'] == 'update')
+					{
+						record.set('state', '<img src = "/img/update.png" />')
+					}
+					if(data[i]['status'] == false)
+					{
+						record.set('state', '<img src = "/img/stop.png" />')
+					} 
+				}
+			}
+        });
+    }
+	setInterval(get_advert_status, 5000);
+	
+	var startHandler = function(){
+		//блеать
+		if(rec.get('state_Adload') != '<img src = "/img/stop.png" />')
+		{
+			if(rec.get('approved') != '<img src = "/img/no.png" />')
+			{
+				rec.set('state','<img src = "/img/update.png" />')
+				Ext.Ajax.request({
+					url: '/campaigns/set_status',
+					success: function(res){
+						data = Ext.util.JSON.decode(res.responseText);
+						if (data == true)
+						{
+							rec.set('lastUpdate', current_date);
+						}
+					},
+					failure: function ( result, request ) {
+                        Ext.MessageBox.show({
+                            title: 'Ошибка',
+                            msg: 'Случилось что-то ужасное и непоправимое, обратитесь к системному администратору :)',
+                            minWidth: 200,
+                            bottons: Ext.MessageBox.OK,
+                            icon: Ext.MessageBox.WARNING
+                        });
+                        rec.set('state','<img src = "/img/stop.png" />');
+					},
+
+					params: { advertId: advertId, status: true, lastUpdete: current_date}
+				});
+			}
+			else
+			{
+				Ext.MessageBox.show({
+					title: 'Ошибка',
+					msg: 'Невозможно запустить. Кампания не одобрена',
+					minWidth: 200,
+					bottons: Ext.MessageBox.OK,
+					icon: Ext.MessageBox.WARNING
+				});
+			}
+		}
+		else
+		{
+			Ext.MessageBox.show({
+				title: 'Ошибка',
+				msg: 'Невозможно запустить. Кампания не запущена в AdLoad',
+				minWidth: 200,
+				bottons: Ext.MessageBox.OK,
+				icon: Ext.MessageBox.WARNING
+			});
+		}}
+	
+	var stopHandler = function(){
+		rec.set('state','<img src = "/img/update.png" />')
+		Ext.Ajax.request({
+			url: '/campaigns/set_status',
+			success: function(res){
+				data = Ext.util.JSON.decode(res.responseText)
+				if (data == true)
+				{
+					rec.set('lastUpdate', current_date)
+				}
+			},
+			params: { advertId: advertId, status: false, lastUpdete: current_date}
+		});
+	}
+	
+	current_date = new Date()
+	
+	var refreshHandler = function(){
+		rec.set('state','<img src = "/img/update.png" />');
+		Ext.Ajax.request({
+			url: '/campaigns/update',
+			success: function(res){
+				data = Ext.util.JSON.decode(res.responseText)
+				if (data == true)
+				{
+					rec.set('lastUpdate', current_date)
+				}
+			},
+			params: { advertId: advertId, lastUpdete: current_date }
+		});
+	}
+	
+	var approvedHandler = function(){
+		Ext.Ajax.request({
+			url: '/campaigns/approved',
+			success: function(res){
+				data = Ext.util.JSON.decode(res.responseText)
+                if (data['approved'] == true)
+    				rec.set('approved','<img src = "/img/yes.png" />');
+                else
+                    rec.set('approved', '<img src = "/img/no.png" />');
+			},
+			params: { advertId: advertId, approved: true }
+		});
+	}
+	
+	var notApprovedHandler = function(){
+		Ext.Ajax.request({
+			url: '/campaigns/approved',
+			success: function(res){
+                if (rec.get('state') != '<img src = "/img/stop.png" />')
+                    rec.set('state','<img src = "/img/update.png" />')
+				Ext.Ajax.request({
+					url: '/campaigns/set_status',
+					success: function(res){
+                        data = Ext.util.JSON.decode(res.responseText)
+
+                        if (data['approved'] == true)
+                            rec.set('approved','<img src = "/img/yes.png" />');
+                        else
+                            rec.set('approved', '<img src = "/img/no.png" />');
+					},
+					params: { advertId: advertId, status: false }
+				});
+			},
+			params: { advertId: advertId, approved: false }
+		});
+	}
+	
+	var menu = new Ext.menu.Menu({
+		items: [
+            {
+                id:   'refresh',
+                text: 'Обновить',
+                icon: '/img/refresh.png',
+                hidden: true,
+                handler: refreshHandler
+            },
+            {
+                id:   'start',
+                text: 'Старт',
+                icon: '/img/start.png',
+                hidden: true,
+                handler: startHandler
+            },
+            {
+                id:   'stop',
+                text: 'Стоп',
+                icon: '/img/stop.png',
+                hidden: true,
+                handler: stopHandler
+            },
+            {
+                id:   'approve',
+                text: 'Одобрить',
+                icon: '/img/yes.png',
+                hidden: true,
+                handler: approvedHandler
+            },
+            {
+                id:   'prohibit',
+                text: 'Запретить',
+                icon: '/img/no.png',
+                hidden: true,
+                handler: notApprovedHandler    
+                    
+            }
+        ]
+	});
+
+    function hideAllMenuItems(context_menu){
+        context_menu.items.each(function(item){
+            item.hide();
+        });
+    }
+
+
+	function _contextMenu(node, obj, index, event)
+	 {	
+		rec = store.getAt(index);
+		advertId = rec.get('id');
+        hideAllMenuItems(menu);
+
+        menu.getComponent('refresh').show();
+
+		if(rec.get('approved') == '<img src = "/img/no.png" />')
+            menu.getComponent('approve').show();
+		else
+			menu.getComponent('prohibit').show();
+
+		if( rec.get('state') == '<img src = "/img/stop.png" />')
+			menu.getComponent('start').show();
+		else
+			menu.getComponent('stop').show();
+		
+		x = event.browserEvent.pageX;
+		y = event.browserEvent.pageY;
+        _ev = event;
+		menu.showAt([x, y]);
+	}
+
+	
+	var grid = Ext.extend(Ext.grid.GridPanel,{
+		store: store,
+		listeners: {
+			render: {
+				fn: function() {
+					 Ext.getBody().on("contextmenu", Ext.emptyFn,
+						null, {preventDefault: true});
+				}
+			}
+		},
+		colModel: new Ext.grid.ColumnModel({
+			defaults: {
+				width: 120,
+				sortable: true
+			},
+			columns: [
+				{
+					header: 'Название',
+					width: 250, 
+					sortable: true,  
+					dataIndex: 'title',
+					id: 'title',
+					listeners: {
+						contextmenu: {
+							fn: function(node, obj, index, event){_contextMenu(node, obj, index, event)}
+						}
+					},
+				},{
+					id: 'user',
+					header: 'Пользователь', 
+					sortable: true, 
+					dataIndex: 'user',
+					listeners: {
+						contextmenu: {
+							fn: function(node, obj, index, event){_contextMenu(node, obj, index, event)}
+						}
+					},
+				},{
+					header: 'Последнее обновление',
+					width: 250, 
+					sortable: true,  
+					dataIndex: 'lastUpdate',
+					listeners: {
+						contextmenu: {
+							fn: function(node, obj, index, event){_contextMenu(node, obj, index, event)}
+						}
+					},
+				},{
+					header: 'Статус',
+					width: 50, 
+					sortable: true,  
+					dataIndex: 'state',
+					id: 'state',
+					listeners: {
+						contextmenu: {
+							fn: function(node, obj, index, event){_contextMenu(node, obj, index, event)}
+						}
+					},
+				},{
+					header: 'Статус в AdLoad',
+					width: 100, 
+					sortable: true,  
+					dataIndex: 'state_Adload',
+					id: 'state_Adload',
+					listeners: {
+						contextmenu: {
+							fn: function(node, obj, index, event){_contextMenu(node, obj, index, event)}
+						}
+					},
+				},{
+					header: 'Cоциальная',
+					width: 70, 
+					sortable: true,  
+					dataIndex: 'social',
+					id: 'social',
+					listeners: {
+						contextmenu: {
+							fn: function(node, obj, index, event){_contextMenu(node, obj, index, event)}
+						}
+					},
+				},{
+					header: 'Одобрена',
+					width: 70, 
+					sortable: true,  
+					dataIndex: 'approved',
+					id: 'approved',
+					listeners: {
+						contextmenu: {
+							fn: function(node, obj, index, event){_contextMenu(node, obj, index, event)}
+						}
+					},
+				}],
+		}),
+		sm: new Ext.grid.RowSelectionModel({singleSelect:true}),
+		height: 730,
+		width: 950,
+		autoWidth: true,
+		frame: true,
+		title: 'Магазины',
+		iconCls: 'icon-grid',
+		loadMask: true,
+		clicksToEdit:'1',
+		bbar: new Ext.PagingToolbar({
+            pageSize: 20,
+            store: store,
+            displayInfo: true,
+            displayMsg: 'Показано {0} - {1} из {2}'
+        })
+	});
+
+    var static_pages_content_tree = new Ext.tree.TreePanel({
+            region: 'west',
+            id: 'static_pages_content_tree',
+            title: 'Структура навигации',
+            split: true,
+            width: 250,
+            minSize: 150,
+            autoScroll: true,
+            rootVisible: true,
+            lines: false,
+            useArrows: true,
+            collapsible: true,
+            loader: new Ext.tree.TreeLoader({
+                    dataUrl: '/static/get_pages_tree'
+                }),
+            root: new Ext.tree.AsyncTreeNode({ id: '0',
+                    text: 'Главная',
+                    cls: 'folder',
+                    draggable: false,
+                    leaf: false,
+                    expanded: true
+                }),
+            listeners: {
+                    beforedblclick: function(){ return false;},
+                    click: function(node, evt){
+                           edit_static_page(node.text, node.id);
+                       }
+               }
+        });
+
+    var static_pages_content_tabs = new Ext.TabPanel({
+            region: 'center',
+            defferedRender: false,
+            enableTabScroll: true,
+            resizeTabs: true,
+            defaults: {autoscroll: true},
+            minTabWidth: 115,
+            tabWidth: 200
+        });
+
+    function edit_static_page(title, id){
+        if (static_pages_content_tabs.find('id', id).length != 0){
+            static_pages_content_tabs.setActiveTab(id);
+        }
+        else { 
+            Ext.Ajax.request({
+                    url: '/static/get_page_content',
+                    method: 'POST',
+                    params: {page_id: id},
+                    success: function(result, request){
+                            html  = result.responseText;
+                            static_pages_content_tabs.add({
+                                    id: id,
+                                    title: title,
+                                    closable: true,
+                                    html: html
+                                });
+                            static_pages_content_tabs.setActiveTab(id);
+                            setup();
+                        }
+                });
+        }
+    }
+    Ext.reg('campaigns', grid);

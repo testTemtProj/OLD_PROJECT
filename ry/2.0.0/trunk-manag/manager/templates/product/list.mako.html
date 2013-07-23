@@ -1,0 +1,392 @@
+<%inherit file='/base/index.html' />
+<%def name="title()">Редактирование эталонов</%def>
+<%def name="head()">
+    <link rel="stylesheet" type="text/css" href="/js/ext/resources/css/ext-all.css" />
+    <script type="text/javascript" src="/js/ext/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="/js/ext/ext-all.js"></script>
+    <script type="text/javascript" src="/js/ext/plugins/TabCloseMenu.js"></script>
+    <script type="text/javascript">
+    
+
+
+        Ext.onReady(function(){
+
+        var treePanel = new Ext.tree.TreePanel({
+                            region: 'west',
+                            id: 'categories-tree',
+                            title: 'Категори &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox">Без эталонов</input>',
+                            split: true,
+                            width: 250,
+                            minSize: 150,
+                            autoScroll: true,
+                            rootVisible: false,
+                            lines: false,
+                            //singleExpand: true,
+                            useArrows: true,
+                            collapsible: true,
+
+                            loader: new Ext.tree.TreeLoader({
+                                dataUrl: '/category/getYottosTreeSettings'
+                            }),
+                            root: new Ext.tree.AsyncTreeNode({
+                                id: '0'
+                            }),
+                            listeners: {
+                                beforedblclick: function(){return false;},
+                                click: function(node, evt){
+                                    addTab(node.text, node.id);
+                                }
+                            }
+                        });
+
+        new Ext.tree.TreeSorter(treePanel, {folderSort: true});
+
+        var tabs = new Ext.TabPanel({
+                        region: 'center',
+                        defferedRender: false,
+                        enableTabScroll: true,
+                        resizeTabs: true,
+                        defaults: {autoScroll:true},
+                        minTabWidth: 115,
+                        tabWidth: 200,
+                        //plugins: new Ext.ux.TabCloseMenu()
+                    }); 
+
+            mainProps = new Ext.grid.PropertyGrid({
+                                title: 'Основные',
+                                closable: false
+                            });
+            characterProps = new Ext.grid.PropertyGrid({
+                                title: 'Дополнительные',
+                                closable: false,
+                                bbar: {
+                                    xtype: 'buttongroup',
+                                    columns: 1,
+                                    items: [
+                                        {
+                                            text: 'Добавить поле',
+                                            scale: 'small',
+                                            listeners: {
+                                                click: addPropertyWindow
+                                            }
+                                        }
+                                    ]
+                                }
+                            });
+            propsTabs  = new Ext.TabPanel({
+                            border: false,
+                            activeTab: 0,
+                            tabPosition: 'bottom',
+                            items:[
+                                mainProps,
+                                characterProps
+                            ]
+                        });
+
+            new Ext.Viewport({
+                layout: 'border',
+                items:[
+                    new Ext.BoxComponent({
+                        region: 'north',
+                        height: 32,
+                        contentEl: 'mainMenu'
+                    }), tabs,
+                    {
+                        region: 'east',
+                        split: true,
+                        title: 'Характеристики эталона',
+                        width: 225,
+                        minSize: 175,
+                        maxSize: 400,
+                        margins: '0 5 0 0',
+                        layout: 'fit',
+                        items: propsTabs,
+                        bbar: {
+                            xtype: 'buttongroup',
+                            columns: 2,
+                            items: [
+                                {
+                                    text: 'Сбросить',
+                                    scale: 'small'
+                                },
+                                {
+                                    text: 'Сохранить',
+                                    scale: 'small',
+                                    listeners: {
+                                        click: saveModel
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    treePanel,
+                    {
+                        xtype: 'tabpanel',
+                        minSize: 250,
+                        maxSize: 500,
+                        split: true,
+                        region: 'south',
+                        collapsible: true,
+                        collapsed: true,
+                        border: false,
+                        activeTab: 0,
+                        height: 250,
+                        items:[
+                            {
+                              xtype: 'panel',
+                              title: 'Описание',
+                              items: [
+                                {
+                                    xtype: 'label',
+                                    text: 'Описание товара'
+                                },
+                                {
+                                    xtype: 'textarea',
+                                    width: 770,
+                                    height: 278,
+                                    id: 'txtDescription'
+                                },
+                                {
+                                    xtype: 'button',
+                                    text: 'Сохранить',
+                                    id: 'btnSave'
+                                }
+                              ]
+                            },
+                            {
+                                xtype: 'panel',
+                                title: 'Товары',
+                                items: [
+                                    {
+                                        xtype: 'listview',
+                                        columnResize: false,
+                                        store: 'ItemStore',
+                                        height: 426,
+                                        width: 776,
+                                        columns: [
+                                            {
+                                                xtype: 'lvcolumn',
+                                                header: 'ID',
+                                                width: 0.25
+                                            },
+                                            {
+                                                xtype: 'lvcolumn',
+                                                header: 'Магазин'
+                                            },
+                                            {
+                                                xtype: 'lvcolumn',
+                                                header: 'Отображать'
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                xtype: 'panel',
+                                title: 'Обзоры'
+                            },
+                            {
+                                xtype: 'panel',
+                                title: 'Отзывы'
+                            }
+                        ]
+                    }
+                ]
+            });
+
+editing = false;
+var win;
+
+
+function editProduct(product){
+   editing = true;
+   var raw = product.json;
+   var main = {};
+   main.model = raw.model;
+   delete raw.model;
+
+   hidden = {};
+   hidden._id = raw._id;
+   hidden.categorID = raw.categorID;
+   hidden.lots = raw.lots;
+   hidden.count_lots = raw.count_lots;
+   hidden.LotID = raw.LotID;
+
+   delete raw._id;
+   delete raw.categorID;
+   delete raw.lots;
+   delete raw.count_lots;
+   delete raw.LotID;
+
+   mainProps.setSource(main);
+   characterProps.setSource(raw); 
+}
+
+function saveModel(){
+    if(!editing)
+        return false;
+    var main = mainProps.getSource();
+    var charProps = characterProps.getSource();
+    console.log(main);
+
+    var result = merge_dicts(main, charProps);
+    result = merge_dicts(result, hidden);
+
+    Ext.Ajax.request({
+        url: '/product/saveModel',
+        method: 'POST',
+        success: function() {
+        },
+        failure: function() {
+        },
+        params: { 'result': Ext.encode(result) },
+        disableCaching: false
+    });
+
+}
+function addPropertyWindow(){
+        var form = new Ext.FormPanel({
+            frame: false,
+            bodyStyle: 'padding: 5px 5px 0',
+            defaultType: 'textfield',
+            labelAlign: 'left',
+            items: [
+                {
+                    fieldLabel: 'Имя параметра',
+                    name: 'Name',
+                    anchor: '100%'
+                }, {
+                    fieldLabel: 'Значение',
+                    name: 'Value',
+                    anchor: '100%'
+                }
+            ]
+        });            
+        win = new Ext.Window({
+            layout: 'fit',
+            width: 500,
+            height: 127,
+            closeAction: 'hide',
+            plain: true,
+            items:[form],
+            buttons: [
+                {
+                    text: 'Сохранить',
+                    handler: function(){
+                        var items = form.items.items;
+                        var data = {};
+                        data[items[0].getValue()] = items[1].getValue();
+                        var active = propsTabs.getActiveTab();
+                        var activeSource = active.getSource();
+                        var newSource = merge_dicts(activeSource, data);
+                        active.setSource(newSource);
+                        win.hide();
+                    }
+                }, {
+                    text: 'Отменить',
+                    handler: function() {
+                        win.hide();
+                    }
+                }
+            ]
+        });
+        win.show();
+}
+
+function merge_dicts(obj1, obj2){
+    var obj3 = {};
+    for (attrname in obj1) { obj3[attrname] = obj1[attrname]; }
+    for (attrname in obj2) { obj3[attrname] = obj2[attrname]; }
+    return obj3;
+}
+
+
+            function addTab(title, id){
+            
+        var store = new Ext.data.JsonStore({
+            autoDestroy: true,
+            url: '/product/getByCategory',
+            remoteSort: false, 
+            sortInfo: {
+                field: 'model',
+                direction: 'ASC'
+            },
+            storeId: 'myStore',
+            baseParams: { cat: id},
+
+            idProperty: 'model',
+            root: 'data',
+            totalProperty: 'total',
+            fields: [
+                {
+                    name: 'LotID'
+                } , {
+                    name: 'model'
+                }, {
+                    name: 'count_lots'
+                } 
+                
+            ]
+        
+        });
+        var colModel = new Ext.grid.ColumnModel({
+            defaults: {
+                sortable: true
+            }, columns: [
+                {
+                    dataIndex: 'LotID',
+                    header: 'ID'
+                }, {
+                    dataIndex: 'model',
+                    header: 'Название эталона',
+                    id: 'model'
+                }, {
+                    dataIndex: 'count_lots',
+                    header: 'Kоличество товаров',
+                    width: 190
+                }
+            ]   
+        
+        });
+                tabs.add(new Ext.grid.GridPanel({
+                    title: title,
+                    closable: true,
+                    store: store,
+                    colModel: colModel,
+                    loadMask: true,
+                    autoExpandColumn: 'model',
+                    listeners: {
+                        render: {
+                            fn: function(){
+                                store.load({
+                                    params: {
+                                        start: 0,
+                                        limit: 50
+                                    }
+                                });
+                            }
+                        }
+                    },
+                    tbar: {
+                        xtype: 'panel',
+                        title: 'Фильтр'
+                    },
+                    bbar: new Ext.PagingToolbar({
+                        store: store,
+                        pageSize: 50,
+                        displayInfo: true,
+                        displayMsg: 'Показано товаров {0} - {1} из {2}',
+                        emptyMsg: 'Категория пуста'
+                    })
+                })).show().getSelectionModel().on('rowselect', function(sm, rowIdx, r){
+                        editProduct(r)
+                });
+            }
+        });
+
+</script>
+</%def>
+<div id="mainMenu">${parent.menu()}</div>
+
+<script type="text/javascript">	
+</script>

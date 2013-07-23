@@ -1,0 +1,95 @@
+<%! from rynok.lib import viewhelpers as vh %>
+<%inherit file='/base/index.html' />
+<%def name="title()">Купить в ${c.market['title']}
+% if c.current_cat is not None:
+             - ${c.current_cat['Name']}
+% endif
+</%def>
+<%def name="keywords()">Магазин</%def>
+<%def name="description()">Купить в ${c.market['title']}
+% if c.current_cat is not None:
+             - ${c.current_cat['Name']}
+% endif
+</%def>
+
+<script type="text/javascript">
+$(document).ready(function(){
+    $("#shops").click();
+});
+</script>
+        
+${vh.market_breadcrumbs(market=c.market, cat=c.current_cat)}
+			<!--[if lte IE 7]>
+		<table class="ie-wrapper">
+			<tr>
+				<td class="col sidebar">
+		<![endif]-->
+			<div id="left-bar">
+                ${vh.market_filters(c.current_cat, c.vendors, c.market, c.currency, c.query)}
+			</div>
+			<!--[if lte IE 7]>
+				</td>
+				<td class="col">
+			<![endif]-->
+			<div id="wrapper">
+				<div id="content">
+					<div class="main">
+						<div class="main-holder">
+                            <div class="panel-sort">
+                                ${vh.sort_panel(c.sort_settings, c.current_url, c.price_min, c.price_max)}
+                            </div>
+                            ${products(c.products)}
+                            ${vh.paging_toolbar(current_page=c.page, total_pages=c.total_pages)}
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--[if lte IE 7]>
+				</td>
+				<td class="col sidebar">
+			<![endif]-->
+			<div id="sidebar">
+                ${vh.banner_block()}
+                ${vh.wishlist()}
+                ${vh.vendors()}
+                <!--{vh.compare()}-->
+			</div>
+			<!--[if lte IE 7]>
+					</td>
+				</tr>
+			</table>
+			<div class="clr"></div>
+			<![endif]-->
+
+<%def name="products(products)">
+<div class="clr"></div>
+<ul class="list">
+<li style="height: 38px; padding-top: 0px;">
+    <div class="desc-holder">
+            <h3 style="font-size: 18px; margin-top: 10px; color: #393939; border-bottom: none; background: none;"><center>${c.market['title']}
+% if c.current_cat is not None:
+             - ${c.current_cat['Name']}
+% endif
+            </center></h3>
+    </div>
+        <div class="clr"></div>
+</li>
+% if c.error_message:
+                            <li style="height: 38px; padding-top: 0px;">
+                                <div class="desc-holder">
+                                    <h4 style="font-size: 14px; margin-top: 10px; color: #393939; border-bottom: none; background: none;">
+                                        <center>
+                                            ${c.error_message} 
+                                        </center>
+                                    </h4>
+                                </div>
+                                <div class="clr">
+                                </div>
+                            </li>                                                           
+% endif
+<%
+    for product in products:
+        context.write(vh.product_preview(product, c.currency))
+%>
+</ul>
+</%def>

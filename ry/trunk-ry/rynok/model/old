@@ -1,0 +1,19 @@
+# coding: utf-8
+
+from rynok.model.mongo_rebalance import *
+
+class Base():
+    """
+    Модель подключения к базе
+    """
+    database = "rynok"
+    connections = ['10.0.0.8:27017', '10.0.0.8:27018', '10.0.0.8:27019']
+    connection = ApplicationDatabaseInterface(hosts=connections).connection()[database]
+
+    products_collection = connection.Products
+    category_collection = connection.Category
+    vendors_collection = connection.Vendors
+    market_collection = connection.Market
+    new_products_collection = connection.NewProducts
+    popular_products_collection = connection.PopularProducts
+

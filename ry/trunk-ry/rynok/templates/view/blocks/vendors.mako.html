@@ -1,0 +1,155 @@
+<div class="alphabet-holder">
+    <div class="header">
+        <ul>
+            <li class="active"><a href="#" id="brands"><span>Бренды</span></a></li>
+            <li class="last"><a href="#" id="shops"><span>Магазины</span></a></li>
+        </ul>
+    </div>
+    <div class="holder" id="brands-holder">
+% if c.vendors_show_arrows:
+<div class="brands-book">
+    <a href="#" class="scroll-up pngfix scroll-up-fix">up</a>
+% endif
+        <ul class="names">
+            ${c.vendors}
+        </ul>
+% if c.vendors_show_arrows:
+        <a href="#" class="scroll-down pngfix scroll-down-fix">down</a>
+</div>
+% endif
+        <div class="alphabet-slider"></div>
+        <ul class="alphabet en">
+            <li><a href="#A">A</a></li>
+            <li><a href="#B">B</a></li>
+            <li><a href="#C">C</a></li>
+            <li><a href="#D">D</a></li>
+            <li><a href="#E">E</a></li>
+            <li><a href="#F">F</a></li>
+            <li><a href="#G">G</a></li>
+            <li><a href="#H">H</a></li>
+            <li><a href="#I">I</a></li>
+            <li><a href="#J">J</a></li>
+            <li><a href="#K">K</a></li>
+            <li><a href="#L">L</a></li>
+            <li><a href="#M">M</a></li>
+            <li><a href="#N">N</a></li>
+            <li><a href="#O">O</a></li>
+            <li><a href="#P">P</a></li>
+            <li><a href="#Q">Q</a></li>
+            <li><a href="#R">R</a></li>
+            <li><a href="#S">S</a></li>
+            <li><a href="#T">T</a></li>
+            <li><a href="#U">U</a></li>
+            <li><a href="#V">V</a></li>
+            <li><a href="#W">W</a></li>
+            <li><a href="#X">X</a></li>
+            <li><a href="#Y">Y</a></li>
+            <li><a href="#Z">Z</a></li>
+        </ul>
+        <ul class="alphabet ru">
+            <li><a href="#А">А</a></li>
+            <li><a href="#Б">Б</a></li>
+            <li><a href="#В">В</a></li>
+            <li><a href="#Г">Г</a></li>
+            <li><a href="#Д">Д</a></li>
+            <li><a href="#Е">Е</a></li>
+            <li><a href="#Ж">Ж</a></li>
+            <li><a href="#З">З</a></li>
+            <li><a href="#И">И</a></li>
+            <li><a href="#К">К</a></li>
+            <li><a href="#Л">Л</a></li>
+            <li><a href="#М">М</a></li>
+            <li><a href="#Н">Н</a></li>
+            <li><a href="#О">О</a></li>
+            <li><a href="#П">П</a></li>
+            <li><a href="#Р">Р</a></li>
+            <li><a href="#С">С</a></li>
+            <li><a href="#Т">Т</a></li>
+            <li><a href="#У">У</a></li>
+            <li><a href="#Ф">Ф</a></li>
+            <li><a href="#Х">Х</a></li>
+            <li><a href="#Ц">Ц</a></li>
+            <li><a href="#Ч">Ч</a></li>
+            <li><a href="#Ш">Ш</a></li>
+            <li><a href="#Щ">Щ</a></li>
+            <li><a href="#Э">Э</a></li>
+            <li><a href="#Ю">Ю</a></li>
+            <li><a href="#Я">Я</a></li>            
+            <li><a href="#DIGITS" class="digits">0-9</a></li>
+        </ul>
+        <div class="clr"></div>
+    </div>
+    <div class="holder" id="shops-holder">
+% if c.markets_show_arrows:
+    <a href="#" class="scroll-up pngfix">up</a>
+% endif
+        <ul class="names">
+            ${c.markets}
+        </ul>
+% if c.markets_show_arrows:
+        <a href="#" class="scroll-down pngfix">down</a>
+% endif
+        <div class="alphabet-slider"></div>
+        <ul class="alphabet en">
+            <li><a href="#SHOP_A">A</a></li>
+            <li><a href="#SHOP_B">B</a></li>
+            <li><a href="#SHOP_C">C</a></li>
+            <li><a href="#SHOP_D">D</a></li>
+            <li><a href="#SHOP_E">E</a></li>
+            <li><a href="#SHOP_F">F</a></li>
+            <li><a href="#SHOP_G">G</a></li>
+            <li><a href="#SHOP_H">H</a></li>
+            <li><a href="#SHOP_I">I</a></li>
+            <li><a href="#SHOP_J">J</a></li>
+            <li><a href="#SHOP_K">K</a></li>
+            <li><a href="#SHOP_L">L</a></li>
+            <li><a href="#SHOP_M">M</a></li>
+            <li><a href="#SHOP_N">N</a></li>
+            <li><a href="#SHOP_O">O</a></li>
+            <li><a href="#SHOP_P">P</a></li>
+            <li><a href="#SHOP_Q">Q</a></li>
+            <li><a href="#SHOP_R">R</a></li>
+            <li><a href="#SHOP_S">S</a></li>
+            <li><a href="#SHOP_T">T</a></li>
+            <li><a href="#SHOP_U">U</a></li>
+            <li><a href="#SHOP_V">V</a></li>
+            <li><a href="#SHOP_W">W</a></li>
+            <li><a href="#SHOP_X">X</a></li>
+            <li><a href="#SHOP_Y">Y</a></li>
+            <li><a href="#SHOP_Z">Z</a></li>
+        </ul>
+        <ul class="alphabet ru">
+            <li><a href="#SHOP_RU_A">А</a></li>
+            <li><a href="#SHOP_RU_B">Б</a></li>
+            <li><a href="#SHOP_RU_V">В</a></li>
+            <li><a href="#SHOP_RU_G">Г</a></li>
+            <li><a href="#SHOP_RU_D">Д</a></li>
+            <li><a href="#SHOP_RU_E">Е</a></li>
+            <li><a href="#SHOP_RU_GZ">Ж</a></li>
+            <li><a href="#SHOP_RU_Z">З</a></li>
+            <li><a href="#SHOP_RU_I">И</a></li>
+            <li><a href="#SHOP_RU_K">К</a></li>
+            <li><a href="#SHOP_RU_L">Л</a></li>
+            <li><a href="#SHOP_RU_M">М</a></li>
+            <li><a href="#SHOP_RU_N">Н</a></li>
+            <li><a href="#SHOP_RU_O">О</a></li>
+            <li><a href="#SHOP_RU_P">П</a></li>
+            <li><a href="#SHOP_RU_R">Р</a></li>
+            <li><a href="#SHOP_RU_S">С</a></li>
+            <li><a href="#SHOP_RU_T">Т</a></li>
+            <li><a href="#SHOP_RU_U">У</a></li>
+            <li><a href="#SHOP_RU_F">Ф</a></li>
+            <li><a href="#SHOP_RU_H">Х</a></li>
+            <li><a href="#SHOP_RU_TS">Ц</a></li>
+            <li><a href="#SHOP_RU_CH">Ч</a></li>
+            <li><a href="#SHOP_RU_SH">Ш</a></li>
+            <li><a href="#SHOP_RU_SCH">Щ</a></li>
+            <li><a href="#SHOP_RU_AE">Э</a></li>
+            <li><a href="#SHOP_RU_YU">Ю</a></li>
+            <li><a href="#SHOP_RU_YA">Я</a></li>
+            <li><a href="#SHOP_DIGITS" class="digits">0-9</a></li>
+        </ul>
+        <div class="clr"></div>
+    </div>
+</div>
+<div class="clr"></div>

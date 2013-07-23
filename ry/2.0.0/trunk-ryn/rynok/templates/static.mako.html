@@ -1,0 +1,52 @@
+<%! from rynok.lib import viewhelpers as vh %>
+<%inherit file='/base/index.html' />
+<%def name="title()"></%def>
+<%def name="description()"></%def>
+<%def name="keywords()"></%def>
+    
+${vh.static_pages_breadcrumbs(c.page_id)}
+<div id="static">
+<!--[if lte IE 7]>
+<table class="ie-wrapper">
+<tr>
+    <td class="col sidebar">
+<![endif]-->
+<div id="left-bar">
+    <div id="static-navigation">
+        ${vh.static_pages_navigation_menu(page_id=c.page_id)}
+    </div>
+</div>
+<!--[if lte IE 7]>
+    </td>
+    <td class="col">
+<![endif]-->
+<div id="wrapper">
+    <div id="content">
+        <div class="main">
+            <div class="main-holder">
+                <div class="static notice">
+                <div class="content">
+                    <h1>${c.title}</h1>
+                    ${c.content}
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--[if lte IE 7]>
+    </td>
+    <td class="col sidebar">
+<![endif]-->
+<div id="sidebar">
+
+</div>
+<!--[if lte IE 7]>
+        </td>
+    </tr>
+    </table>
+    <div class="clr"></div>
+    <![endif]-->
+</div>
+
+<ul>

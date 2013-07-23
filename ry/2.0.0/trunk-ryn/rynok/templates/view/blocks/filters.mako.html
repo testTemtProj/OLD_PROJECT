@@ -1,0 +1,240 @@
+<%! from rynok.lib import viewhelpers as vh %>
+<form id="filters-form" action="" method="get">
+<div class="block">
+    <div class="header"> <span>Цена</span> <a title="свернуть/развернуть" href="javascript:void(0)" class="toggle open">свернуть/развернуть</a></div>
+    <div class="holder open"> от
+        <input type="text" id="price-min" name="price-min" value="${c.price_min}" class="price" />
+        до
+        <input type="text" id="price-max" name="price-max" value="${c.price_max}" class="price" />
+        <div id="currency-select-button-holder">
+            <select class="custom" id="currency-select">
+                <option <% if c.currency == 'UAH': context.write('selected') %> value="UAH">Грн.</option>
+                <option <% if c.currency == 'USD': context.write('selected') %> value="USD">USD</option>
+                <option <% if c.currency == 'EUR': context.write('selected') %> value="EUR">EUR</option>
+                <option <% if c.currency == 'RUB': context.write('selected') %> value="RUB">Руб.</option>
+            </select>
+        </div>
+        <div class="price-line" id="price-slider"> <span class="min-value" id="min-value">${c.price_min}</span> <span class="max-value" id="max-value">${c.price_max}</span> </div>
+    </div>
+</div>
+${vh.market_cats(c.market)}
+${vh.vendor_cats(c.vendor)}
+${vh.search_cats(c.search_query, c.cats)}
+% if (c.vendors or c.pop_vendors) and (len(c.vendors) and len(c.pop_vendors)):
+<div class="block">
+    <div class="header"> <span>Производитель</span> <a title="свернуть/развернуть" href="javascript:void(0)" class="toggle open">свернуть/развернуть</a></div>
+    <div class="holder open">
+        <ul class="vendors-header">
+            <li><a href="javascript:void(0)" id="vendors-popular-link" class="active">Популярные производители</a></li>
+            <li><a href="javascript:void(0)" id="vendors-all-link">Все</a></li>
+        </ul>
+        <div class="clr"></div>
+        <div class="scroller">
+        <div id="vendors-popular">
+            <ul class="vendors">
+<%
+checked_vendors = []
+pop_vendors = []
+for vendor in c.pop_vendors:
+    if vendor is not None:
+        if vendor['id'] in c.checked_vendors:
+            checked_vendors.append('<li class="show_tip"><input type="checkbox" checked="checked" id="vendor-'+str(vendor['id'])+'" /><label for="vendor-'+str(vendor['id'])+'" class="text-wrap">'+vendor['name']+'<span></span></label><div class="proposal fix-right"><a href="/vendor/'+vendor['transformedTitle']+'/"><div class="dotted-text">'+u"все предложения"+'</div></div></a></li>')
+        else:
+            pop_vendors.append('<li class="show_tip"><input type="checkbox" id="vendor-'+str(vendor['id'])+'" /><label for="vendor-'+str(vendor['id'])+'" class="text-wrap">'+vendor['name']+'<span></span></label><div class="proposal fix-right"><a href="/vendor/'+vendor['transformedTitle']+'/"><div class="dotted-text">'+u"все предложения"+'</div></a></div></li>')
+vendors = []
+for vendor in c.vendors:
+    if vendor is not None:
+        if vendor['id'] in c.checked_vendors:
+            checked_vendors.append('<li class="show_tip"><input type="checkbox" checked="checked" id="vendor-'+str(vendor['id'])+'" /><label for="vendor-'+str(vendor['id'])+'" class="text-wrap">'+vendor['name']+'<span></span></label><div class="proposal fix-right"><a href="/vendor/'+vendor['transformedTitle']+'/"><div class="dotted-text">'+u"все предложения"+'</div></a></div></li>')
+        else:
+            vendors.append('<li class="show_tip"><input type="checkbox" id="vendor-'+str(vendor['id'])+'" /><label for="vendor-'+str(vendor['id'])+'" class="text-wrap">'+vendor['name']+'<span></span></label><div class="proposal fix-right"><a href="/vendor/'+vendor['transformedTitle']+'/"><div class="dotted-text">'+u"все предложения"+'</div></a></div></li>')
+
+context.write(''.join(checked_vendors))
+context.write(''.join(pop_vendors))
+%>
+            </ul>
+        </div>
+        <div id="vendors-all">
+        <ul class="vendors">
+<%
+context.write(''.join(vendors))
+%>
+        </ul>
+    </div>
+</div>
+        <div class="clr"></div>
+    </div>
+</div>
+% endif
+% if c.markets or c.pop_markets:
+<div class="block">
+    <div class="header"> <span>Магазин</span> <a href="#" class="toggle open" title="свернуть/развернуть">свернуть/развернуть</a></div>
+    <div class="holder open">
+        <ul class="markets-header">
+            <li><a href="javascript:void(0)" id="markets-popular-link" class="active">Популярные магазины</a></li>
+            <li><a href="javascript:void(0)" id="markets-all-link">Все</a></li>
+        </ul>
+        <div class="clr"></div>
+        <div class="scroller sc-markets">
+        <div id="markets-popular">
+            <ul class="markets">
+<%
+checked_markets = []
+pop_markets = []
+for market in c.pop_markets:
+    if market is not None:
+        if market['id'] in c.checked_markets:
+            checked_markets.append('<li class="show_tip opa-market"><input type="checkbox" checked="checked" id="market-'+str(market['id'])+'" /><label for="market-'+str(market['id'])+'" class="text-wrap">'+market['title'].lower()+'<span></span></label><div class="proposal fix-right" style="z-index:100;background-color:white;"><a href="/market/'+market['transformedTitle']+'/"><div class="dotted-text">'+u"все предложения"+'</div></a></div><div class="fadeOut pngfix" style="right:-8px; z-index:0;"/></li>')
+        else:
+            pop_markets.append('<li class="show_tip opa-market"><input type="checkbox" id="market-'+str(market['id'])+'" /><label for="market-'+str(market['id'])+'" class="text-wrap" style="width:223px;">'+market['title'].lower()+'<span></span></label><div class="proposal fix-right" style="z-index:100;background-color:white;"><a href="/market/'+market['transformedTitle']+'/"><div class="dotted-text">'+u"все предложения"+'</div></a></div><div class="fadeOut pngfix" style="right:-8px; z-index:0;"/></li>')
+markets = []
+for market in c.markets:
+    if market is not None:
+        if market['id'] in c.checked_markets:
+            checked_markets.append('<li class="show_tip opa-market"><input type="checkbox" checked="checked" id="market-'+str(market['id'])+'" /><label for="market-'+str(market['id'])+'" class="text-wrap">'+market['title'].lower()+'<span></span></label><div class="proposal fix-right" style="z-index:100;background-color:white;"><a href="/market/'+market['transformedTitle']+'/"><div class="dotted-text">'+u"все предложения"+'</div></a></div><div class="fadeOut pngfix" style="right:-8px; z-index:0;"/></li>')
+        else:
+            markets.append('<li class="show_tip opa-market"><input type="checkbox" id="market-'+str(market['id'])+'" /><label for="market-'+str(market['id'])+'" class="text-wrap">'+market['title'].lower()+'<span></span></label><div class="proposal fix-right" style="z-index:100;background-color:white;"><a href="/market/'+market['transformedTitle']+'/"><div class="dotted-text">'+u"все предложения"+'</div></a></div><div class="fadeOut pngfix" style="right:-8px; z-index:0;"/></li>')
+context.write(''.join(checked_markets))
+context.write(''.join(pop_markets))
+%>
+            </ul>
+        </div>
+        <div id="markets-all">
+        <ul class="markets">
+<%
+context.write(''.join(markets))
+%>
+        </ul>
+        </div>
+    </div>
+        <div class="clr"></div>
+    </div>
+</div>
+% endif
+</form>
+<input type="reset" value="Подобрать" class="filter-btn" onclick="apply_filters('${url.current()}', '${request.query_string}');" />
+<input type="reset" value="Сбросить" class="filter-btn" onclick="reset_filters('${url.current()}', '${request.query_string}', '${c.affordable_price}');" />
+
+<script type="text/javascript">
+$(document).ready(function(){
+<%
+if 'pop_vendors' in locals() and len(pop_vendors) > 8:
+    context.write('''
+            $('#vendors-popular-link').click();
+        ''')
+if 'pop_markets' in locals() and len(pop_markets) > 2:
+    context.write('''
+            $('#markets-popular-link').click();
+        ''')
+%>
+//	$( "#price-slider" ).slider({
+//		range: true,
+//		min: 0,
+//		max: ${c.affordable_price},
+//		values: [ ${c.price_min}, ${c.price_max}],
+//		create: function( event, ui ) {
+//			$(this).children("a.ui-slider-handle:last").addClass("right").css('background-position', '-6px 0');
+//			$("#min-value").css("left",$(this).children("a.ui-slider-handle").eq(0).css("left"));
+//			$("#max-value").css("left",$(this).children("a.ui-slider-handle").eq(1).css("left"));
+//			},
+//		slide: function( event, ui ) {
+//			var maxPos = $("#max-value").offset();
+//			var minPos = $("#min-value").offset();
+//			var minWidth = $("#min-value").width();
+//			var leftMin = $(this).children("a.ui-slider-handle").eq(0).css("left").replace('px','');
+//			var leftMax = $(this).children("a.ui-slider-handle").eq(1).css("left").replace('px','');
+//			if (Math.round(leftMin)+minWidth > Math.round(leftMax))
+//				$("#max-value").css("top","30px");
+//			else
+//				$("#max-value").css("top","20px"); 
+//			$("#min-value").css("left",leftMin+"px");
+//			if (leftMax < 190)
+//				$("#max-value").css("left",leftMax+"px");
+//			$("#min-value").text(ui.values[ 0 ]);
+//			$("#max-value").text(ui.values[ 1 ]);
+//			$("#price-min").val(ui.values[ 0 ]);
+//			$("#price-max").val(ui.values[ 1 ]);
+//			}
+//		});
+    //$("#max-value").css("left", "186px");    
+    $('#currency-select').change(function(){
+        var query = ${h.literal(c.price_params)};
+        var currency = this.value;
+        console.log(this.value);
+        var price_params = {'query': query, 'currency': currency};
+        price_params = json_stringify(price_params);
+        $.ajax({
+            type: 'POST', 
+            url: '/product/get_filter_options',
+            data: {filter_type:'price', params : price_params},
+            success: function(data){
+                        $('input#price-min').attr('value', data['price_min']);
+                        $('input#price-max').attr('value', data['price_max']);
+                        $('span#min-value').text(data['price_min']);
+                        $('span#max-value').text(data['price_max']);
+                        $( "#price-slider" ).slider("destroy");
+                        $( "#price-slider" ).slider({
+                            range: true,
+                            min: 0,
+                            max: data['price_max'],
+                            values: [ data['price_min'], data['price_max']],
+                            create: function( event, ui ) {
+                                $(this).children("a.ui-slider-handle:last").addClass("right").css('background-position', '-6px 0');
+                                $("#min-value").css("left",$(this).children("a.ui-slider-handle").eq(0).css("left"));
+                                $("#max-value").css("left",$(this).children("a.ui-slider-handle").eq(1).css("left"));
+                                },
+                            slide: function( event, ui ) {
+                                var maxPos = $("#max-value").offset();
+                                var minPos = $("#min-value").offset();
+                                var minWidth = $("#min-value").width();
+                                var leftMin = $(this).children("a.ui-slider-handle").eq(0).css("left").replace('px','');
+                                var leftMax = $(this).children("a.ui-slider-handle").eq(1).css("left").replace('px','');
+                                if (Math.round(leftMin)+minWidth > Math.round(leftMax))
+                                    $("#max-value").css("top","30px");
+                                else
+                                    $("#max-value").css("top","20px"); 
+                                $("#min-value").css("left",leftMin+"px");
+                                if (leftMax < 190)
+                                    $("#max-value").css("left",leftMax+"px");
+                                $("#min-value").text(ui.values[ 0 ]);
+                                $("#max-value").text(ui.values[ 1 ]);
+                                $("#price-min").val(ui.values[ 0 ]);
+                                $("#price-max").val(ui.values[ 1 ]);
+                                }
+                            });
+                        $("#max-value").css("left","196px");
+                    }, 
+            dataType:  'json'
+        });
+    });
+});
+        $("#price-slider").slider({
+        range: true,
+        min: 0,
+        max: ${c.affordable_price},
+        values: [ ${c.price_min}, ${c.price_max}],
+        create: function(event, ui){
+            $(this).children("a.ui-slider-handle:last").addClass("right").css('background-position', '-6px 0');
+            $("#min-value").css("left", $(this).children("a.ui-slider-handle").eq(0).position().left);
+            $("#max-value").css("left", $(this).children("a.ui-slider-handle").eq(1).position().left-$('#max-value').width()+6);            
+        },
+        slide: function(event, ui){            
+            var maxPos = $("#max-value").offset();
+            var minPos = $("#min-value").offset();
+            var minWidth = $("#min-value").width();
+            var leftMin = $(this).children("a.ui-slider-handle").eq(0).position().left;
+            var leftMax = $(this).children("a.ui-slider-handle").eq(1).position().left;
+            if (Math.round(leftMin) + minWidth > Math.round(leftMax)) 
+                $("#max-value").css("top", "30px");
+            else 
+                $("#max-value").css("top", "20px");
+            $("#min-value").css("left", leftMin + "px");            
+            if (leftMax < 186) 
+                $("#max-value").css("left", leftMax + "px");
+            $("#min-value").text(ui.values[0]);
+            $("#max-value").text(ui.values[1]);
+            $("#price-min").val(ui.values[0]);
+            $("#price-max").val(ui.values[1]);
+        }
+    });      
+</script>

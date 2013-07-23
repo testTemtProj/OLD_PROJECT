@@ -1,0 +1,170 @@
+.ui-selectmenu {
+	display:inline-block;
+	position:relative;
+	height:20px;
+	text-decoration: none;
+	overflow:hidden;
+}
+.ui-selectmenu-icon {
+	position:absolute;
+	right:6px;
+	margin-top:-6px;
+	top: 50%;
+}
+.ui-selectmenu-menu {
+	padding:0;
+	margin:0;
+	list-style:none;
+	position:absolute;
+	top: 0;
+	visibility: hidden;
+	overflow: auto;
+}
+.ui-selectmenu-open {
+	visibility: visible;
+}
+.ui-selectmenu-menu-popup {
+	margin-top: -1px;
+}
+.ui-selectmenu-menu-dropdown {
+}
+.ui-selectmenu-menu li {
+	color:#989797;
+	font-size:11px;
+	padding:0;
+	margin:0;
+	display: block;
+	border: none !important;
+	font-weight: normal !important;
+}
+.ui-selectmenu-menu li a, .ui-selectmenu-status {
+	color:#989797;
+	font-size:11px;
+	display:block;
+	padding:.3em 1em;
+	outline:none;
+	text-decoration:none;
+}
+.ui-selectmenu-menu li.ui-selectmenu-hasIcon a, .ui-selectmenu-hasIcon .ui-selectmenu-status {
+	padding-left: 20px;
+	position: relative;
+	margin-left: 5px;
+}
+.ui-selectmenu-menu li .ui-icon, .ui-selectmenu-status .ui-icon {
+	position: absolute;
+	top: 1em;
+	margin-top: -8px;
+	left: 0;
+}
+.ui-selectmenu-status {
+	line-height: 1.4em;
+	text-align: left;
+}
+.ui-selectmenu-open li.ui-selectmenu-item-focus a {
+	background:#F1F4E5 !important;
+	color:#373737 !important;
+}
+.ui-selectmenu-open li.ui-selectmenu-item-selected {
+}
+.ui-selectmenu-menu li span, .ui-selectmenu-status span {
+	display:block;
+	margin-bottom: .2em;
+}
+.ui-selectmenu-menu li .ui-selectmenu-item-header {
+	font-weight: bold;
+}
+.ui-selectmenu-menu li .ui-selectmenu-item-content {
+}
+.ui-selectmenu-menu li .ui-selectmenu-item-footer {
+	opacity: .8;
+}
+/*for optgroups*/
+.ui-selectmenu-menu .ui-selectmenu-group {
+	font-size: 1em;
+}
+.ui-selectmenu-menu .ui-selectmenu-group .ui-selectmenu-group-label {
+	line-height: 1.4em;
+	display:block;
+	padding:.6em .5em 0;
+	font-weight: bold;
+}
+.ui-selectmenu-menu .ui-selectmenu-group ul {
+	margin: 0;
+	padding: 0;
+}
+#count-select-button.ui-state-default .ui-icon, #currency-select-button.ui-state-default .ui-icon, #currency-select-rel-button.ui-state-default .ui-icon, #payment-select-button.ui-state-default .ui-icon, #country-select-button.ui-state-default .ui-icon, #town-select-button.ui-state-default .ui-icon, #service-select-button.ui-state-default .ui-icon  {
+	background:url(/img/select-arrow.gif) no-repeat 0 5px;
+	height:23px;
+	margin-left:10px;
+	width:10px;
+}
+#count-select-button.ui-corner-all, #count-select-button.ui-corner-top, #currency-select-button.ui-corner-all, #currency-select-rel-button.ui-corner-all, #currency-select-button.ui-corner-top, #currency-select-rel-button.ui-corner-top, #payment-select-button.ui-corner-all, #payment-select-button.ui-corner-top, #country-select-button.ui-corner-all, #country-select-button.ui-corner-top, #town-select-button.ui-corner-all, #town-select-button.ui-corner-top, #service-select-button.ui-corner-all, #service-select-button.ui-corner-top {
+	-moz-border-radius:0;
+	background:#FFF;
+	border:#b3d63d 1px solid;
+	color:#989797;
+	font-size:11px;
+	min-width:48px;
+	text-decoration:none;
+}
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, .ui-selectmenu-status {
+	font-weight:normal;
+	text-decoration:none;
+}
+.ui-corner-bottom {
+	border-top:none;
+}
+#count-select-menu.ui-widget-content, #currency-select-menu.ui-widget-content, #currency-select-rel-menu.ui-widget-content, #payment-select-menu.ui-widget-content, #country-select-menu.ui-widget-content, #town-select-menu.ui-widget-content, #service-select-menu.ui-widget-content {
+	background:#FFF;
+	border:#b3d63d 1px solid;
+	border-top:none;
+	min-width:48px;
+	z-index:100;
+}
+#count-select-button, #currency-select-button, #currency-select-rel-button, #payment-select-button{
+	bottom:10px;
+	float:right;
+	margin:0 0 0 10px;
+}
+.holder #currency-select-button-holder{
+	float:right;
+	margin: 0 15px 0 0;
+    position: static;
+    right: 20px;
+    top: 20px;
+}
+.holder #currency-select-button{
+	bottom:0;
+}
+body:nth-of-type(1) .holder #currency-select-button{/*Chrome*/
+	top:2px;
+}
+.holder #currency-select-rel-button{
+	margin: 0 15px 0 0;
+    position:relative;
+    right:auto;
+    top:auto;
+}
+#country-select-button, #country-select-rel-button, #town-select-button{
+	float:right;
+	margin-right:20px;
+	width:130px !important;
+}
+#country-select-menu, #town-select-menu{
+	width:130px !important;
+}
+#service-select-button{
+	margin:0 0 5px 0;
+	width:187px !important;
+}
+#service-select-menu{
+	width:187px !important;
+}
+#prices #count-select-button{
+	margin-top:0;
+}
+#payment-select-button{
+	float:left;
+	margin-left:115px;
+	margin-top:-12px;
+}

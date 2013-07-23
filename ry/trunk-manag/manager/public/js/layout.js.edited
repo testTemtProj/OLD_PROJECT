@@ -1,0 +1,89 @@
+/*!
+ * Ext JS Library 3.3.1
+ * Copyright(c) 2006-2010 Sencha Inc.
+ * licensing@sencha.com
+ * http://www.sencha.com/license
+ */
+Ext.onReady(function() {
+	Ext.QuickTips.init();
+    
+    var viewport = new Ext.Viewport({
+        layout:'border',
+        items:[
+            {
+                 cls: 'docs-header',
+                height: 44,
+                region:'north',
+                xtype:'box',
+                el:'header',
+                border:false,
+                margins: '0 0 5 0'
+            },
+            {
+            region:'center',
+            xtype: 'grouptabpanel',
+    		tabWidth: 180,
+    		activeGroup: 0,
+            initComponent: function() {
+                Ext.ux.GroupTabPanel.prototype.initComponent.call(this);
+                this.items.each(function(item){
+                    item.items.each(function(element){
+                        element.layout = 'fit'
+                        element.iconCls = 'x-icon-' + element.id
+                        element.style = 'padding: 10px;'
+                        item.on('tabchange', function(current){
+                            if(current.activeTab.id == element.id) {
+                                if(element.onLoad !== undefined) {
+                                    element.onLoad()
+                                }
+                            }
+                        }, this)
+                    },this);
+                },this);
+            },
+    		items: [{
+    			mainItem: 0,
+    			items: [
+                {
+                    title: 'Рынок',
+                    tabTip: 'Рынок'
+                }, {
+    				title: 'Категории',
+                    layout: 'fit',
+                    iconCls: 'x-icon-tickets',
+                    tabTip: 'Категории',
+
+    			},
+                campaigns,
+                {
+    				title: 'Эталоны',
+                    iconCls: 'x-icon-users',
+                    tabTip: 'Эталоны',
+                    style: 'padding: 10px;'
+    			}]
+            }, {
+                expanded: true,
+                items: [{
+                    title: 'Настройки',
+                    iconCls: 'x-icon-configuration',
+                    tabTip: 'Настройки',
+                    style: 'padding: 10px;'
+                }, {
+    				title: 'Статические страницы',
+                    iconCls: 'x-icon-subscriptions',
+                    tabTip: 'Статические страницы',
+                    style: 'padding: 10px;',
+					layout: 'border',
+                    items: [
+                        static_pages_content_tree,
+                        static_pages_content_tabs
+                    ]
+                }]
+            }]
+		}]
+    });
+<<<<<<< .mine
+});
+=======
+    viewport.doLayout();
+});>>>>>>> .r764

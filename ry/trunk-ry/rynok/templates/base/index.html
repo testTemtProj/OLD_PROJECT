@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><%! from rynok.lib import viewhelpers as vh %>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>${next.title()}</title>
+<meta name="keywords" content="${next.keywords()}"/>
+<meta name="description" content="${next.description()}"/>
+
+<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+<link rel="icon" href="/favicon.ico" type="image/png" />
+<link rel="stylesheet" href="/css/reset.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="/css/style.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="/css/ui.selectmenu.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="/css/mopTip-2.2.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="/js/jquery-lightbox/css/jquery.lightbox-0.5.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="/css/jquery.autocomplete.css" type="text/css" media="screen" />
+<script type="text/javascript" src="/js/flash_detect.js"></script>
+<script type="text/javascript" src="/js/storage.uncompressed.js"></script>
+<script type="text/javascript" src="/js/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="/js/jquery-ui-1.8.13.custom.min.js"></script>
+<script type="text/javascript" src="/js/jquery.scrollerVertical.js"></script>
+<script type="text/javascript" src="/js/jquery.scrollTo-min.js"></script>
+<script type="text/javascript" src="/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="/js/ui.selectmenu.js"></script>
+<script type="text/javascript" src="/js/mopTip-2.2.js"></script>
+<script type="text/javascript" src="/js/contentflow.js"></script>
+<script type="text/javascript" src="/js/jquery-lightbox/jquery.lightbox-0.5.pack.js"></script>
+<script type="text/javascript" src="/js/jquery.bgiframe.min.js"></script>
+<script type="text/javascript" src="/js/jquery.ajaxQueue.js"></script>
+<script type="text/javascript" src="/js/jquery.autocomplete.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/css/ie.css" media="screen" /><![endif]-->
+<!--[if lte IE 6]>
+<script type="text/javascript" src="/js/DD_belatedPNG_0.0.7a.js"></script>
+<script type="text/javascript">
+	DD_belatedPNG.fix('.pngfix, .ui-slider-handle, ul.rating li, a.delete, .scroll-up, .scroll-down, .toggle');
+</script>
+<link rel="stylesheet" type="text/css" href="/css/ie6.css" media="screen" />
+<![endif]-->
+</head>
+<body>
+<script type="text/javascript">
+        	var temp_obj;
+        $(document).ready(function(){
+            Storage.init(function(){
+                if($("#wishlist").length){
+                    var keys = Storage.getKeys();
+                    $(keys).each(function(){
+                        key = this.split()[0];
+                        var data = Storage.get(key).split('::');
+                        if(key.search(/w/i) != -1){
+                            addToWishList(data[0], data[1], key.substring(0, key.length - 1));
+                        }
+                        if(key.search(/v/i) != -1){
+                            addToViewList(data[0], data[1], key.substring(0, key.length - 1));
+                        }
+                    });
+                }
+            });
+        });
+curTheme = "";
+ $(function() {
+        var d = 80;
+        function format(item) {
+            //return item.term;
+            if (item.theme != curTheme) {
+                curTheme = item.theme;
+                return item.term;
+            }
+              return item.term
+        }
+         $("#txtFind").autocomplete("/suggest/index", {
+              multiple: false,
+              max: 80,
+              appendTo: "#divQueryBox",
+              selectFirst: false,
+              width: $("#txtFind").width(),
+              maxColumnWidth: 400,
+              delay: d,
+              spaceToContinue: true,
+          moreString: "ещё",
+              parse: function(data) { 
+                  return $.map(eval(data), function(rowTheme) {
+                      var theme = rowTheme.t;
+                       var terms = $.map(rowTheme.w, function(rowTerm) {
+                           return { data: { theme: theme, term: rowTerm[0],
+                                            childCount: rowTerm[1],
+                                             charsEntered: rowTerm[2] },
+                                    value: rowTerm[0],
+                                    result: rowTerm[0]} 
+                          });
+                       return terms;
+                       })
+              },
+              formatItem: function(item) {
+                  return format(item)
+              }
+         }).result(function(e, item) {          
+		 	document.getElementById("btnSearch").focus();
+		 	document.getElementById("btnSearch").click() 
+         })
+    });
+</script>
+<div id="ContentFlow">
+	<div class="flow"></div>
+</div>
+<div id="holder">
+	<div id="page">
+		<div id="header">
+			<div class="header-holder pngfix">
+				<h1 class="pngfix"><a href="/">Rynok</a></h1>
+				<form action="/search/" method="get">
+##					<input type="hidden" name="area" id="area" value="3" />
+					<ul class="header-li">						
+					</ul>
+					<div class="holder">
+						<div id="divQueryBox" style="float:none;display:block !important;">
+						<input type="text" name="query" class="text" id='txtFind' autocomplete=​"on" />                        
+                        </div>
+						<input type="submit" id='btnSearch' value="Поиск" class="btn pngfix" />
+					</div>
+				</form>
+				<div id="login" class="pngfix"></div>
+			</div>
+		</div>
+		<div class="clr"></div>
+            ${next.body()}
+		<div class="clr"></div>
+	</div>
+</div>
+<div class="clr"></div>
+<!--[if lte IE 7]>
+    <script src="http://letskillie6.googlecode.com/svn/trunk/letskillie6.ru_RU.pack.js"></script>
+    <p class="advice">
+        Ой! Похоже вы до сих пор используете Internet Explorer 6! Вы достойны большего!<br><br>
+
+        Браузер, который вы используете, может не корректно отобразить эту страницу.<br>
+        Пожалуйста, обновите его. <a target="_blank" href="http://enoughie6.com/">Получить больше информации</a>.
+    </p>
+<![endif]-->
+</body>
+${vh.footer_block()}
+</html>

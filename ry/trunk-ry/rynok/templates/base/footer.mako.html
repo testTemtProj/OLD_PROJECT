@@ -1,0 +1,23 @@
+<div id="footer">
+	<div class="holder">
+		<div class="footer">
+            <ul>
+                % for counter in [0,1,2,3]:
+                    % if c.footer_settings[counter]:
+                    <li>${h.literal(c.footer_settings[counter])}
+                        <ul>
+                            % for subcounter in [4,8,12,16]:
+                                % if c.footer_settings[counter]:
+                                    <li>${h.literal(c.footer_settings[counter+subcounter])}</li>
+                                % endif
+                            % endfor
+                        </ul>
+                    </li>
+                    % endif
+                % endfor
+            </ul>
+			<div class="copyright">&copy; <a href="http://yottos.ru/" target="_blank">Yottos</a>, 2011</div>
+			<div class="clr"></div>
+		</div>
+	</div>
+</div>

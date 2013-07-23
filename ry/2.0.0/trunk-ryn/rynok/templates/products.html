@@ -1,0 +1,64 @@
+<%! from rynok.lib import viewhelpers as vh %>
+<%inherit file='/base/index.html' />
+<%def name="title()"></%def>
+<%def name="keywords()"></%def>
+<%def name="description()"></%def>
+<div id="breadcrumbs">
+    <ul>
+        <li class="home" style="display: inline;"><a href="/">Рынок</a></li>
+        <li style="display: inline;"><a href="/new">${c.title}</a></li>
+    </ul>
+</div>
+<div class="clr"></div>
+        <!--[if lte IE 7]>
+		<table class="ie-wrapper">
+			<tr>
+				<td class="col sidebar">
+		<![endif]-->
+			<div id="left-bar">
+                ##${vh.category_filters(c.price_min, c.price_max, c.affordable_price, c.category['ID'], c.markets, c.vendors, c.currency)}
+			</div>
+			<!--[if lte IE 7]>
+				</td>
+				<td class="col">
+			<![endif]-->
+			<div id="wrapper">
+				<div id="content">
+					<div class="main">
+						<div class="main-holder">
+                            <div class="panel-sort">
+                                ##${vh.sort_panel(c.sort_settings, c.current_url, c.price_min, c.price_max)}
+                            </div>
+
+                            ${products(c.products)}
+                            ##${vh.paging_toolbar(current_page=c.page, total_pages=c.total_pages)}
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--[if lte IE 7]>
+				</td>
+				<td class="col sidebar">
+			<![endif]-->
+			<div id="sidebar">
+                ${vh.banner_block()}
+                ${vh.wishlist()}
+                ${vh.vendors()}
+			</div>
+			<!--[if lte IE 7]>
+					</td>
+				</tr>
+			</table>
+			<div class="clr"></div>
+			<![endif]-->
+
+<%def name="products(products)">
+<div class="clr"></div>
+<ul class="list">
+<%
+    for product in products:
+        context.write(vh.product_preview(product, 'UAH'))
+%>
+</ul>
+</%def>
+

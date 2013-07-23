@@ -1,0 +1,51 @@
+<%! from rynok.lib import viewhelpers as vh %>
+<%inherit file='/base/index.html' />
+<%def name="title()">Рынок Yotos</%def>
+<%def name="keywords()">Рынок Yotos, рубрикатор товаров, интернет-магазин</%def>
+<%def name="description()">Рынок Yotos</%def>
+
+<div style="height: 14px"></div>
+    <!--[if lte IE 7]>
+    <table class="ie-wrapper">
+        <tr>
+            <td class="col">
+    <![endif]-->
+        <div id="wrapper">
+			<div id="content" class="home">
+                ${categories(c.cats)}
+				<div class="clr"></div>
+				<h2 class="all-cats link"><span>&nbsp;</span><a href="/category/all">Все категории</a></h2>
+				<div class="clr"></div>
+                ${vh.products('popular')}
+				<div class="clr"></div>
+                ${vh.products('new')}
+				<div class="clr"></div>
+			</div>
+		</div>
+		<!--[if lte IE 7]>
+				</td>
+				<td class="col sidebar">
+		<![endif]-->
+		<div id="sidebar">
+            ${vh.banner_block(c.banner)}
+            ${vh.wishlist()}
+            ${vh.vendors()}
+		</div>
+		<!--[if lte IE 7]>
+				</td>
+			</tr>
+		</table>
+		<![endif]-->
+        <div class="clr"></div>
+
+<%def name="categories(cats)">
+<div id="category-list-wrapper">
+    <ul class="category-list">
+<%
+    for cat in cats:
+        context.write(vh.categories(cat, show_count=False))
+%>
+    </ul>
+    <div class="clr"></div>
+</div>
+</%def>
